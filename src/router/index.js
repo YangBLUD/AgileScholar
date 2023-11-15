@@ -1,13 +1,8 @@
-import {createRouter,createWebHashHistory} from 'vue-router'
-const Login=()=>import('../components/HelloWorld.vue')
-const Main=()=>import('../components/groupManagement/main.vue')
-const routes = [
-    { path: '/login', component: Login },
-    { path: '/main', component: Main},
-
-]
+import { createRouter, createWebHashHistory } from "vue-router";
+const Main = () => import("../components/HelloWorld.vue");
+const routes = [{ path: "/main", component: Main }];
 const router = createRouter({
-    history: createWebHashHistory(),
-    routes,
-})
-export default router
+  history: createWebHashHistory(),
+  routes,
+});
+export default router;
