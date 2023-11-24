@@ -39,11 +39,32 @@
                 </div>
                 <div class="middle-right-list">
                     论文列表
-                    <ul >
-                        <li >
-
-                        </li>
-                    </ul>
+                    <div class="paper-list">
+                        <div class="list-item">
+                            <div class="checkbox">
+                                <el-checkbox v-model="checked3"/>
+                            </div>
+                            <div class="context">
+                                <Content></Content>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="checkbox">
+                                <el-checkbox v-model="checked3"/>
+                            </div>
+                            <div class="context">
+                                <Content></Content>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="checkbox">
+                                <el-checkbox v-model="checked3"/>
+                            </div>
+                            <div class="context">
+                                <Content></Content>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,6 +72,7 @@
     </div>
 </template>
 <script setup>
+import Content from './paperContent.vue'
 </script>
 <style scoped>
 ul{
@@ -119,13 +141,30 @@ ul{
             
         }
         .middle-right-list{
-            height: 200px;
+            height: 180px;
             background-color: blanchedalmond;
-            ul{
-                li{
+            .paper-list{
+                .list-item{
+                    margin: 20px 0px;
                     width: 100%;
-                    height: 100px;
+                    height: 250px;
                     background-color: black; 
+                    display: flex;
+                    box-shadow: 0 0 5px 1px #999;
+                    .checkbox{
+                        position: relative;
+                        left: 5px;
+                        width: 20px;
+                    }   
+                    .context{
+                        position: relative;
+                        top:0px;
+                        left: 20px;
+                        height: 100%;
+                        width: 95%;
+                        background-color: white;
+                    }
+
                 }
             }
         }
