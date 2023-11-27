@@ -18,10 +18,10 @@
     <!-- 下方板块 -->
     <el-main class="main-content">
       <el-tabs v-model="activeTab" @tab-click="handleTabClick" class="tabs">
-        <!-- 发表的论文 -->
-        <el-tab-pane label="发表的论文" name="papers" class="pane">论文</el-tab-pane>
         <!-- 学术影响力分析 -->
         <el-tab-pane label="学术影响力分析" name="influence"  class="pane">学术影响力</el-tab-pane>
+        <!-- 发表的论文 -->
+        <el-tab-pane label="发表的论文" name="papers" class="pane">论文</el-tab-pane>
         <!-- 学术关系网络 -->
         <el-tab-pane label="学术关系网络" name="network"  class="pane">学术关系网络</el-tab-pane>
         <!-- 学术成果集 -->
@@ -47,7 +47,7 @@ const authorName = ref('姓名');
 const institution = ref('研究机构');
 
 // 标签页状态
-const activeTab = ref('papers');
+const activeTab = ref('influence');
 
 
 const tabComponents = {
