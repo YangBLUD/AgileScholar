@@ -5,20 +5,24 @@
                 <span>Search Results</span>
             </div>
             <div class="second-search-form">
-                <span>搜索栏</span>
+                <el-form >
+                    <el-form-item>
+                        <el-input class="el-search"/>
+                        <el-button :icon="Search" />
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
         <div class="middle">
             <div class="middle-left">
-                左侧列表
                 <div class="middle-left-people">
-
+                    <Droplist></Droplist>
                 </div>
                 <div class="middle-left-publications">
-                
+                    <Droplist></Droplist>
                 </div>
                 <div class="middle-left-conferences">
-                    
+                    <Droplist></Droplist>
                 </div>
             </div>
             <div class="middle-right">
@@ -28,17 +32,21 @@
                 </div>
                 <div class="search-result-tabs">
                     <div class="nav-container">
-                        结果期刊软件人
+                        <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                            <el-tab-pane label="RESULTS" name="first"></el-tab-pane>
+                            <el-tab-pane label="PERIODICALS" name="second"></el-tab-pane>
+                            <el-tab-pane label="SOFTWARE" name="third"></el-tab-pane>
+                            <el-tab-pane label="PEOPLE" name="fourth"></el-tab-pane>
+                        </el-tabs>
                     </div>
                     <div class="nav-result">
-                        结果共1000条
+                        Showing 1 - 20 of 98,218 Results
                     </div>
                 </div>
                 <div class="search-result-checkbox">
                     筛选器
                 </div>
                 <div class="middle-right-list">
-                    论文列表
                     <div class="paper-list">
                         <div class="list-item">
                             <div class="checkbox">
@@ -73,6 +81,13 @@
 </template>
 <script setup>
 import Content from './paperContent.vue'
+import Droplist from './droplist.vue'
+import { Search} from "@element-plus/icons-vue";
+import { ref } from 'vue';
+
+const activeName = ref('first');
+const handleClick = (tab, event) => {
+};
 </script>
 <style scoped>
 ul{
@@ -96,10 +111,16 @@ ul{
         color: white;
     }
     .second-search-form{
+        position: relative;
+        top:10px;
         padding: 40px 80px;
         font-size: 50px;
         font-weight: 600;
         color: white;
+        .el-search{
+           height: 55px;
+           width: 600px; 
+        }
     }
 }
 .middle{
@@ -121,16 +142,19 @@ ul{
         }
         .search-result-tabs{
             height: 50px;
-            background-color: rgb(138, 165, 42);
+            width: 100%;
             display: flex;
             margin: auto 0;
+            background-color: #fafafa;
             .nav-container{
                 left: 20%;
                 width: 50%;
                 margin: auto 0;
             }
             .nav-result{
-                right: 10%;
+                position: relative;
+                top:-3px;
+                left : 20%;
                 width: 30%;
                 margin: auto 0;
             }
@@ -142,13 +166,12 @@ ul{
         }
         .middle-right-list{
             height: 180px;
-            background-color: blanchedalmond;
+            /* background-color: blanchedalmond; */
             .paper-list{
                 .list-item{
                     margin: 20px 0px;
                     width: 100%;
-                    height: 250px;
-                    background-color: black; 
+                    height: 250px; 
                     display: flex;
                     box-shadow: 0 0 5px 1px #999;
                     .checkbox{

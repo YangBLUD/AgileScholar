@@ -15,13 +15,16 @@
         </div>
         <div class="right">
             <div class="title">
-                标题
+                CAIN '22:Proceedings of the 1st International Conference on AI Engineering:
+Software Engineering for AI
             </div>
             <div class="writer">
-                作者
+                Ivica Crnkovic
             </div>
             <div class="abstract">
-                摘要aodnasondasdasndnasod nasodnoas ndoasndoa ndounasudnasuobndasdasodbuoasbd
+                The aim of the conference is to bring together researchers and practitioners in software
+engineering,in data science and Al,and to build up a community that will target the new
+challenges emerging in Software Engineering for Al-enabled systems.In the ..
             </div>
             <div class="bottom">
                 <div class="data">
@@ -85,21 +88,23 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
     left: 10%;
     height: 100%;
     .title{
-        color: blue;
-        font-size: 25px;
+        color: #5f99cc;
+        font-size: 18px;
         font-weight: 400;
     }
     .writer{
         margin: 15px 0;
+        color: #806f5d;
+        text-decoration: underline;
     }
     .abstract{
-        width: 100%;
+        width: 90%;
         white-space: pre-wrap;
     }
     .bottom{
         position: relative;
         left: 0px;
-        bottom : -90px;
+        bottom : 0px;
         margin: 15px 0;
         display: flex;
         width: 100%;
@@ -107,7 +112,7 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
             position: relative;
             left: 0px;
             display: flex;
-            width: 40%;
+            width: 20%;
             border-right: 1px;
             font-size: 15px;
             .inference{
@@ -121,11 +126,12 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
         }
         .highlight{
             position: relative;
-            left: 70%;
+            left: 0%;
+            width: 10%;
         }
         .choice{
             position: relative;
-            left:90%;
+            left:30%;
             display: flex;
             .introduce{
                 background-color: rgb(231, 229, 229);
