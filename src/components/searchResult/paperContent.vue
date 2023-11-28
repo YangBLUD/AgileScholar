@@ -31,11 +31,11 @@ challenges emerging in Software Engineering for Al-enabled systems.In the ..
                 <div class="data">
                     <div class="inference">
                         <el-icon><Edit /></el-icon>
-                        <div>31</div>
+                        <div class="inf-num">31</div>
                     </div>
                     <div class="trend">
                         <el-icon><DocumentAdd /></el-icon>
-                        <div>5093</div>
+                        <div class="tr-num">5093</div>
                     </div>
                 </div>
                 <div class="highlight">
@@ -126,30 +126,45 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
             position: relative;
             left: 0px;
             display: flex;
-            width: 20%;
-            border-right: 1px;
-            font-size: 15px;
+            width: 17%;
+            border-right: 1px solid #e6e6e6;
+            font-size: 18px;
             .inference{
-                /* margin:  0 5px; */
+                margin-top: 5px;
                 display: flex;
+                color: #0077c2;
+                .inf-num{
+                    margin-top: -2px;
+                    font-size: 15px;
+                    margin-left: 5px;
+                }
             }
             .trend{
-                    /* margin: 0 5px; */
+                margin-top: 5px;
                 display: flex;
+                color: #974dff;
+                .tr-num{
+                    margin-top: -2px;
+                    font-size: 15px;
+                    margin-left: 5px;
+                }
             }
         }
         .highlight{
             position: relative;
-            left: 0%;
+            color: #786e6d;
+            margin-top: 3px;
+            left: 10px;
             width: 10%;
         }
         .choice{
             position: relative;
-            left:30%;
+            left:50%;
             display: flex;
             .introduce{
                 background-color: rgb(231, 229, 229);
                 margin: 2px;
+                margin-left: 5px;
                 font-size: 20px;
                 color: gray;
                 border-radius: 2px;
@@ -157,6 +172,7 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
             .addfile{
                 background-color: rgb(231, 229, 229);
                 margin: 2px;
+                margin-left: 5px;
                 font-size: 20px;
                 color: gray;
                 border-radius: 2px;

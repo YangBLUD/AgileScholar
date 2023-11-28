@@ -62,7 +62,7 @@ const handleChange = (val) => {
 .main{
     position: relative;
     left: 0px;
-    width: 85%;
+    width: 89%;
     .label{
         position: relative;
         left: 0px;

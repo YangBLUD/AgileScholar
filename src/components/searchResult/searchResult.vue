@@ -28,16 +28,18 @@
                 <div class="middle-right-sum">
                     <div class="first-line">
                         <div class="search-num">
-                            98,230 Results for: All: ai
+                            98,230 
+                            <div style="font-weight: 300;">Results for: </div>
+                            All: ai
                         </div>
                         <div class="sum-button">
-                            <el-button type="primary" plain>Edit Search</el-button>
-                            <el-button type="success" plain>Save Search</el-button>
-                            <el-button type="info" plain>RSS</el-button>
+                            <el-button type="primary" class="button">Edit Search</el-button>
+                            <el-button type="success" class="button">Save Search</el-button>
+                            <el-button type="info" class="button">RSS</el-button>
                         </div>
                     </div>
                     <div class="sum-text">
-                        Searched The ACM Full-Text Collection (718,901 records)|Expand your search to The ACM Guide to Computing Literature (3,605,660 records)
+                        <div class="text-first">Searched The ACM Full-Text Collection (718,901 records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
                     </div>
                 </div>
                 <div class="search-result-tabs">
@@ -54,7 +56,26 @@
                     </div>
                 </div>
                 <div class="search-result-checkbox">
-                    筛选器
+                    <div class="shai-checkbox">
+                        <el-checkbox />
+                    </div>
+                    <div class="select-all">Select all</div>
+                    <div class="per-page">per page:20</div>
+                    <div class="drop-choice">
+                        <el-col :span="8">
+                            <el-dropdown trigger="click">
+                                <span class="el-dropdown-link">Relevance</span>
+                                <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item >Earliest</el-dropdown-item>
+                                    <el-dropdown-item >Latest</el-dropdown-item>
+                                    <el-dropdown-item >Downloaded</el-dropdown-item>
+                                    <el-dropdown-item >Cited</el-dropdown-item>
+                                </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </el-col>
+                    </div>
                 </div>
                 <div class="middle-right-list">
                     <div class="paper-list">
@@ -104,8 +125,6 @@ ul{
     list-style: none;
 }
 .main{
-    /* display: flex; */
-    /* justify-content: center; */
     list-style-type: none;}
 .second{
     top: 0px;
@@ -114,6 +133,7 @@ ul{
     background-color: aqua;
     display: flex;
     padding: 0px 100px;
+    margin-bottom: 50px;
     .second-search-results{
         padding: 40px 80px;
         font-size: 50px;
@@ -171,19 +191,32 @@ ul{
                 .search-num{
                     font-size: 20px;
                     font-weight: 400;
+                    display: flex;
                 }
                 .sum-button{
                     position: relative;
                     left: 20px;
                     display: flex;
                     width: 70%;
+                   
                 }
             }
             .sum-text{
                 font-size: 15px;
                 font-weight: 100;
                 height: 70px;
+                width: 100%;
                 border-bottom:1px solid #e6e6e6;
+                display: flex;
+                .text-first{
+                    width: 43%;
+                }
+                .text-second{
+                    position: relative;
+                    color: #0077c2;
+                    left: 0px;
+                    width: 55%
+                }
             }
         }
         .search-result-tabs{
@@ -207,7 +240,37 @@ ul{
         }
         .search-result-checkbox{
             height: 70px;
-            background-color: rgb(42, 79, 165);
+            display: flex;
+            border-bottom: 1px solid #fdfdfd;
+            .shai-checkbox{
+                margin-top: 20px;
+                position: relative;
+                left: 5px;
+            }
+            .select-all{
+                margin: 25px 20px;
+                font-size: 15px;
+                color: #e6e6e6;
+                font-weight: 500;
+                width: 160px;
+            }
+            .per-page{
+                margin-top: 25px;
+                position: relative;
+                padding-right: 10px;
+                left: 50%;
+                height: 30px;
+                font-size: 13px;
+                font-weight: 600;
+                color: black;
+                border-right: 1px solid #e6e6e6;
+            }
+            .drop-choice{
+                position: relative;
+                left: 52%;
+                width: 20%;
+                margin-top: 28px;
+            }
             
         }
         .middle-right-list{
@@ -231,7 +294,7 @@ ul{
                         height: 100%;
                         width: 95%;
                         background-color: white;
-                        box-shadow: 0 0 5px 1px #999;
+                        box-shadow: 0 0.3125rem 0.5rem rgba(0,0,0,.1);
                     }
 
                 }
