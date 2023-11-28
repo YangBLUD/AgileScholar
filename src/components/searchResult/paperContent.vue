@@ -19,7 +19,8 @@
 Software Engineering for AI
             </div>
             <div class="writer">
-                Ivica Crnkovic
+                <img src="../../assets/test.jpg" class="writer-pic"/>
+                <div class="name">Ivica Crnkovic</div>
             </div>
             <div class="abstract">
                 The aim of the conference is to bring together researchers and practitioners in software
@@ -70,7 +71,7 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
             font-weight:500;
         }
         .time{
-            font-size: 15px;
+            font-size: 12px;
             color: gray;
         }
     }
@@ -87,18 +88,31 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
     position: relative;
     left: 10%;
     height: 100%;
+    /* width: 95%; */
     .title{
         color: #5f99cc;
         font-size: 18px;
         font-weight: 400;
+        width: 87%;
     }
     .writer{
-        margin: 15px 0;
-        color: #806f5d;
-        text-decoration: underline;
+        display: flex;
+        .writer-pic{
+
+            margin: 10px 5px 10px 0px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid;
+        }
+        .name{
+            margin: 15px 0;
+            color: #806f5d;
+            text-decoration: underline;
+        }
     }
     .abstract{
-        width: 90%;
+        width: 87%;
         white-space: pre-wrap;
     }
     .bottom{

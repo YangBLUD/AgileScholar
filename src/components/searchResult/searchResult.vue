@@ -5,12 +5,10 @@
                 <span>Search Results</span>
             </div>
             <div class="second-search-form">
-                <el-form >
-                    <el-form-item>
-                        <el-input class="el-search"/>
-                        <el-button :icon="Search" />
-                    </el-form-item>
-                </el-form>
+                <div class='content-search'>
+					<input type="" name="" placeholder="搜索" class="content-search-input">
+					<el-icon :size='22' color='#808080'><search /></el-icon>
+				</div>
             </div>
         </div>
         <div class="middle">
@@ -28,7 +26,19 @@
             <div class="middle-right">
                 <!-- 右侧列表 -->
                 <div class="middle-right-sum">
-                    总览
+                    <div class="first-line">
+                        <div class="search-num">
+                            98,230 Results for: All: ai
+                        </div>
+                        <div class="sum-button">
+                            <el-button type="primary" plain>Edit Search</el-button>
+                            <el-button type="success" plain>Save Search</el-button>
+                            <el-button type="info" plain>RSS</el-button>
+                        </div>
+                    </div>
+                    <div class="sum-text">
+                        Searched The ACM Full-Text Collection (718,901 records)|Expand your search to The ACM Guide to Computing Literature (3,605,660 records)
+                    </div>
                 </div>
                 <div class="search-result-tabs">
                     <div class="nav-container">
@@ -50,7 +60,7 @@
                     <div class="paper-list">
                         <div class="list-item">
                             <div class="checkbox">
-                                <el-checkbox v-model="checked3"/>
+                                <el-checkbox />
                             </div>
                             <div class="context">
                                 <Content></Content>
@@ -58,7 +68,7 @@
                         </div>
                         <div class="list-item">
                             <div class="checkbox">
-                                <el-checkbox v-model="checked3"/>
+                                <el-checkbox />
                             </div>
                             <div class="context">
                                 <Content></Content>
@@ -66,7 +76,7 @@
                         </div>
                         <div class="list-item">
                             <div class="checkbox">
-                                <el-checkbox v-model="checked3"/>
+                                <el-checkbox />
                             </div>
                             <div class="context">
                                 <Content></Content>
@@ -100,7 +110,7 @@ ul{
 .second{
     top: 0px;
     height: 150px;
-    width: 100%;
+    width: 87%;
     background-color: aqua;
     display: flex;
     padding: 0px 100px;
@@ -117,9 +127,28 @@ ul{
         font-size: 50px;
         font-weight: 600;
         color: white;
-        .el-search{
-           height: 55px;
-           width: 600px; 
+
+        .content-search{
+            position: relative;
+            left: 180px;
+            display: flex;
+            align-items: center;
+            padding:5px 10px;
+            width: 450px;
+            height: 45px;
+            background: #F0F2F4;
+            border-radius: 8px;
+            .content-search-input{
+                padding:0 10px;
+                width:530px;
+                height: 50px;
+                border:0;
+                border-radius: 8px;
+                background: #F0F2F4;
+                color:#808080;
+                font-size:16px;
+                outline: none;
+            }
         }
     }
 }
@@ -127,18 +156,35 @@ ul{
     width: 1200px;
     height: 100px;
     margin: 0 auto;
-    background-color: antiquewhite;
     display: flex;
     .middle-left{
         width: 25%;
-        background-color: azure;
     }
     .middle-right{
         width: 75%;
-        background-color: blueviolet;
         .middle-right-sum{
             height: 100px;
-            background-color: brown;
+            
+            display: inline;
+            .first-line{
+                display: flex;
+                .search-num{
+                    font-size: 20px;
+                    font-weight: 400;
+                }
+                .sum-button{
+                    position: relative;
+                    left: 20px;
+                    display: flex;
+                    width: 70%;
+                }
+            }
+            .sum-text{
+                font-size: 15px;
+                font-weight: 100;
+                height: 70px;
+                border-bottom:1px solid #e6e6e6;
+            }
         }
         .search-result-tabs{
             height: 50px;
@@ -172,8 +218,7 @@ ul{
                     margin: 20px 0px;
                     width: 100%;
                     height: 250px; 
-                    display: flex;
-                    box-shadow: 0 0 5px 1px #999;
+                    display: flex;                   
                     .checkbox{
                         position: relative;
                         left: 5px;
@@ -186,6 +231,7 @@ ul{
                         height: 100%;
                         width: 95%;
                         background-color: white;
+                        box-shadow: 0 0 5px 1px #999;
                     }
 
                 }
