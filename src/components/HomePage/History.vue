@@ -122,4 +122,11 @@ function handleClose() {
     background-color: #b7cbff;
   }
 }
+:deep(.el-table) {
+  background-color: #f0f4ff;
+  color: black;
+  &:hover {
+    background-color: #b7cbff;
+  }
+}
 </style>

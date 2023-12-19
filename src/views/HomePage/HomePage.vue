@@ -155,7 +155,8 @@ import TopNav from "../../components/HomePage/TopNav.vue";
 import Footer from "../../components/HomePage/Footer.vue";
 import { Search, Right } from "@element-plus/icons-vue";
 import { useRouter, useRoute } from "vue-router";
-import { Store } from "vuex";
+import { useStore } from "vuex";
+const Store = useStore();
 //窗口计算
 const router = useRouter();
 const route = useRoute();
@@ -192,7 +193,13 @@ const messages = [
 const searchText = ref("");
 
 const performSearch = () => {
-  alert(searchText.value);
+  if (searchText.value === "") return;
+  const data = {
+    searchType: 1,
+    keyword: searchText.value,
+  };
+  Store.commit("setGeneralSearch", data);
+  router.push("");
 };
 
 const clearSearch = () => {
@@ -573,6 +580,11 @@ function goArticle(id) {
   });
 }
 function goClassification(value) {
+  const data = {
+    keyword: value,
+    searchType: 3,
+  };
+  Store.commit("setGeneralSearch", data);
   router.push({
     path: "",
   });

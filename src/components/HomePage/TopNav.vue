@@ -16,7 +16,12 @@
       </li>
       <li style="width: 55%; margin-right: 0">
         <div style="float: right">
-          <el-input v-model="input" class="w-50 m-2" size="large">
+          <el-input
+            v-model="input"
+            class="w-50 m-2"
+            size="large"
+            @keyup.enter="performSearch"
+          >
             <template #prefix>
               <el-icon class="el-input__icon"><search /></el-icon>
             </template>
@@ -46,15 +51,17 @@ import Login from "./Login.vue";
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
-import History from "./History.vue";
+import History from "./history.vue";
 import { useStore } from "vuex";
 import { ElInput, ElMessage } from "element-plus";
+import { useRouter, useRoute } from "vue-router";
 const showLogin = ref(false);
 const showRegister = ref(false);
 const showStar = ref(false);
 const showHistory = ref(false);
 const input = ref("");
 const Store = useStore();
+const router = useRouter();
 const have_user_info = ref(false);
 watch(
   () => Store.getters.getLoginState,
@@ -85,6 +92,18 @@ function refresh() {
   showStar.value = false;
   showHistory.value = false;
 }
+const performSearch = () => {
+  if (input.value === "") {
+    return;
+  }
+  const data = {
+    searchType: 1,
+    keyword: input.value,
+  };
+  Store.commit("setGeneralSearch", data);
+  input.value = "";
+  router.push("");
+};
 </script>
 
 <style scoped>

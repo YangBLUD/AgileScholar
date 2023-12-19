@@ -12,12 +12,12 @@
         <el-radio-group
           v-model="searchType"
           size="large"
-          change="clearAndChange"
+          @change="clearAndChange"
         >
-          <el-radio-button label="Articles" value="0" />
-          <el-radio-button label="Authors" value="1" />
-          <el-radio-button label="Institutions" value="2" />
-          <el-radio-button label="Subjects" value="3" />
+          <el-radio-button :label="0">Articles</el-radio-button>
+          <el-radio-button :label="1">Authors</el-radio-button>
+          <el-radio-button :label="2">Institutions</el-radio-button>
+          <el-radio-button :label="3">Subjects</el-radio-button>
         </el-radio-group>
       </div>
       <div class="keywords-select">
@@ -37,10 +37,62 @@
                     <el-option value="NOT">NOT</el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="3">
+                <el-col :span="4">
                   <el-select v-model="props.row.select" style="width: 100%">
-                    <el-option value="Theme">Theme</el-option>
-                    <el-option value="Author">Author</el-option>
+                    <el-option v-if="searchType === 0" value="Title"
+                      >Title</el-option
+                    >
+                    <el-option v-if="searchType === 0" value="Abstract"
+                      >Abstract</el-option
+                    >
+                    <el-option v-if="searchType === 0" value="Domain"
+                      >Domain</el-option
+                    >
+                    <el-option v-if="searchType === 0" value="Author"
+                      >Author</el-option
+                    >
+                    <el-option v-if="searchType === 0" value="Source"
+                      >Source</el-option
+                    >
+                    <el-option v-if="searchType === 1" value="Name"
+                      >Name</el-option
+                    >
+                    <el-option v-if="searchType === 1" value="Domain"
+                      >Domain</el-option
+                    >
+                    <el-option v-if="searchType === 1" value="Institution"
+                      >Institution</el-option
+                    >
+                    <el-option v-if="searchType === 1" value="Orcid"
+                      >Orcid</el-option
+                    >
+                    <el-option v-if="searchType === 2" value="Name"
+                      >Name</el-option
+                    >
+                    <el-option v-if="searchType === 2" value="Acronyms"
+                      >Acronyms</el-option
+                    >
+                    <el-option v-if="searchType === 2" value="Country Code"
+                      >Country Code</el-option
+                    >
+                    <el-option v-if="searchType === 2" value="Institution Type"
+                      >Type</el-option
+                    >
+                    <el-option v-if="searchType === 2" value="Domain"
+                      >Domain</el-option
+                    >
+                    <el-option v-if="searchType === 2" value="Ror"
+                      >Ror</el-option
+                    >
+                    <el-option v-if="searchType === 3" value="Name"
+                      >Name</el-option
+                    >
+                    <el-option v-if="searchType === 3" value="Description"
+                      >Description</el-option
+                    >
+                    <el-option v-if="searchType === 3" value="Concept Level"
+                      >Level</el-option
+                    >
                   </el-select>
                 </el-col>
                 <el-col :span="9">
@@ -115,21 +167,56 @@
 import { reactive } from "vue";
 import { ref, onMounted } from "vue";
 import TopNav from "../../components/HomePage/TopNav.vue";
+import { ElDialog, ElForm, ElInput, ElButton, ElMessage } from "element-plus";
 import { el } from "element-plus/es/locale";
-const searchType = ref(1);
+import { useStore } from "vuex";
+const Store = useStore();
+const searchType = ref(0);
 //搜索类型选择
-function clearAndChange() {}
+function clearAndChange() {
+  //实际上操作的是同一个list
+  if (searchType.value === 0) {
+    list.value = articleList.value;
+  } else if (searchType.value === 1) {
+    list.value = authorList.value;
+  } else if (searchType.value === 2) {
+    list.value = institutionList.value;
+  } else if (searchType.value === 3) {
+    list.value = subjectList.value;
+  }
+}
 //过滤器选择
-const list = ref([
-  { content: "", select: "Theme", type: "AND", clear: "0" },
-  { content: "", select: "Author", type: "AND", clear: "0" },
+const list = ref([{ content: "", select: "Title", type: "AND", clear: "0" }]);
+const articleList = ref([
+  { content: "", select: "Title", type: "AND", clear: "0" },
+  { content: "", select: "Abstract", type: "AND", clear: "0" },
 ]);
-
+const authorList = ref([
+  { content: "", select: "Name", type: "AND", clear: "0" },
+  { content: "", select: "Domain", type: "AND", clear: "0" },
+]);
+const institutionList = ref([
+  { content: "", select: "Name", type: "AND", clear: "0" },
+  { content: "", select: "Acronyms", type: "AND", clear: "0" },
+]);
+const subjectList = ref([
+  { content: "", select: "Name", type: "AND", clear: "0" },
+  { content: "", select: "Description", type: "AND", clear: "0" },
+]);
+list.value = articleList.value;
 function addRow(row) {
-  if (list.value.length >= 5) {
+  if (list.value.length >= 7) {
     return;
   }
-  list.value.push({ content: "", select: "Theme", type: "AND", clear: "0" });
+  if (searchType.value === 0) {
+    list.value.push({ content: "", select: "Title", type: "AND", clear: "0" });
+  } else if (searchType.value === 1) {
+    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+  } else if (searchType.value === 2) {
+    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+  } else if (searchType.value === 3) {
+    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+  }
 }
 
 function removeRow(row) {
@@ -164,19 +251,76 @@ const shortcuts = [
   },
 ];
 function search() {
-  if (timeSelect.value == "AllDates") {
-    var begin = "";
-    var end = "";
-  } else {
-    var begin = timePick.value[0];
-    var end = timePick.value[1];
+  let flag = false;
+  for (var i = 0; i < list.value.length; i++) {
+    if (list.value[i].content != "") {
+      flag = true;
+    }
   }
+  if (!flag) {
+    ElMessage.error("Please enter the keywords!");
+    return;
+  }
+  var begin;
+  var end;
+  // 根据 type 字段进行分类整合
+  const and_list = list.value
+    .filter((item) => item.type === "AND")
+    .map((item) => {
+      const { type, ...rest } = item;
+      return rest;
+    });
+
+  const or_list = list.value
+    .filter((item) => item.type === "OR")
+    .map((item) => {
+      const { type, ...rest } = item;
+      return rest;
+    });
+
+  const not_list = list.value
+    .filter((item) => item.type === "NOT")
+    .map((item) => {
+      const { type, ...rest } = item;
+      return rest;
+    });
+  if (timeSelect.value == "AllDates") {
+    begin = "0";
+    end = "0";
+  } else {
+    begin = timePick.value[0];
+    end = timePick.value[1];
+  }
+  const data = {
+    searchType: searchType.value,
+    and_list: and_list,
+    or_list: or_list,
+    not_list: not_list,
+    start_time: begin,
+    end_time: end,
+  };
+  Store.commit("setAdvancedSearch", data);
 }
 function clearInf() {
-  list.value = [
-    { content: "", select: "Theme", type: "AND", clear: "0" },
-    { content: "", select: "Author", type: "AND", clear: "0" },
+  searchType.value = 0;
+  //还原成开始的列表
+  articleList.value = [
+    { content: "", select: "Title", type: "AND", clear: "0" },
+    { content: "", select: "Abstract", type: "AND", clear: "0" },
   ];
+  authorList.value = [
+    { content: "", select: "Name", type: "AND", clear: "0" },
+    { content: "", select: "Domain", type: "AND", clear: "0" },
+  ];
+  institutionList.value = [
+    { content: "", select: "Name", type: "AND", clear: "0" },
+    { content: "", select: "Acronyms", type: "AND", clear: "0" },
+  ];
+  subjectList.value = [
+    { content: "", select: "Name", type: "AND", clear: "0" },
+    { content: "", select: "Description", type: "AND", clear: "0" },
+  ];
+  list.value = articleList.value;
   timeSelect.value = "AllDates";
   timePick.value = "";
 }
@@ -199,7 +343,7 @@ function clearInf() {
   float: right;
 }
 .header {
-  margin: 20px 0;
+  margin: 40px 0;
   padding-left: 10px;
 }
 .type-select {

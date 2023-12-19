@@ -83,6 +83,8 @@ function handleSubmit() {
           user_id: data.user_id,
           user_email: data.email,
           token: data.token,
+          claimed_scholar_id: data.claimed_scholar_id,
+          claimed_scholar_name: data.claimed_scholar_name,
         };
         Store.commit("loginSuccess", user);
         ElMessage.success("Welcome!");

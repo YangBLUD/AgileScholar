@@ -106,7 +106,7 @@ const treeProps = {
 };
 let favorites_list = ref([
   {
-    name: "谢秉书没牛牛1",
+    name: "test",
     list: [
       {
         star_id: 2,
@@ -162,72 +162,6 @@ let favorites_list = ref([
       },
     ],
     folder_id: 1,
-    num: 2,
-  },
-  {
-    name: "谢秉书没牛牛2",
-    list: [
-      {
-        star_id: 4,
-        type: 0,
-        time: "2023-12-08 15:57:16",
-        folder_id: 2,
-        folder_name: "谢秉书没牛牛2",
-        data: {
-          title:
-            "Multiuser OFDM with adaptive subcarrier, bit, and power allocation",
-          id: "2106749358",
-          cited_count: 2550,
-          author_all: [
-            {
-              name: "Cheong Yui Wong",
-              id: "5054683990",
-            },
-            {
-              name: "R.S. Cheng",
-              id: "5049524680",
-            },
-            {
-              name: "K.B. Lataief",
-              id: "5036836941",
-            },
-            {
-              name: "R.D. Murch",
-              id: "5004541948",
-            },
-          ],
-          publication_date: "1999-01-01",
-        },
-      },
-      {
-        star_id: 3,
-        type: 1,
-        time: "2023-12-08 15:57:01",
-        folder_id: 2,
-        folder_name: "谢秉书没牛牛2",
-        data: {
-          display_name: "Cheong Yui Wong",
-          id: "5054683990",
-          most_cited_work:
-            "Multiuser OFDM with adaptive subcarrier, bit, and power allocation (1999)",
-          cited_by_count: 2680,
-          summary_stats: {
-            cited_by_count: 2680,
-            "2yr_i10_index": 0,
-            h_index: 3,
-            i10_index: 3,
-            oa_percent: 50.0,
-            "2yr_mean_citedness": 0,
-            works_count: 4,
-            "2yr_works_count": 0,
-            "2yr_h_index": 0,
-            "2yr_cited_by_count": 40,
-          },
-          orcid: null,
-        },
-      },
-    ],
-    folder_id: 2,
     num: 2,
   },
 ]);
