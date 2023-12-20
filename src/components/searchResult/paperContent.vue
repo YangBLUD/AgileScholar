@@ -1,5 +1,5 @@
 <template>
-    <div class="main">
+    <div class="main" @click="console.log(info.title)">
         <div class="left">
             <div class="timer">
                 <div class="state">
@@ -15,38 +15,35 @@
         </div>
         <div class="right">
             <div class="title">
-                CAIN '22:Proceedings of the 1st International Conference on AI Engineering:
-Software Engineering for AI
+                {{ props.info.title }}
             </div>
-            <div class="writer">
-                <img src="../../assets/test.jpg" class="writer-pic"/>
-                <div class="name">Ivica Crnkovic</div>
+            <div class="wri_list" >
+                <div class="writer" v-for="item in props.info.author_all.slice(0,3)">
+                    <img src="../../assets/test.jpg" class="writer-pic"/>
+                    <div class="name">{{ item }}</div>
+                </div>
             </div>
             <div class="abstract">
-                The aim of the conference is to bring together researchers and practitioners in software
-engineering,in data science and Al,and to build up a community that will target the new
-challenges emerging in Software Engineering for Al-enabled systems.In the ..
+                {{ props.info.abstract }}
             </div>
             <div class="bottom">
                 <div class="data">
                     <div class="inference">
                         <el-icon><Edit /></el-icon>
-                        <div class="inf-num">31</div>
+                        <div class="inf-num">{{ props.info.cited_count }}</div>
                     </div>
                     <div class="trend">
                         <el-icon><DocumentAdd /></el-icon>
-                        <div class="tr-num">5093</div>
+                        <div class="tr-num">{{ props.info.type_num }}</div>
                     </div>
-                </div>
-                <div class="highlight">
-                    Highlight
                 </div>
                 <div class="choice">
                     <div class="introduce">
-                        <el-icon><Edit /></el-icon>
+                        <el-icon @click="gotolink"><Link /></el-icon>
                     </div>
-                    <div class="addfile">
-                        <el-icon><DocumentAdd /></el-icon>
+                    <div class="introduce">
+                        
+                        <stardialog :folderlist = "folderlist" :token = "user_token" :paper_id="paper_id" :type="type"></stardialog>
                     </div>
                 </div>
             </div>
@@ -54,7 +51,64 @@ challenges emerging in Software Engineering for Al-enabled systems.In the ..
 </div>
 </template>
 <script setup>
-import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
+import { Edit ,DocumentAdd,StarFilled,Link} from "@element-plus/icons-vue";
+import { defineProps } from 'vue';
+import { reactive, ref, onMounted, onUnmounted ,onBeforeMount} from "vue";
+import axios from "axios";
+import stardialog from "./stardialog.vue";
+import { useStore } from "vuex";
+const Store = useStore();
+onMounted(() => {
+    //addstar();
+});
+const user_token = ref("eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjEwNzEzNy44MDk2MDc3fQ.rVGoTbaiH3XLZudPCxShFXnWg72Yiykuyi0Jn-XPrIE");
+//用于收藏
+const paper_id = ref("2106749358");
+const type = ref(0);
+const folder_id = ref(2);
+const folderlist = ref([{"folder_id": 1,"folder_name": "谢秉书没牛牛1","num": 2},{"folder_id": 2,"folder_name": "谢秉书没牛牛2","num": 2}]);
+function getfold(){
+    return;
+    axios({
+      url: "http://122.9.5.156:8000/api/v1/home/get_folders",
+      method: "post",
+      data: JSON.stringify({    
+            token :user_token,
+      }),
+    })
+      .then((res) => {
+            console.log(res);
+            folderlist = res.data.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
+function addstar(){
+    axios({
+      url: "http://122.9.5.156:8000/api/v1/home/star",
+      method: "post",
+      data: JSON.stringify({    
+            token :user_token,
+            "paper_id": paper_id,
+            "type": type,
+            "folder_id": folder_id,
+      }),
+    })
+      .then((res) => {
+            console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
+//用于链接的分享
+function gotolink(){
+    window.open(props.info.landing_page_url);
+}
+const props = defineProps({
+    info:Object,
+})
 </script>
 <style scoped>
 .main{
@@ -94,9 +148,14 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
         font-size: 18px;
         font-weight: 400;
         width: 87%;
+        cursor: pointer;
     }
-    .writer{
+    .wri_list{
+        display: flex   ;
+        .writer{
         display: flex;
+        cursor: pointer;
+        margin-right: 20px;
         .writer-pic{
 
             margin: 10px 5px 10px 0px;
@@ -111,6 +170,8 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
             text-decoration: underline;
         }
     }
+    }
+    
     .abstract{
         width: 87%;
         white-space: pre-wrap;
@@ -126,56 +187,61 @@ import { Edit ,DocumentAdd} from "@element-plus/icons-vue";
             position: relative;
             left: 0px;
             display: flex;
-            width: 17%;
+            width: 22%;
             border-right: 1px solid #e6e6e6;
             font-size: 18px;
             .inference{
                 margin-top: 5px;
+                margin-right: 10px;
                 display: flex;
                 color: #0077c2;
+                font-size: 25px;
                 .inf-num{
-                    margin-top: -2px;
-                    font-size: 15px;
+                    margin-top:3px;
+                    font-size: 17px;
                     margin-left: 5px;
                 }
+            }
+            .inference:hover{
+                cursor:pointer;
+                transform:translate(1px,-1px)
             }
             .trend{
                 margin-top: 5px;
+                margin-right: 10px;
                 display: flex;
                 color: #974dff;
+                font-size: 25px;
                 .tr-num{
-                    margin-top: -2px;
-                    font-size: 15px;
+                    margin-top:3px;
+                    font-size: 17px;
                     margin-left: 5px;
                 }
             }
-        }
-        .highlight{
-            position: relative;
-            color: #786e6d;
-            margin-top: 3px;
-            left: 10px;
-            width: 10%;
+            .trend:hover{
+                cursor:pointer;
+                transform:translate(1px,-1px)
+            }
         }
         .choice{
             position: relative;
-            left:50%;
+            left:45%;
             display: flex;
             .introduce{
                 background-color: rgb(231, 229, 229);
-                margin: 2px;
+                margin: 5px;
                 margin-left: 5px;
-                font-size: 20px;
+                font-size: 25px;
                 color: gray;
                 border-radius: 2px;
+                height: 30px;
+                width: 30px;
+                display: flex;
+                justify-content:center;
+                align-items:center;
             }
-            .addfile{
-                background-color: rgb(231, 229, 229);
-                margin: 2px;
-                margin-left: 5px;
-                font-size: 20px;
-                color: gray;
-                border-radius: 2px;
+            .introduce:hover{
+                background-color: #d7d7d7;
             }
         }
     }

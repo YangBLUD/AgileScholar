@@ -6,21 +6,15 @@
             </div>
             <div class="second-search-form">
                 <div class='content-search'>
-					<input type="" name="" placeholder="搜索" class="content-search-input">
+					<input type="" name="" placeholder="Search" class="content-search-input" v-model="searchcontent">
 					<el-icon :size='22' color='#808080'><search /></el-icon>
 				</div>
             </div>
         </div>
         <div class="middle">
             <div class="middle-left">
-                <div class="middle-left-people">
-                    <Droplist></Droplist>
-                </div>
-                <div class="middle-left-publications">
-                    <Droplist></Droplist>
-                </div>
-                <div class="middle-left-conferences">
-                    <Droplist></Droplist>
+                <div class="middle-left-people" :key="index" v-for="(item,index) in agg">
+                    <Droplist :agginfo="item"/>
                 </div>
             </div>
             <div class="middle-right">
@@ -28,14 +22,9 @@
                 <div class="middle-right-sum">
                     <div class="first-line">
                         <div class="search-num">
-                            98,230 
+                            {{ totalpage }} 
                             <div style="font-weight: 300;">Results for: </div>
-                            All: ai
-                        </div>
-                        <div class="sum-button">
-                            <el-button type="primary" class="button">Edit Search</el-button>
-                            <el-button type="success" class="button">Save Search</el-button>
-                            <el-button type="info" class="button">RSS</el-button>
+                            All: {{ search_title }}
                         </div>
                     </div>
                     <div class="sum-text">
@@ -45,14 +34,14 @@
                 <div class="search-result-tabs">
                     <div class="nav-container">
                         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-                            <el-tab-pane label="RESULTS" name="first"></el-tab-pane>
-                            <el-tab-pane label="PERIODICALS" name="second"></el-tab-pane>
-                            <el-tab-pane label="SOFTWARE" name="third"></el-tab-pane>
-                            <el-tab-pane label="PEOPLE" name="fourth"></el-tab-pane>
+                            <el-tab-pane label="RESULTS" name="RESULTS" ></el-tab-pane>
+                            <el-tab-pane label="SCHOLARS" name="SCHOLARS"></el-tab-pane>
+                            <el-tab-pane label="INSTITUTIONS" name="INSTITUTIONS"></el-tab-pane>
+                            <el-tab-pane label="SUBJECTS" name="SUBJECTS"></el-tab-pane>
                         </el-tabs>
                     </div>
                     <div class="nav-result">
-                        Showing 1 - 20 of 98,218 Results
+                        Showing {{ search_from }} - {{ search_to }} of {{ totalpage }} Results
                     </div>
                 </div>
                 <div class="search-result-checkbox">
@@ -60,17 +49,23 @@
                         <el-checkbox />
                     </div>
                     <div class="select-all">Select all</div>
-                    <div class="per-page">per page:20</div>
-                    <div class="drop-choice">
+                    <div class="per-page">per page:
+                        <div v-if="papernum == 10"  class="page-num-active" >10  </div>
+                        <div v-else class="page-num-com"  @click="changeSize(10)">10  </div>
+
+                        <div v-if="papernum == 20" class="page-num-active">20  </div>
+                        <div v-else class="page-num-com"  @click="changeSize(20)">20  </div>
+
+                        <div v-if="papernum == 30" class="page-num-active" >30  </div>
+                        <div v-else class="page-num-com"  @click="changeSize(30)">30  </div>
+                    </div>
+                    <div class="drop-choice" >
                         <el-col :span="8">
-                            <el-dropdown trigger="click">
+                            <el-dropdown trigger="click" @click="dropsort()">
                                 <span class="el-dropdown-link">Relevance</span>
-                                <template #dropdown>
+                                <template #dropdown >
                                 <el-dropdown-menu>
-                                    <el-dropdown-item >Earliest</el-dropdown-item>
-                                    <el-dropdown-item >Latest</el-dropdown-item>
-                                    <el-dropdown-item >Downloaded</el-dropdown-item>
-                                    <el-dropdown-item >Cited</el-dropdown-item>
+                                    <el-dropdown-item :key=index v-for="(item,index) in sortlist">{{ item.text }}</el-dropdown-item>
                                 </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
@@ -78,48 +73,286 @@
                     </div>
                 </div>
                 <div class="middle-right-list">
-                    <div class="paper-list">
+                    <div class="paper-list" :key="index" v-for="(item,index) in paper_list">
                         <div class="list-item">
                             <div class="checkbox">
                                 <el-checkbox />
                             </div>
-                            <div class="context">
-                                <Content></Content>
-                            </div>
-                        </div>
-                        <div class="list-item">
-                            <div class="checkbox">
-                                <el-checkbox />
-                            </div>
-                            <div class="context">
-                                <Content></Content>
-                            </div>
-                        </div>
-                        <div class="list-item">
-                            <div class="checkbox">
-                                <el-checkbox />
-                            </div>
-                            <div class="context">
-                                <Content></Content>
+                            <div class="context" >
+                                <Content :info="item"/>
                             </div>
                         </div>
                     </div>
+                    <div class="bottom-page">
+                        <div class="example-pagination-block">
+                        <el-pagination layout="prev, pager, next" :total="totalpage" v-model:current-page="currentPage"
+                        @current-change="currentChange"
+                        @prev-click="prevClick"
+                        @next-click="nextClick"
+                        />
+                    </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
+        </div>   
     </div>
 </template>
 <script setup>
+import { reactive, ref, onMounted, onUnmounted ,onBeforeMount} from "vue";
+import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
 import { Search} from "@element-plus/icons-vue";
-import { ref } from 'vue';
+import { useStore } from "vuex";
+const Store = useStore();
+//搜索框
+const searchcontent = ref("adasd");
+//初始化函数
+onBeforeMount(() => {
+  //搜索框
+  //searchcontent = Store.getters.and_list[0].content;
+  tst();
+  totalpage.value =100; //获取总数
+  dropsort();
+  console.log(sortlist.value);
+});
+//额外的请求参数
+const search_first_search = ref(1)
+const search_type = ref(0)
+const search_work_clustering = ref(1)
+const search_author_clustering = ref(1)
+const search_size = ref(20)
+const search_from  = ref(0)
+const search_to = ref(20)
+const search_sort = ref(-1)
+const search_extend_list = ref([])
 
+//用于论文列表的渲染
+const paper_list = ref([])
+//用于第一行的渲染
+const search_title = ref("ai")
+
+//下一行的滑动
 const activeName = ref('first');
 const handleClick = (tab, event) => {
+    if(tab.props.name == "RESULT"){
+        search_type.value = 0;
+    }
+    else if(tab.props.name == "SCHOLARS"){
+        search_type.value = 1;
+    }
+    else if(tab.props.name == "INSTITUTIONS"){
+        search_type.value = 2;
+    }
+    else if(tab.props.name == "SUBJECTS"){
+        search_type.value = 3;
+    }
+    getpaperlist();
 };
+
+function getpaperlist(){
+    return;
+    axios({
+      url: "http://122.9.5.156:8000/api/v1/search_result/search",
+      method: "post",
+      data: JSON.stringify({
+            token :Store.getters.getUserinfo.token,
+
+            search_type : search_type,
+            and_list : Store.getters.getSearch.and_list,
+            or_list : Store.getters.getSearch.or_list,
+            not_list : Store.getters.getSearch.not_list,
+            start_time : Store.getters.getSearch.start_time,
+            end_time : Store.getters.getSearch.end_time,
+
+            first_search : search_first_search,
+            work_clustering : search_work_clustering,
+            author_clustering : search_author_clustering,
+            size : search_size,
+            from : search_from,
+            sort : search_sort,
+            extend_list : search_extend_list,
+      }),
+    })
+      .then((res) => {
+        paper_list = res.data.message.data.result;
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
+//选择显示论文的条数
+const papernum = ref(2)
+function changeSize(size){
+    papernum.value = size;
+    getpaperlist();
+}
+//翻页功能的实现
+const currentPage = ref(1);
+const totalpage = ref(0);
+const user_article_content = ref(0);
+const currentChange = () => {
+    user_article_content.value = currentPage.value;
+    search_from.value = (currentPage.value-1) * papernum.value;
+    search_to.value = (currentPage.value ) * papernum.value;
+  };
+  
+  //点击左边一页, 切换呈现<新的页码-1>号子数组
+  const prevClick = () => {
+    currentPage.value - 1;
+    user_article_content.value = currentPage.value;
+    search_from.value = (currentPage.value-1) * papernum.value;
+    search_to.value = (currentPage.value ) * papernum.value;
+  };
+  
+  //点击向右一页, 切换呈现<新的页码+1>号子数组
+  const nextClick = () => {
+    currentPage.value + 1;
+    user_article_content.value = currentPage.value;
+    search_from.value = (currentPage.value-1) * papernum.value;
+    search_to.value = (currentPage.value ) * papernum.value;
+  };
+
+//下拉框排序
+const sortlist = ref([])
+function dropsort(){
+    sortlist.value.splice(0, sortlist.length);
+    if(search_type.value == 0){
+        sortlist.value.push({id:0,text:"Cited least"});
+        sortlist.value.push({id:1,text:"Cited most"});
+        sortlist.value.push({id:2,text:"Latest"});
+        sortlist.value.push({id:3,text:"Earliest"});
+        sortlist.value.push({id:4,text:"Title down"});
+        sortlist.value.push({id:5,text:"Title up"});
+    }
+    else if(search_type.value == 1 ||search_type.value == 2){
+        sortlist.value.push({id:0,text:"Cited least"});
+        sortlist.value.push({id:1,text:"Cited most"});
+        sortlist.value.push({id:2,text:"Index down"});
+        sortlist.value.push({id:3,text:"Index up"});
+        sortlist.value.push({id:4,text:"More than 10 in 2"});
+        sortlist.value.push({id:5,text:"More than 10 in 5"});
+        sortlist.value.push({id:6,text:"Results down"});
+        sortlist.value.push({id:7,text:"Results up"});
+        sortlist.value.push({id:8,text:"Name down"});
+        sortlist.value.push({id:9,text:"Name down"});
+    }
+    else if(search_type.value == 3){
+        sortlist.value.push({id:0,text:"Cited least"});
+        sortlist.value.push({id:1,text:"Index up"});
+        sortlist.value.push({id:2,text:"Results down"});
+        sortlist.value.push({id:3,text:"Results up"});
+        sortlist.value.push({id:4,text:"Level down"});
+        sortlist.value.push({id:5,text:"Level up"});
+        sortlist.value.push({id:6,text:"Name down"});
+        sortlist.value.push({id:7,text:"Name up"});
+    }
+}
+//用于测试
+function tst(){
+    console.log("pppppp"+papernum.value);
+    for(let i = 0;i<papernum.value;i++){
+        paper_list.value.push(test);
+    }
+}
+const test = {
+    title: "AI4TV '19: Proceedings of the 1st International Workshop on AI for Smart TV Content Production, Access and Delivery",
+    id: "4254080329",
+    abstract: "It is our great pleasure to welcome you to the  Production, Access and Delivery - AI4TV 2019. New scientific breakthroughs in video understanding through the application of AI techniques along with ...",
+    cited_count: 0,
+    domain: [
+        {
+            "name": "Psychology",
+            "id": "15744967",
+            "level": "0",
+            "activity_level": "0.2911021"
+        }
+    ],
+    author_all: ["aaa","bbb","ccc","ddd"],
+    pdf_url: null,
+    landing_page_url: "https://doi.org/10.1007/978-3-319-15347-6_300037",
+    source: [
+        {
+            "name": "Springer eBooks",
+            "type": "ebook platform",
+            "id": "4310319965"
+        }
+    ],
+    publication_date: "2020-01-01",
+    type_num: 110,
+    is_star: false
+}
+const agg = [
+    {
+        name:"source",
+        source:"source",
+        data:[
+            {
+                "raw": "arXiv (Cornell University) & repository & None | ",
+                "value": 2719
+            },
+            {
+                "raw": "Social Science Research Network & repository & None | ",
+                "value": 1157
+            },
+            {
+                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
+                "value": 504
+            },
+            {
+                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
+                "value": 499
+            }
+        ]
+    },
+    {
+        name:"source",
+        source:"source",
+        data:[
+            {
+                "raw": "arXiv (Cornell University) & repository & None | ",
+                "value": 2719
+            },
+            {
+                "raw": "Social Science Research Network & repository & None | ",
+                "value": 1157
+            },
+            {
+                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
+                "value": 504
+            },
+            {
+                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
+                "value": 499
+            }
+        ]
+    },
+    {
+        name:"source",
+        source:"source",
+        data:[
+            {
+                "raw": "arXiv (Cornell University) & repository & None | ",
+                "value": 2719
+            },
+            {
+                "raw": "Social Science Research Network & repository & None | ",
+                "value": 1157
+            },
+            {
+                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
+                "value": 504
+            },
+            {
+                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
+                "value": 499
+            }
+        ]
+    }
+]
 </script>
+
 <style scoped>
 ul{
     list-style: none;
@@ -182,12 +415,15 @@ ul{
     }
     .middle-right{
         width: 75%;
+        /* display: flex; */
+        
         .middle-right-sum{
-            height: 100px;
+            height: 70px;
             
             display: inline;
             .first-line{
                 display: flex;
+                margin-bottom: 10px;
                 .search-num{
                     font-size: 20px;
                     font-weight: 400;
@@ -204,7 +440,7 @@ ul{
             .sum-text{
                 font-size: 15px;
                 font-weight: 100;
-                height: 70px;
+                height: 50px;
                 width: 100%;
                 border-bottom:1px solid #e6e6e6;
                 display: flex;
@@ -258,18 +494,31 @@ ul{
                 margin-top: 25px;
                 position: relative;
                 padding-right: 10px;
-                left: 50%;
+                left: 46%;
                 height: 30px;
-                font-size: 13px;
-                font-weight: 600;
+                font-size: 15px;
+                font-weight: 400;
                 color: black;
                 border-right: 1px solid #e6e6e6;
+                display: flex;
+                .page-num-com{
+                    margin-right: 15px;
+                    cursor: pointer;
+                }
+                .page-num-active{
+                    margin-right: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
             }
             .drop-choice{
                 position: relative;
-                left: 52%;
+                left: 48%;
                 width: 20%;
                 margin-top: 28px;
+                .el-dropdown-link{
+                    cursor: pointer;
+                }
             }
             
         }
@@ -299,6 +548,13 @@ ul{
 
                 }
             }
+            .bottom-page{
+                margin-left: 300px;
+                .example-pagination-block + .example-pagination-block {
+                    margin-top: 10px;
+            }
+            }
+            
         }
     }
 }

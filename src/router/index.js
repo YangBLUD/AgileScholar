@@ -8,6 +8,10 @@ const router = createRouter({
       path: '/searchResult',
       component: ()=>import('../components/searchResult/searchResult.vue'),
     },
+    {
+      path: '/topnav',
+      component: ()=>import('../components/TopNav.vue'),
+    },
   ],
 });
 export default router;
