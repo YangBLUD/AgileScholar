@@ -11,7 +11,19 @@
     <el-tree :data="favorites_list" :props="treeProps" ref="tree">
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
-          <span style="width: 160px; overflow: hidden">{{
+          <span class="icon" v-if="nodeData.type == 0"
+            ><el-icon><Document /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 1"
+            ><el-icon><User /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 2"
+            ><el-icon><House /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.list != undefined"
+            ><el-icon><Folder /></el-icon
+          ></span>
+          <span style="width: 220px; overflow: hidden">{{
             nodeData.name || nodeData.data.display_name || nodeData.data.title
           }}</span>
           <span>
@@ -47,6 +59,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted, onUnmounted } from "vue";
+import { House, User, Document, Folder } from "@element-plus/icons-vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import type Node from "element-plus/es/components/tree/src/model/node";
@@ -62,7 +75,7 @@ const newFolderName = ref("");
 const showCreateDialog = ref(false);
 const tree = ref();
 onMounted(() => {
-  getFavorites();
+  //getFavorites();
   listener = document.addEventListener("click", (e) => {
     if (showFavorite.value) {
       if (firstTime) {
@@ -115,7 +128,8 @@ let favorites_list = ref([
         folder_id: 1,
         folder_name: "谢秉书没牛牛1",
         data: {
-          display_name: "Omega Piezo Technologies (United States)",
+          display_name:
+            "Omega Piezo Technologies (United States) asdasd asdadsa asdas",
           id: "4210092899",
           image_url: null,
           ror: "https://ror.org/00jch3e54",
@@ -290,7 +304,10 @@ function remove(node: Node, data) {
 </script>
 <style scoped lang="scss">
 .star-dialog {
-  width: 300px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: black 0px 0px 3px 0px;
+  width: 400px;
   max-height: 500px;
   background-color: white;
   position: fixed;
@@ -298,6 +315,11 @@ function remove(node: Node, data) {
   right: 80px;
   overflow-y: auto;
   z-index: 999;
+}
+.icon {
+  width: 10px;
+  margin-left: 5px;
+  padding-top: 5px;
 }
 .custom-tree-node {
   flex: 1;
@@ -320,8 +342,5 @@ function remove(node: Node, data) {
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;
-  &:hover {
-    background-color: #b7cbff;
-  }
 }
 </style>
