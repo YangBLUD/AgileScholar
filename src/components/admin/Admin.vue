@@ -19,8 +19,27 @@ import AdminHome from './AdminHome.vue';
 import AdminTable from './AdminTable.vue';
 import AdminInfo from './AdminInfo.vue';
 
+import axios from 'axios';
+import {onBeforeMount} from 'vue'
+
 import store from '../../store';
 
+onBeforeMount( () =>{
+    console.log("begin get the data")
+    axios({
+            url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
+            method: 'post',
+            data: JSON.stringify({
+                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDIzMTUxOTQuNDY2OTU1N30.02rT2FBiOQdP32Awbfw1xRDmxOYwU6DuQahOAUMNa4Q"
+            })
+    }).then(res =>{
+        console.log(res.data)
+
+    }).catch(err => {
+        console.log(err)
+    })
+}
+)
 </script>
 
 <style scoped>
