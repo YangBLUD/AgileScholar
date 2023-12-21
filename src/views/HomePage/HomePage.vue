@@ -123,7 +123,7 @@
           <div class="ins-rank">{{ index + 1 }}</div>
           <div class="ins-name">{{ institution.display_name }}</div>
           <div class="ins-views">
-            cited : {{ institution.summary_stats.cited_by_count }}
+            H index : {{ institution.summary_stats.h_index }}
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
           <div class="rank">{{ index + 4 }}</div>
           <div class="name">{{ institution.display_name }}</div>
           <div class="views">
-            cited : {{ institution.summary_stats.cited_by_count }}
+            H index : {{ institution.summary_stats.h_index }}
           </div>
         </div>
       </div>
@@ -152,7 +152,6 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import TopNav from "../../components/HomePage/TopNav.vue";
-import Footer from "../../components/HomePage/Footer.vue";
 import { Search, Right } from "@element-plus/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
