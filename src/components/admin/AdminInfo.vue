@@ -32,10 +32,10 @@
                             <el-input v-model="form.name"></el-input>
                         </el-form-item>
 						<el-form-item label="密码：">
-							<el-input type="password" v-model="form.old"></el-input>
+							<el-input type="password" v-model="form.first"></el-input>
 						</el-form-item>
 						<el-form-item label="确认密码：">
-							<el-input type="password" v-model="form.new"></el-input>
+							<el-input type="password" v-model="form.second"></el-input>
 						</el-form-item>
 						<el-form-item label="个人简介：">
 							<el-input v-model="form.desc"></el-input>
@@ -55,16 +55,36 @@ import { reactive, ref } from 'vue';
 
 import avatar from '../../assets/img.jpg';
 import store from '../../store';
+import axios from 'axios';
 
 const name = store.getters.getName;
 const form = reactive({
     name: '',
-	old: '',
-	new: '',
+	first: '',
+	second: '',
 	desc: '不可能！我的代码怎么可能会有bug！'
 });
 const onSubmit = () => {
-
+	if(form.first != form.second){
+		alert("密码不一致")
+	}
+	else{
+		console.log("begin submit")
+    	axios({
+            url: 'http://122.9.5.156:8000/api/v1/admin/add_admin',
+            method: 'post',
+            data: JSON.stringify({
+                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDMyNDQwMzYuMzIyNDAwNn0.4TLKpJcX3V9YIM4Ht287xFzcJTrjoAYKb04PFZVgt5k",
+				"username": form.name,
+				"password": form.second,
+            })
+    	}).then(res =>{
+        	console.log(res.data)
+    	}).catch(err => {
+        	console.log(err)
+			alert("未知错误，请联系超级管理员")
+    	})
+	}
 };
 
 const avatarImg = ref(avatar);

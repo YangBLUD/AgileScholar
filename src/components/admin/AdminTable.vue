@@ -21,10 +21,11 @@
 			</div>
 			<el-table 
 			class="table"
-			:data="tableDataList" 
+			:key="itemKey"
+			:data="tableDataList"
 			max-height="520"
-			border="true"  
-			stripe="true"
+			:border="true"  
+			:stripe="true"
 			header-cell-class-name="table-header"
 			>
 				<el-table-column prop="id" label="ID" width="90" align="center"></el-table-column>
@@ -35,7 +36,7 @@
 					<template #default="scope">
 						<el-tag
 							:type="scope.row.state === '已处理' ? 'success' : scope.row.state === '未处理' ? 'danger' : ''"
-							disable-transitions="true"
+							:disable-transitions="true"
 						>
 							{{ scope.row.state }}
 						</el-tag>
@@ -89,6 +90,8 @@
 import { ref, reactive } from 'vue';
 import { Edit, Search } from '@element-plus/icons-vue';
 
+let itemKey = ref()
+
 class tableData {
 	id: number;
 	name: string;
@@ -97,7 +100,7 @@ class tableData {
 	state: string;
 }
 
-let tableDataList : tableData[] = [
+let tableDataList : tableData[] = reactive([
 	{id: 1, name: "name1", type: "申诉", date: "2023-12-6", state:"未处理"},
 	{id: 11, name: "name2", type: "申诉", date: "2023-12-5", state:"已处理"},
 	{id: 2, name: "name3", type: "举报", date: "2023-12-6", state:"未处理"},
@@ -116,19 +119,34 @@ let tableDataList : tableData[] = [
 	{id: 22, name: "name4", type: "举报", date: "2023-12-5", state:"已处理"},
 	{id: 3, name: "name5", type: "认证申请", date: "2023-12-6", state:"未处理"},
 	{id: 33, name: "name6", type: "认证申请", date: "2023-12-5", state:"已处理"},
-]
+])
 
 //let dataNum = ref(tableDataList.length)
 
-const query = reactive({
-	type: '',
-	state: '',
+let query = reactive({
+	type: '全部',
+	state: '全部',
 	name: '',
 });
 
 // 查询操作
 const handleSearch = () => {
-	
+	//console.log("筛选")
+	//console.log(query)
+	tableDataList = tableDataList.filter(item => {
+        if (query.type !== "全部" && item.type !== query.type) {
+            return false;
+        }
+        if (query.state !== "全部" && item.state !== query.state) {
+            return false;
+        }
+        if (query.name && !item.name.includes(query.name)) {
+            return false;
+        }
+        return true;
+    });
+	itemKey.value = Math.random()
+	console.log(tableDataList)
 };
 // 分页导航
 // const handlePageChange = (val: number) => {

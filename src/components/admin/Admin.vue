@@ -25,12 +25,27 @@ import {onBeforeMount} from 'vue'
 import store from '../../store';
 
 onBeforeMount( () =>{
+    // axios({
+    //     url: 'http://122.9.5.156:8000/api/v1/home/user/login',
+    //     method: 'post',
+    //     data: JSON.stringify({
+    //         "token" : "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDIzMTUxOTQuNDY2OTU1N30.02rT2FBiOQdP32Awbfw1xRDmxOYwU6DuQahOAUMNa4Q",
+    //         "username" : "admin1",
+    //         "password" : "123456"
+    //     })
+    // }).then(res =>{
+    //     console.log(res.data)
+    //     console.log("管理员登录成功！")
+    // }).catch(err => {
+    //     console.log(err)
+    // })
+
     console.log("begin get the data")
     axios({
             url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
             method: 'post',
             data: JSON.stringify({
-                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDIzMTUxOTQuNDY2OTU1N30.02rT2FBiOQdP32Awbfw1xRDmxOYwU6DuQahOAUMNa4Q"
+                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDMyNDQwMzYuMzIyNDAwNn0.4TLKpJcX3V9YIM4Ht287xFzcJTrjoAYKb04PFZVgt5k"
             })
     }).then(res =>{
         console.log(res.data)

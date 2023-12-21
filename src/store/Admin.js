@@ -6,9 +6,9 @@ const AdminMoudle = {
         collapse : true,
         name: 'Admin',
         role: '超级管理员',
-        lastLoginTime : '2023-12-11',
+        lastLoginTime : '2023-12-26',
         lastLoginLocation : '北京',
-        
+
         todoList : [
             {
                 title: '今天要修复100个bug',
@@ -37,7 +37,6 @@ const AdminMoudle = {
         AdminLogin(state){
             state.isAdmin = true
         },
-        
         AdminLogout(state){
             state.isAdmin = false
         },
