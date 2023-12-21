@@ -7,6 +7,8 @@ const UserModule = {
     user_id: "",
     token: "",
     user_email: "",
+    claimed_scholar_id: "",
+    claimed_scholar_name: "",
   },
   mutations: {
     loginSuccess(state, user) {
@@ -15,13 +17,17 @@ const UserModule = {
       state.user_name = toRaw(user.user_name);
       state.token = toRaw(user.token);
       state.user_email = toRaw(user.user_email);
+      state.claimed_scholar_id = toRaw(user.claimed_scholar_id);
+      state.claimed_scholar_name = toRaw(user.claimed_scholar_name);
     },
-    logout(state) {
+    logOut(state) {
       state.user_id = "";
       state.login_or_not = false;
       state.user_name = "";
       state.token = "";
       state.user_email = "";
+      state.claimed_scholar_id = "";
+      state.claimed_scholar_name = "";
     },
     setlogin(state, login_or_not) {
       state.login_or_not = login_or_not;
@@ -34,6 +40,9 @@ const UserModule = {
     },
     getLoginState(state) {
       return state.login_or_not;
+    },
+    getScholarName(state) {
+      return state.claimed_scholar_name;
     },
   },
 };
