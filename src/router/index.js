@@ -14,9 +14,10 @@ const routes = [
     component: Main
   },
   {
-    // 待进一步处理，根据选中论文选则路径
-    path: "/article",
-    component: ArticleDisplay
+    path: "/article/:id",
+    name: "article-display",
+    component: ArticleDisplay,
+    props: true,
   },
   {
     path: "/institution",
