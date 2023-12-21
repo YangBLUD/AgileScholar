@@ -26,8 +26,8 @@ const SearchModule = {
       state.and_list = [{ content: data.keyword, select: "", clear: 1 }];
       state.or_list = [];
       state.not_list = [];
-      state.start_time = "0"; //不知道是不是这样的0
-      state.end_time = "0";
+      state.start_time = ""; //不知道是不是这样的0
+      state.end_time = "";
     },
     clearSearch() {
       state.isAdvancedSearch = false;
