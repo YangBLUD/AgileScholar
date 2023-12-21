@@ -108,8 +108,8 @@
                 </el-col>
                 <el-col :span="3">
                   <el-select v-model="props.row.clear" style="width: 100%">
-                    <el-option value="0" label="Fuzzy">Fuzzy</el-option>
-                    <el-option value="1" label="Accurate">Accurate</el-option>
+                    <el-option :value="0" label="Fuzzy">Fuzzy</el-option>
+                    <el-option :value="1" label="Accurate">Accurate</el-option>
                   </el-select>
                 </el-col>
                 <el-col :span="5">
@@ -220,22 +220,22 @@ function clearAndChange() {
   }
 }
 //过滤器选择
-const list = ref([{ content: "", select: "Title", type: "AND", clear: "0" }]);
+const list = ref([{ content: "", select: "Title", type: "AND", clear: 0 }]);
 const articleList = ref([
-  { content: "", select: "Title", type: "AND", clear: "0" },
-  { content: "", select: "Abstract", type: "AND", clear: "0" },
+  { content: "", select: "Title", type: "AND", clear: 0 },
+  { content: "", select: "Abstract", type: "AND", clear: 0 },
 ]);
 const authorList = ref([
-  { content: "", select: "Name", type: "AND", clear: "0" },
-  { content: "", select: "Domain", type: "AND", clear: "0" },
+  { content: "", select: "Name", type: "AND", clear: 0 },
+  { content: "", select: "Domain", type: "AND", clear: 0 },
 ]);
 const institutionList = ref([
-  { content: "", select: "Name", type: "AND", clear: "0" },
-  { content: "", select: "Acronyms", type: "AND", clear: "0" },
+  { content: "", select: "Name", type: "AND", clear: 0 },
+  { content: "", select: "Acronyms", type: "AND", clear: 0 },
 ]);
 const subjectList = ref([
-  { content: "", select: "Name", type: "AND", clear: "0" },
-  { content: "", select: "Description", type: "AND", clear: "0" },
+  { content: "", select: "Name", type: "AND", clear: 0 },
+  { content: "", select: "Description", type: "AND", clear: 0 },
 ]);
 list.value = articleList.value;
 function addRow(row) {
@@ -243,13 +243,13 @@ function addRow(row) {
     return;
   }
   if (searchType.value === 0) {
-    list.value.push({ content: "", select: "Title", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Title", type: "AND", clear: 0 });
   } else if (searchType.value === 1) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
   } else if (searchType.value === 2) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
   } else if (searchType.value === 3) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
   }
 }
 
@@ -285,14 +285,10 @@ const shortcuts = [
   },
 ];
 function search() {
-  let flag = false;
-  for (var i = 0; i < list.value.length; i++) {
-    if (list.value[i].content != "") {
-      flag = true;
-    }
-  }
-  if (!flag) {
-    ElMessage.error("Please enter the keywords!");
+  // 先删除掉空的搜索条件
+  list.value = list.value.filter((item) => item.content !== "");
+  if (list.value.length == 0) {
+    ElMessage.error("Please enter at least one search constraint!");
     return;
   }
   var begin;
@@ -319,8 +315,8 @@ function search() {
       return rest;
     });
   if (timeSelect.value == "AllDates") {
-    begin = "0";
-    end = "0";
+    begin = "";
+    end = "";
   } else {
     begin = timePick.value[0];
     end = timePick.value[1];
@@ -334,25 +330,26 @@ function search() {
     end_time: end,
   };
   Store.commit("setAdvancedSearch", data);
+  console.log(data);
 }
 function clearInf() {
   searchType.value = 0;
   //还原成开始的列表
   articleList.value = [
-    { content: "", select: "Title", type: "AND", clear: "0" },
-    { content: "", select: "Abstract", type: "AND", clear: "0" },
+    { content: "", select: "Title", type: "AND", clear: 0 },
+    { content: "", select: "Abstract", type: "AND", clear: 0 },
   ];
   authorList.value = [
-    { content: "", select: "Name", type: "AND", clear: "0" },
-    { content: "", select: "Domain", type: "AND", clear: "0" },
+    { content: "", select: "Name", type: "AND", clear: 0 },
+    { content: "", select: "Domain", type: "AND", clear: 0 },
   ];
   institutionList.value = [
-    { content: "", select: "Name", type: "AND", clear: "0" },
-    { content: "", select: "Acronyms", type: "AND", clear: "0" },
+    { content: "", select: "Name", type: "AND", clear: 0 },
+    { content: "", select: "Acronyms", type: "AND", clear: 0 },
   ];
   subjectList.value = [
-    { content: "", select: "Name", type: "AND", clear: "0" },
-    { content: "", select: "Description", type: "AND", clear: "0" },
+    { content: "", select: "Name", type: "AND", clear: 0 },
+    { content: "", select: "Description", type: "AND", clear: 0 },
   ];
   list.value = articleList.value;
   timeSelect.value = "AllDates";

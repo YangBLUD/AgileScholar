@@ -442,7 +442,7 @@ function getCaptcha() {
 .login-box {
   border: #dfdfdf 0.5px solid;
   z-index: 999;
-  position: absolute;
+  position: fixed;
   top: 300px;
   left: 50%;
   width: 400px;

@@ -11,7 +11,19 @@
     <el-tree :data="favorites_list" :props="treeProps" ref="tree">
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
-          <span style="width: 260px; overflow: hidden">{{
+          <span class="icon" v-if="nodeData.type == 0"
+            ><el-icon><Document /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 1"
+            ><el-icon><User /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 2"
+            ><el-icon><House /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.list != undefined"
+            ><el-icon><Folder /></el-icon
+          ></span>
+          <span style="width: 220px; overflow: hidden">{{
             nodeData.name || nodeData.data.display_name || nodeData.data.title
           }}</span>
           <span>
@@ -47,6 +59,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted, onUnmounted } from "vue";
+import { House, User, Document, Folder } from "@element-plus/icons-vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import type Node from "element-plus/es/components/tree/src/model/node";
@@ -291,8 +304,9 @@ function remove(node: Node, data) {
 </script>
 <style scoped lang="scss">
 .star-dialog {
-  border-radius: 10px;
-  box-shadow: black 0px 0px 10px 0px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: black 0px 0px 3px 0px;
   width: 400px;
   max-height: 500px;
   background-color: white;
@@ -301,6 +315,11 @@ function remove(node: Node, data) {
   right: 80px;
   overflow-y: auto;
   z-index: 999;
+}
+.icon {
+  width: 10px;
+  margin-left: 5px;
+  padding-top: 5px;
 }
 .custom-tree-node {
   flex: 1;
