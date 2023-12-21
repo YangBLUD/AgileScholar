@@ -22,7 +22,7 @@
                 <div class="middle-right-sum">
                     <div class="first-line">
                         <div class="search-num">
-                            {{ totalpage }} 
+                            {{ totalpage }}
                             <div style="font-weight: 300;">Results for: </div>
                             All: {{ search_title }}
                         </div>
@@ -114,7 +114,6 @@ function keysearch(){
 }
 //初始化函数
 onBeforeMount(() => {
-    console.log(Store.getters.getSearch.and_list[0].content);
     searchcontent.value = Store.getters.getSearch.and_list[0].content;
     getpaperlist();
     totalpage.value =100; //获取总数
@@ -181,7 +180,7 @@ function getpaperlist(){
         agg.value = data.agg;
         search_to.value = Math.min(data.total,papernum.value);
         totalye.value = parseInt(totalpage.value / papernum.value) +1;
-        console.log(totalye.value);
+        console.log(data.agg.data);
       })
       .catch((err) => {
         console.log(err);

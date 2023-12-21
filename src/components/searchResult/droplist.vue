@@ -5,7 +5,7 @@
         </div>
         <div class="list">
             <el-collapse v-model="activeNames" @change="handleChange" >
-                <el-collapse-item :title=item.raw :name=index v-for="(item,index) in props.agginfo.data" :key="index" >
+                <el-collapse-item :title=item.raw :name=index v-for="(item,index) in props.agginfo.data.splice(0,6)" :key="index" >
                     <template #title>
                         <div class="el-collapse-item-title">{{ item.raw }}</div>
                     </template>
