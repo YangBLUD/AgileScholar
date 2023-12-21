@@ -5,6 +5,22 @@ const ArticleModule ={
         currentArticleId: -1,
         Authors:[],  //数组，存储当前所有的组织
         currentAuthorId: -1,
+        title: "",
+        id: "",
+        abstract: "",
+        domain: [],
+        pdf_url: "",
+        landing_page_url: "",
+        source: [],
+        publication_date: "",
+        type_num: -1,
+        counts_by_year: [],
+        corresponding_author: [],
+        corresponding_institutions: [],
+        references: [],
+        is_star: false,
+        related_works: {},
+
     },
     mutations: {
         initAuthors(state){
