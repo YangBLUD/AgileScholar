@@ -15,10 +15,10 @@ const router = createRouter({
       path: '/searchResult',
       component: ()=>import('../components/searchResult/searchResult.vue'),
     },
-    {
-      path: '/topnav',
-      component: ()=>import('../components/TopNav.vue'),
-    },
+    { path: "/", redirect: "/home" },
+    { path: "/main", component: Main },
+    { path: "/home", component: HomePage },
+    { path: "/advanced", component: AdvancedSearch },
   ],
 });
 export default router;

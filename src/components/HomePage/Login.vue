@@ -86,6 +86,7 @@ function handleSubmit() {
           claimed_scholar_id: data.claimed_scholar_id,
           claimed_scholar_name: data.claimed_scholar_name,
         };
+        console.log(user)
         Store.commit("loginSuccess", user);
         ElMessage.success("Welcome!");
         emit("refresh");

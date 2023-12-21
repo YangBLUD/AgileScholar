@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div class="label">
-            <div class="label-content">{{ props.agginfo.name }}</div>
+            <div class="label-content">{{ props.agginfo.text }}</div>
         </div>
         <div class="list">
             <el-collapse v-model="activeNames" @change="handleChange" >

@@ -10,21 +10,21 @@
                 </div>
             </div>
             <div class="pic" >
-                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;">
+                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;" >
             </div>
         </div>
         <div class="right">
-            <div class="title">
-                {{ props.info.title }}
+            <div class="title" >
+                <span v-html="props.info.title"></span>
             </div>
             <div class="wri_list" >
-                <div class="writer" v-for="item in props.info.author_all.slice(0,3)">
+                <div class="writer" v-for="item in props.info.author_all.slice(0,2)">
                     <img src="../../assets/test.jpg" class="writer-pic"/>
-                    <div class="name">{{ item }}</div>
+                    <div class="name"><span v-html="item.name"></span></div>
                 </div>
             </div>
             <div class="abstract">
-                <div v-if="props.info.abstract" class="ab-text">{{ props.info.abstract }}</div>
+                <div v-if="props.info.abstract" class="ab-text"><span v-html="props.info.abstract"></span></div>
                 <div v-else>without abstract</div>
             </div>
             <div class="bottom">
@@ -82,7 +82,7 @@ function getfold(){
     })
       .then((res) => {
             console.log(res);
-            folderlist = res.data.data;
+            folderlist.value = res.data.data;
       })
       .catch((err) => {
         console.log(err);
@@ -143,6 +143,7 @@ const props = defineProps({
         margin: 15px;
         width: 30px;
         height: 30px;
+        
     }
 }
 .right{
@@ -152,11 +153,19 @@ const props = defineProps({
     height: 100%;
     /* width: 95%; */
     .title{
-        color: #5f99cc;
+        color: #3f98d1;
         font-size: 18px;
         font-weight: 400;
         width: 87%;
+        height: 52px;
         cursor: pointer;
+        white-space: pre-wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        >>> em {
+        background-color: yellow;
+
+        }
     }
     .wri_list{
         display: flex   ;
@@ -171,22 +180,39 @@ const props = defineProps({
             height: 30px;
             border-radius: 50%;
             border: 1px solid;
+            /* -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -ms-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            filter: grayscale(100%);
+            filter: gray; */
         }
         .name{
             margin: 15px 0;
-            color: #806f5d;
+            color: #616374;
             text-decoration: underline;
+            >>> em {
+        background-color: yellow;
+
+        }
         }
     }
     }
     
     .abstract{
-        font-size: 15px;
+        font-size: 16px;
         width: 87%;
-        height: 78px;
+        height: 65px;
+        overflow: hidden;
         white-space: pre-wrap;
         text-overflow:ellipsis ;
-        overflow: hidden;
+        >>> em {
+        background-color: yellow;
+
+        }
+    }
+    .ab-text{
+        
         
     }
     .bottom{
@@ -200,7 +226,7 @@ const props = defineProps({
             position: relative;
             left: 0px;
             display: flex;
-            width: 22%;
+            width: 24%;
             border-right: 1px solid #e6e6e6;
             font-size: 18px;
             .inference{

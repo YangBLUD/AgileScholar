@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div class="sum-text">
-                        <div class="text-first">Searched The ACM Full-Text Collection (718,901 records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
+                        <div class="text-first">Searched The ACM Full-Text Collection ({{totalpage}} records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
                     </div>
                 </div>
                 <div class="search-result-tabs">
@@ -85,7 +85,7 @@
                     </div>
                     <div class="bottom-page">
                         <div class="example-pagination-block">
-                        <el-pagination layout="prev, pager, next" :total="totalpage" v-model:current-page="currentPage"
+                        <el-pagination layout="prev, pager, next" :page-count="totalye" v-model:current-page="currentPage"
                         @current-change="currentChange"
                         @prev-click="prevClick"
                         @next-click="nextClick"
@@ -109,25 +109,24 @@ const Store = useStore();
 const searchcontent = ref("AI");
 //搜索函数
 function keysearch(){
-    console.log(searchcontent.value);
     return;
     getpaperlist();
 }
 //初始化函数
 onBeforeMount(() => {
-  //搜索框
-  tst();
-  totalpage.value =100; //获取总数
-  dropsort();
-  console.log(sortlist.value);
+    console.log(Store.getters.getSearch.and_list[0].content);
+    searchcontent.value = Store.getters.getSearch.and_list[0].content;
+    getpaperlist();
+    totalpage.value =100; //获取总数
+    dropsort();
 });
 //额外的请求参数
 const search_first_search = ref(1)
 const search_type = ref(0)
-const search_work_clustering = ref("")
+const search_work_clustering = ref(0)
 const search_author_clustering = ref(1)
 
-const search_sort = ref(-1)
+const search_sort = ref(0)
 const search_extend_list = ref([])
 
 //用于论文列表的渲染
@@ -150,40 +149,39 @@ const handleClick = (tab, event) => {
     else if(tab.props.name == "SUBJECTS"){
         search_type.value = 3;
     }
-    console.log(search_type.value);
     getpaperlist();
     resetpage();
 };
-
+const totalye = ref(0);
 function getpaperlist(){
-    tst();
-    console.log(paper_list.value);
-    return;
     axios({
       url: "http://122.9.5.156:8000/api/v1/search_result/search",
       method: "post",
       data: JSON.stringify({
             token :Store.getters.getUserinfo.token,
-
-            search_type : search_type,
+            search_type : search_type.value,
             and_list : Store.getters.getSearch.and_list,
             or_list : Store.getters.getSearch.or_list,
             not_list : Store.getters.getSearch.not_list,
             start_time : Store.getters.getSearch.start_time,
             end_time : Store.getters.getSearch.end_time,
-
-            first_search : search_first_search,
-            work_clustering : search_work_clustering,
-            author_clustering : search_author_clustering,
-            size : search_size,
-            from : search_from,
-            sort : search_sort,
-            extend_list : search_extend_list,
+            first_search : search_first_search.value,
+            work_clustering : search_work_clustering.value,
+            author_clustering : search_author_clustering.value,
+            size : papernum.value,
+            from : search_from.value - 1,
+            sort : search_sort.value,
+            extend_list : search_extend_list.value,
       }),
     })
       .then((res) => {
-        paper_list = res.data.message.data.result;
-
+        let data = res.data.data;
+        paper_list.value = data.result;
+        totalpage.value = data.total;
+        agg.value = data.agg;
+        search_to.value = Math.min(data.total,papernum.value);
+        totalye.value = parseInt(totalpage.value / papernum.value) +1;
+        console.log(totalye.value);
       })
       .catch((err) => {
         console.log(err);
@@ -191,8 +189,8 @@ function getpaperlist(){
 }
 //选择显示论文的条数
 const papernum = ref(20)
-const search_from  = ref(1)
 const search_to = ref(20)
+const search_from  = ref(1)
 
 function changeSize(size){
     papernum.value = size;
@@ -204,17 +202,18 @@ function resetpage(){
     search_to.value = search_from.value + papernum.value;
 }
 //左侧的聚类
-const getCluster = computed(()=>{
+const agg = ref([]);
+function getCluster(){
 	//返回的是ref对象
 	return Store.getters.getCluster;
-})
+}
 watch(getCluster, (newVal, oldVal) => {
 	console.log('newVal, oldVal', newVal, oldVal);
     getnewagg();
-}, {immediate:true,deep:true});
+}, {deep:true});
 function getnewagg(){
     search_work_clustering.value = getCluster;
-    // getpaperlist();
+    getpaperlist();
     resetpage();
 }
 //翻页功能的实现
@@ -246,7 +245,6 @@ const nextClick = () => {
 const sortlist = ref([])
 function dropsort(){
     sortlist.value = [];
-    console.log(search_type.value)
     if(search_type.value == 0){
         sortlist.value.push({id:0,text:"Cited least"});
         sortlist.value.push({id:1,text:"Cited most"});
@@ -316,74 +314,7 @@ const test = {
     type_num: 110,
     is_star: false
 }
-const agg = [
-    {
-        name:"source",
-        source:"source",
-        data:[
-            {
-                "raw": "arXiv (Cornell University) & repository & None | ",
-                "value": 2719
-            },
-            {
-                "raw": "Social Science Research Network & repository & None | ",
-                "value": 1157
-            },
-            {
-                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
-                "value": 504
-            },
-            {
-                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
-                "value": 499
-            }
-        ]
-    },
-    {
-        name:"source",
-        source:"source",
-        data:[
-            {
-                "raw": "arXiv (Cornell University) & repository & None | ",
-                "value": 2719
-            },
-            {
-                "raw": "Social Science Research Network & repository & None | ",
-                "value": 1157
-            },
-            {
-                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
-                "value": 504
-            },
-            {
-                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
-                "value": 499
-            }
-        ]
-    },
-    {
-        name:"source",
-        source:"source",
-        data:[
-            {
-                "raw": "arXiv (Cornell University) & repository & None | ",
-                "value": 2719
-            },
-            {
-                "raw": "Social Science Research Network & repository & None | ",
-                "value": 1157
-            },
-            {
-                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
-                "value": 504
-            },
-            {
-                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
-                "value": 499
-            }
-        ]
-    }
-]
+
 </script>
 
 <style scoped>

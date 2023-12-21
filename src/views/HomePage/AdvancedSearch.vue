@@ -204,6 +204,7 @@ import TopNav from "../../components/HomePage/TopNav.vue";
 import { ElDialog, ElForm, ElInput, ElButton, ElMessage } from "element-plus";
 import { el } from "element-plus/es/locale";
 import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 const Store = useStore();
 const searchType = ref(0);
 //搜索类型选择
@@ -284,6 +285,7 @@ const shortcuts = [
     },
   },
 ];
+const router = useRouter();
 function search() {
   let flag = false;
   for (var i = 0; i < list.value.length; i++) {
@@ -333,7 +335,11 @@ function search() {
     start_time: begin,
     end_time: end,
   };
+  console.log(data)
   Store.commit("setAdvancedSearch", data);
+  router.push({
+    path: "/searchResult",
+  });
 }
 function clearInf() {
   searchType.value = 0;

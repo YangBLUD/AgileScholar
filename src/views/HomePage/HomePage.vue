@@ -156,6 +156,12 @@ import Footer from "../../components/HomePage/Footer.vue";
 import { Search, Right } from "@element-plus/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
+function getUserInfo(){
+  return Store.getters.getUserInfo
+}
+function test(){
+  console.log(Store.getters.getUserinfo)
+}
 const Store = useStore();
 //窗口计算
 const router = useRouter();
@@ -199,7 +205,8 @@ const performSearch = () => {
     keyword: searchText.value,
   };
   Store.commit("setGeneralSearch", data);
-  router.push("");
+  console.log("lllll");
+  router.push("/searchResult");
 };
 
 const clearSearch = () => {

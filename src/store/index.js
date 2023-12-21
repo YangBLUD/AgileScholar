@@ -9,5 +9,11 @@ const store = createStore({
     Search: SearchModule,
     SearchResult: SearchResultModule,
   },
+  plugins: [
+    createPersistedState({
+    storage: window.sessionStorage,
+     paths: ["User", "Search", "SearchResult"],
+    }),
+  ],
 });
 export default store;
