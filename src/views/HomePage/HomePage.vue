@@ -13,39 +13,25 @@
       <h1>What Scholar</h1>
     </div>
     <div class="search_box">
-      <el-input
-        v-model="searchText"
-        placeholder="Search"
-        class="input-with-select"
-        @keyup.enter="performSearch"
-        size="large"
-        width="400px"
-        id="search"
-      >
+      <el-input v-model="searchText" placeholder="Search" class="input-with-select" @keyup.enter="performSearch"
+        size="large" width="400px" id="search">
         <template #append>
           <el-button :icon="Search" @click="performSearch" />
         </template>
       </el-input>
-      <div
-        style="
+      <div style="
           float: right;
           cursor: pointer;
           margin-right: 5px;
           margin-top: 10px;
           color: aliceblue;
-        "
-        @click="$router.push({ path: '/advanced' })"
-      >
+        " @click="$router.push({ path: '/advanced' })">
         <h5>Advanced Search</h5>
       </div>
     </div>
     <div class="carousel">
       <el-carousel :interval="4000" height="130px" arrow="always">
-        <el-carousel-item
-          class="carousel-item"
-          v-for="(message, index) in messages"
-          :key="index"
-        >
+        <el-carousel-item class="carousel-item" v-for="(message, index) in messages" :key="index">
           {{ message }}
         </el-carousel-item>
       </el-carousel>
@@ -54,12 +40,7 @@
   <div class="article-rank" id="section2">
     <div class="section-title">Most Popular Articles</div>
     <div class="rank-content">
-      <div
-        class="rank-article-item"
-        v-for="(item, index) in rankArticles"
-        :key="index"
-        @click="goArticle(item.id)"
-      >
+      <div class="rank-article-item" v-for="(item, index) in rankArticles" :key="index" @click="goArticle(item.id)">
         <div class="rank-article-index">{{ index + 1 }}</div>
         <div class="rank-article-content">
           <div class="rank-article-title">
@@ -86,22 +67,16 @@
     </div>
   </div>
   <div class="classification" id="section3">
-    <div class="section-title">Search by Subject</div>
+    <div class="section-title">Search by Subject<button @click="goAllSubjects()">View All</button></div>
     <div style="margin: auto; width: 90%">
       <div class="nav-list">
-        <div
-          v-for="(item, index) in classifications"
-          :key="index"
-          class="nav-item"
-          @click="goClassification(item.value)"
-        >
+        <div v-for="(item, index) in classifications" :key="index" class="nav-item" @click="goClassification(item.value)">
           <div class="nav-item-left">
             <div style="float: left; width: 70%">{{ item.text }}</div>
-            <div
-              class="arrow"
-              style="float: right; width: 30%; font-size: 20px"
-            >
-              <el-icon><Right /></el-icon>
+            <div class="arrow" style="float: right; width: 30%; font-size: 20px">
+              <el-icon>
+                <Right />
+              </el-icon>
             </div>
           </div>
         </div>
@@ -113,13 +88,8 @@
     <div class="section-main-dev">
       <!-- 领奖台排名 -->
       <div class="podium">
-        <div
-          v-for="(institution, index) in podiumList"
-          :key="institution.id"
-          class="podium-item"
-          :class="getPodiumClass(index)"
-          @click="goInstitution(institution.id)"
-        >
+        <div v-for="(institution, index) in podiumList" :key="institution.id" class="podium-item"
+          :class="getPodiumClass(index)" @click="goInstitution(institution.id)">
           <div class="ins-rank">{{ index + 1 }}</div>
           <div class="ins-name">{{ institution.display_name }}</div>
           <div class="ins-views">
@@ -130,12 +100,8 @@
 
       <!-- 列表排名 -->
       <div class="normal-list">
-        <div
-          v-for="(institution, index) in normalList"
-          :key="institution.id"
-          class="normal-item"
-          @click="goInstitution(institution.id)"
-        >
+        <div v-for="(institution, index) in normalList" :key="institution.id" class="normal-item"
+          @click="goInstitution(institution.id)">
           <div class="rank">{{ index + 4 }}</div>
           <div class="name">{{ institution.display_name }}</div>
           <div class="views">
@@ -594,6 +560,11 @@ function goInstitution(id) {
     path: "",
   });
 }
+function goAllSubjects() {
+  router.push({
+    path: "/subject",
+  });
+}
 
 //测试新背景
 </script>
@@ -608,15 +579,18 @@ function goInstitution(id) {
   position: absolute;
   top: 65px;
 }
+
 .navigation-item {
   cursor: pointer;
   padding: 10px;
   font-size: 16px;
   text-align: center;
 }
+
 .navigation-item:hover {
   border-bottom: white 3px solid;
 }
+
 .headline {
   margin: auto;
   width: fit-content;
@@ -624,12 +598,14 @@ function goInstitution(id) {
   color: rgb(232, 239, 247);
   margin-top: 120px;
 }
+
 .search_box {
   margin: auto;
   height: fit-content;
   width: 60%;
   margin-top: 60px;
 }
+
 :deep(.el-input-group__append) {
   background-color: white;
   box-shadow: none;
@@ -637,6 +613,7 @@ function goInstitution(id) {
   font-weight: 900;
   color: black;
 }
+
 :deep(#search) {
   background-color: #ffffffe8;
   height: 50px;
@@ -644,6 +621,7 @@ function goInstitution(id) {
   font-weight: 500;
   color: #000000;
 }
+
 .article-search {
   width: 100%;
   height: 100%;
@@ -652,6 +630,7 @@ function goInstitution(id) {
   padding-top: 65px;
   overflow: hidden;
 }
+
 .carousel {
   margin: auto;
   margin-top: 70px;
@@ -659,6 +638,7 @@ function goInstitution(id) {
   background-color: #65656566;
   border-radius: 10px;
 }
+
 .carousel-item {
   color: white;
   background-color: transparent;
@@ -667,6 +647,7 @@ function goInstitution(id) {
   justify-content: center;
   display: flex;
 }
+
 .article-rank {
   padding-top: 20px;
   padding-bottom: 60px;
@@ -674,12 +655,14 @@ function goInstitution(id) {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 .section-title {
   font-size: 20px;
   font-weight: bold;
   font-style: italic;
   margin: 20px 10px 40px 20px;
 }
+
 .rank-content {
   margin-top: 20px;
   margin-left: 20px;
@@ -694,6 +677,7 @@ function goInstitution(id) {
   flex-direction: row;
   flex-wrap: wrap;
 }
+
 .rank-article-item {
   width: 25%;
   margin-bottom: 20px;
@@ -701,6 +685,7 @@ function goInstitution(id) {
   border-bottom: 1px solid #ccd0d8;
   cursor: pointer;
 }
+
 .rank-article-index {
   margin-left: 5%;
   width: 15%;
@@ -710,6 +695,7 @@ function goInstitution(id) {
   color: rgb(255, 240, 103);
   float: left;
 }
+
 .rank-article-content {
   display: flex;
   flex-direction: column;
@@ -718,33 +704,39 @@ function goInstitution(id) {
   width: 80%;
   float: right;
 }
+
 .rank-article-title {
   font-size: 16px;
   font-weight: 600;
   min-height: 160px;
   padding: 0 10px;
 }
+
 .rank-article-author {
   margin-top: 10px;
   font-size: 14px;
   color: #999;
 }
+
 .rank-article-date {
   margin-top: 30px;
   font-size: 14px;
   font-style: italic;
 }
+
 .rank-article-cite {
   margin-top: 10px;
   font-size: 14px;
   font-style: italic;
 }
+
 .classification {
   padding-top: 20px;
   padding-bottom: 40px;
   color: #fff;
   background-image: url(https://dl.acm.org/products/acm/releasedAssets/images/green-dl-bg-19ae13a3f4a3026f6e92d199a91c3dda.jpg);
 }
+
 .nav-list {
   margin-top: 20px;
   background-color: white;
@@ -762,6 +754,7 @@ function goInstitution(id) {
   min-height: 50px;
   cursor: pointer;
 }
+
 .nav-item-left {
   color: black;
   font-size: 14px;
@@ -775,19 +768,24 @@ function goInstitution(id) {
   padding-bottom: 10px;
   border-bottom: #ccd0d8 1px solid;
 }
+
 .nav-item:hover {
   transform: translate(5px, 3px);
   box-shadow: 0 0 10px rgba(159, 174, 157, 0.521);
+
   .nav-item-left {
     border-bottom: transparent 1px solid;
   }
 }
+
 .arrow {
   color: #ccd0d8;
 }
+
 .nav-item:hover .arrow {
   color: #000000;
 }
+
 .organization-rank {
   padding-top: 20px;
   padding-bottom: 40px;
@@ -796,6 +794,7 @@ function goInstitution(id) {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 .section-main-dev {
   margin: auto;
   width: 70%;
@@ -804,6 +803,7 @@ function goInstitution(id) {
   background-color: rgba(255, 255, 255, 0.658);
   margin-top: 20px;
 }
+
 .podium {
   display: flex;
   justify-content: space-between;
@@ -820,6 +820,7 @@ function goInstitution(id) {
   background-color: #f2f2f2;
   border-radius: 5px;
   cursor: pointer;
+
   .views {
     margin-top: 8px;
   }
@@ -830,24 +831,29 @@ function goInstitution(id) {
   font-weight: 600;
   text-align: center;
 }
+
 .ins-name {
   font-style: italic;
   margin: 10px 0;
 }
+
 .ins-views {
   font-size: 14px;
 }
+
 .normal-item .rank {
   width: 15%;
   text-align: center;
   font-size: 18px;
   font-weight: 600;
 }
+
 .normal-item .name {
   width: 60%;
   overflow-x: auto;
   font-style: italic;
 }
+
 .normal-item .views {
   width: 20%;
 }
