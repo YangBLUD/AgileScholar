@@ -1,9 +1,9 @@
 <template>
-    <el-icon @click="centerDialogVisible = true"><StarFilled /></el-icon>
+    <el-icon @click="start"><StarFilled /></el-icon>
     <el-dialog  
       v-model="centerDialogVisible"
-      title="choose a folder"
       class="tan-win"
+      width="30%"
       align-center
     >
         <!-- <el-table :data="props.folderlist"  @row-click="handleEdit" >
@@ -14,10 +14,11 @@
                 <div class="add">add</div>
             </el-table-column>      
         </el-table> -->
+        <div class="title"> Add To Folder</div>
         <div class="folder-list">
-          <div class="folder-item" v-for="item in props.folderlist">
+          <div class="folder-item" v-for="item in fold">
             <div class="item-checkbox">
-              <el-checkbox v-model="sel_list" label="Option 1" size="large" />
+              <el-checkbox size="large" @click="addfold(item)"/>
             </div>
             <div class="item-name">
               {{ item.folder_name }}
@@ -29,8 +30,7 @@
         </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="centerDialogVisible = false">
+          <el-button type="primary" @click="handleEdit" class="btn">
             Confirm
           </el-button>
         </span>
@@ -52,50 +52,80 @@
       paper_id:String,    
       type:Number,
   })
-  function handleEdit(row) {
-  console.log(row);
+  const fold = ref([])
+  function start(){
+    centerDialogVisible.value = true;
+    fold.value = props.folderlist;
+    choose.value = [];
+  }
+  const choose = ref([]);
+  function addfold(item){
+    for(let i=0;i<choose.value.length;i++){
+      if(choose.value[i].folder_id == item.folder_id){
+        return;
+      }
+    }
+    console.log(item);
+    choose.value.push(item);
+  }
+  function handleEdit() {
       centerDialogVisible.value = false;
+      console.log(choose.value);
       return;
-      let folder_id = row.folder_id;
-      axios({
-          url: "http://122.9.5.156:8000/api/v1/home/star",
-          method: "post",
-          data: JSON.stringify({    
-                  token :props.token,
-                  paper_id:props.paper_id,
-                  type:props.type,
-                  folder_id:folder_id,
-          }),
-          })
-          .then((res) => {
-                  console.log(res);
-          })
-          .catch((err) => {
-              console.log(err);
-          });
+      for(let i = 0;i < choose.value.length;i++){
+        let folder_id = choose.value[i].folder_id;
+        axios({
+            url: "http://122.9.5.156:8000/api/v1/home/star",
+            method: "post",
+            data: JSON.stringify({    
+                    token :props.token,
+                    paper_id:props.paper_id,
+                    type:props.type,
+                    folder_id:folder_id,
+            }),
+            })
+            .then((res) => {
+                    console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+      }
+      
 	}
-//记录有什么元素被选中了
-const sel_list = ref([]);
 
 </script>
 <style scoped>
   .tan-win{
-    width:30%;
     border-radius: 10%;
+    padding-top: 5px;
   }  
+  .title{
+      position: relative;
+      top:-30px;
+      margin-left: 33%;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .btn{
+      position: relative;
+      left: -150px;
+    }
   .folder-list{
-    display: inline;
+    margin-left: 10%;
     .folder-item{
-      display: flex;
       .item-checkbox{
-        width: 5%;
-        height: 5%;
+        display: inline-block;
       }
       .item-name{
-
+        margin-left: 20px;
+        display: inline-block;
       }
       .item-num{
-
+        margin-left: 40%;
+        font-size: 14px;
+        font-weight: 300;
+        display: inline-block;
       }
     }
   }
