@@ -164,7 +164,6 @@ function getpaperlist(){
       method: "post",
       data: JSON.stringify({
             token :Store.getters.getUserinfo.token,
-
             search_type : search_type,
             and_list : Store.getters.getSearch.and_list,
             or_list : Store.getters.getSearch.or_list,

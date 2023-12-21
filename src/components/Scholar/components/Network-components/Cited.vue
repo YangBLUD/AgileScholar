@@ -1,193 +1,88 @@
 <template>
-  <div ref="chartDiv" style="width: 100%; height: 400px;"></div>
+  <div ref="chartDiv" :style="{ width: '100%', height: chartHeight + 'px' }"></div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, watchEffect} from 'vue';
 import * as echarts from 'echarts';
-
+import {useStore} from "vuex";
+const store = useStore()
 const chartDiv = ref(null);
-// ECharts 配置项
-
+const chartHeight = ref(680);
+function getAuthorStates(){
+  return store.getters.getAuthorState
+}
+const referdata = getAuthorStates().authorNetwork
+var nodes = [];
+var links = [];
+var mainAuthor = { name: getAuthorStates().authorInformation.display_name, symbolSize: 10 };
+nodes.push(mainAuthor)
+console.log(getAuthorStates().authorNetwork.co_work_list)
+ getLinks()
+function getLinks(){
+  var index = 0;
+  if  (referdata.co_work_list.length!=0){
+    referdata.co_work_list.forEach(function (author) {
+      nodes.push({
+        name: author.name+(index++),
+        symbolSize: 100
+      });
+      links.push({
+        source: 'Main Author',
+        target: author.name+(index++),
+        label: {
+          show: true,
+          formatter: 'Co-Work'
+        }
+      });
+    });
+  }
+// 添加被引用关系
+  if (referdata.referred_list.length!=0){
+    referdata.referred_list.forEach(function (author) {
+      nodes.push({
+        name: author.name+(index++),
+        symbolSize: 100
+      });
+      links.push({
+        source: author.name+(index++),
+        target: 'Main Author',
+        label: {
+          show: true,
+          formatter: 'Referred'
+        }
+      });
+    });
+  }
+}
 const chartOptions = {
-  color: ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'],
   title: {
-    text: 'Gradient Stacked Area Chart'
+    text: 'Author Relationship Graph'
   },
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      label: {
-        backgroundColor: '#6a7985'
-      }
-    }
-  },
-  legend: {
-    data: ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5']
-  },
-  toolbox: {
-    feature: {
-      saveAsImage: {}
-    }
-  },
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    containLabel: true
-  },
-  xAxis: [
-    {
-      type: 'category',
-      boundaryGap: false,
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value'
-    }
-  ],
+  tooltip: {},
+  animationDurationUpdate: 1500,
+  animationEasingUpdate: 'quinticInOut',
   series: [
     {
-      name: 'Line 1',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(128, 255, 165)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(1, 191, 236)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [140, 232, 101, 264, 90, 340, 250]
-    },
-    {
-      name: 'Line 2',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(0, 221, 255)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(77, 119, 255)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [120, 282, 111, 234, 220, 340, 310]
-    },
-    {
-      name: 'Line 3',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(55, 162, 255)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(116, 21, 219)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [320, 132, 201, 334, 190, 130, 220]
-    },
-    {
-      name: 'Line 4',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(255, 0, 135)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(135, 0, 157)'
-          }
-        ])
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 402, 231, 134, 190, 230, 120]
-    },
-    {
-      name: 'Line 5',
-      type: 'line',
-      stack: 'Total',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
+      type: 'graph',
+      layout: 'force',
+      symbolSize: 50,
+      roam: true,
       label: {
-        show: true,
-        position: 'top'
+        show: true
       },
-      areaStyle: {
-        opacity: 0.8,
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          {
-            offset: 0,
-            color: 'rgb(255, 191, 0)'
-          },
-          {
-            offset: 1,
-            color: 'rgb(224, 62, 76)'
-          }
-        ])
+      edgeSymbol: ['circle', 'arrow'],
+      edgeSymbolSize: [4, 10],
+      edgeLabel: {
+        fontSize: 20
       },
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 302, 181, 234, 210, 290, 150]
+      data: nodes,
+      links: links,
+      lineStyle: {
+        opacity: 0.9,
+        width: 2,
+        curveness: 0
+      }
     }
   ]
 };
@@ -195,6 +90,13 @@ onMounted(() => {
   if (chartDiv.value) {
     const chart = echarts.init(chartDiv.value);
     chart.setOption(chartOptions);
+    // 监听图表内容变化
+    watchEffect(() => {
+      // 获取图表内容的高度
+      const chartContentHeight = chartDiv.value.firstChild.clientHeight;
+      // 设置图表的高度为内容高度
+      chartHeight.value = chartContentHeight;
+    });
   } else {
     console.error("Chart element is not available");
   }
