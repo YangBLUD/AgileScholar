@@ -31,6 +31,7 @@
       <li class="right">
         <button v-if="have_user_info" @click="history">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
+        <button v-if="is_scholar" @click="toPersonal">Personal Homepage</button>
         <button v-if="have_user_info" @click="logout">Sign out</button>
         <button v-if="!have_user_info" @click="login">Sign in</button>
         <button v-if="!have_user_info" @click="register">Register</button>
@@ -63,10 +64,18 @@ const input = ref("");
 const Store = useStore();
 const router = useRouter();
 const have_user_info = ref(false);
+const is_scholar = ref(false);
 watch(
   () => Store.getters.getLoginState,
   (newVal) => {
     have_user_info.value = newVal;
+  },
+  { deep: true },
+  () => Store.getters.getScholarName,
+  (newVal) => {
+    if (newVal != "") {
+      is_scholar.value = true;
+    }
   },
   { deep: true }
 );
@@ -75,7 +84,7 @@ function login() {
 }
 function logout() {
   ElMessage.success("You have successfully signed out");
-  Store.commit("logout");
+  Store.commit("logOut");
 }
 function register() {
   showRegister.value = true;
@@ -85,6 +94,9 @@ function star() {
 }
 function history() {
   showHistory.value = !showHistory.value;
+}
+function toPersonal() {
+  let id = Store.getters.getUserinfo.claimed_scholar_id;
 }
 function refresh() {
   showLogin.value = false;

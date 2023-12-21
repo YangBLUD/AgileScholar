@@ -4,6 +4,7 @@
       v-model="dialogFormVisible"
       @close="handleClose"
       :lock-scroll="false"
+      style="border-radius: 10px"
     >
       <template #header>
         <span class="dialog-footer" style="font-weight: 600">
@@ -30,7 +31,6 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { defineEmits } from "vue";
 import axios from "axios";
 import { Base64 } from "js-base64";
 import { useStore } from "vuex";

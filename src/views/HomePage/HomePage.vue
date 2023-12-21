@@ -594,6 +594,8 @@ function goInstitution(id) {
     path: "",
   });
 }
+
+//测试新背景
 </script>
 <style scoped lang="scss">
 .navigation {

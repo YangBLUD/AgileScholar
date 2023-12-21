@@ -4,6 +4,7 @@
       v-model="dialogFormVisible"
       @close="handleClose"
       :lock-scroll="false"
+      style="border-radius: 10px"
     >
       <template #header>
         <span class="dialog-header" style="font-weight: 600"> Register </span>

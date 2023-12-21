@@ -20,7 +20,7 @@ const UserModule = {
       state.claimed_scholar_id = toRaw(user.claimed_scholar_id);
       state.claimed_scholar_name = toRaw(user.claimed_scholar_name);
     },
-    logout(state) {
+    logOut(state) {
       state.user_id = "";
       state.login_or_not = false;
       state.user_name = "";
@@ -40,6 +40,9 @@ const UserModule = {
     },
     getLoginState(state) {
       return state.login_or_not;
+    },
+    getScholarName(state) {
+      return state.claimed_scholar_name;
     },
   },
 };

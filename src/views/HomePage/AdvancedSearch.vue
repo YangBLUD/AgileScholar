@@ -17,12 +17,16 @@
           <el-radio-button :label="0">Articles</el-radio-button>
           <el-radio-button :label="1">Authors</el-radio-button>
           <el-radio-button :label="2">Institutions</el-radio-button>
-          <el-radio-button :label="3">Subjects</el-radio-button>
+          <el-radio-button :label="3">Fields</el-radio-button>
         </el-radio-group>
       </div>
       <div class="keywords-select">
         <h4 style="margin-bottom: 20px">Search Constraint</h4>
-        <el-table :data="list" style="width: 95%">
+        <el-table
+          :data="list"
+          style="width: 95%"
+          :row-style="{ height: 80 + 'px' }"
+        >
           <el-table-column>
             <template #default="props">
               <el-row>
@@ -157,7 +161,37 @@
     </div>
     <div class="right-box">
       <div class="header">
-        <h2>高级检索的使用方法</h2>
+        <h2>Search Tips For Advanced Search</h2>
+        <h3 style="margin: 15px 0">Search Type</h3>
+        <p class="tips">
+          In advanced search, only one type of search is allowed for each search
+          session, which includes articles, authors, institutions, and fields.
+          After selecting the search type, the corresponding content of the
+          search constraint will be changed accordingly.
+        </p>
+        <h3 style="margin: 15px 0">Search Constraint</h3>
+        <p class="tips">
+          There must be at least one search constraint and up to seven
+          constraints. You can click the "Add" button behind the first
+          constraint to add a new one, or click the "Remove" button behind a
+          constraint to delete it.
+        </p>
+        <p class="tips">
+          Each search constraint consists of four parts. Firstly, you need to
+          select the search relationship (AND, OR, or NOT) to narrow down or
+          expand the scope of the search. Then, based on the selected type in
+          the search type section, you can choose the corresponding constraint
+          label and enter the search content. Finally, you can choose between
+          precise search or fuzzy search to match the inputted search content.
+        </p>
+        <h3 style="margin: 15px 0">Publication Date</h3>
+        <p class="tips">
+          In the publication date section, you can choose "All Dates" to search
+          for articles published at any time, or select "Custom Range" to choose
+          a specific time period for publication. The time selector allows you
+          to conveniently select articles published in the last month, last six
+          months, or last year.
+        </p>
       </div>
     </div>
   </div>
@@ -330,20 +364,21 @@ function clearInf() {
   padding-top: 65px;
 }
 .left-box {
-  width: 65%;
+  width: 64%;
   min-height: 500px;
   height: 100%;
   float: left;
 }
 .right-box {
-  width: 35%;
+  width: 33%;
+  margin-left: 2%;
+  margin-right: 1%;
   min-height: 500px;
   height: 100%;
-  background-color: #e3e3ff;
   float: right;
 }
 .header {
-  margin: 40px 0;
+  margin: 30px 0;
   padding-left: 10px;
 }
 .type-select {
@@ -368,5 +403,9 @@ function clearInf() {
   border: #b2b2b2 1px solid;
   display: flex;
   justify-content: flex-end;
+}
+.tips {
+  line-height: 30px;
+  margin-bottom: 15px;
 }
 </style>
