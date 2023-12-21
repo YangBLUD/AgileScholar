@@ -5,12 +5,12 @@
         </div>
         <div class="list">
             <el-collapse v-model="activeNames" @change="handleChange" >
-                <el-collapse-item :title=item.raw :name=index v-for="(item,index) in props.agginfo.data" :key="index" @click.native="changeitem(item)">
+                <el-collapse-item :title=item.raw :name=index v-for="(item,index) in props.agginfo.data" :key="index" >
                     <template #title>
                         <div class="el-collapse-item-title">{{ item.raw }}</div>
                     </template>
-                    <div class="item-item" :key=index v-for="(str,index) in titlearr">
-                    {{ str }}
+                    <div class="item-item" @click="aggchange(item)">
+                    {{ item.raw }}&nbsp;({{ item.value }})
                     </div>
                 </el-collapse-item>
             </el-collapse>
@@ -18,7 +18,11 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} from "vue";
+import axios from "axios";
+import { useStore } from "vuex";
+const Store = useStore();
+
 const props = defineProps({
     agginfo:Object,
 })
@@ -28,11 +32,11 @@ const handleChange = (val) => {
 };
 //用于item的渲染
 const titlearr = ref([]);
-function changeitem(item){
-    let title = item.raw;
-    let str = title.split(" & ");
-    console.log(str);
-    titlearr.value = str.slice(0,str.length-1);
+//点击进行聚类
+function aggchange(item){
+    console.log(item.raw);
+    Store.commit("setCluster", item.raw);
+    console.log(Store.getters.getCluster);
 }
 </script>
 <style scoped>
@@ -66,7 +70,8 @@ function changeitem(item){
     .item-item{
             margin-left: 15px;
             margin-bottom: 3px;
-            border-bottom:1px solid #e6e6e6;
+            word-break: break-all;
+            cursor: pointer;
         }
     .el-collapse-item-title {
             width: 90%;

@@ -7,7 +7,7 @@
             <div class="second-search-form">
                 <div class='content-search'>
 					<input type="" name="" placeholder="Search" class="content-search-input" v-model="searchcontent">
-					<el-icon :size='22' color='#808080'><search /></el-icon>
+					<el-icon :size='22' color='#808080' @click="keysearch()"><search /></el-icon>
 				</div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 <div class="search-result-tabs">
                     <div class="nav-container">
                         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-                            <el-tab-pane label="RESULTS" name="RESULTS" ></el-tab-pane>
+                            <el-tab-pane label="RESULTS" name="RESULTS"></el-tab-pane>
                             <el-tab-pane label="SCHOLARS" name="SCHOLARS"></el-tab-pane>
                             <el-tab-pane label="INSTITUTIONS" name="INSTITUTIONS"></el-tab-pane>
                             <el-tab-pane label="SUBJECTS" name="SUBJECTS"></el-tab-pane>
@@ -61,11 +61,11 @@
                     </div>
                     <div class="drop-choice" >
                         <el-col :span="8">
-                            <el-dropdown trigger="click" @click="dropsort()">
-                                <span class="el-dropdown-link">Relevance</span>
+                            <el-dropdown trigger="click" >
+                                <span class="el-dropdown-link" @click="dropsort()">Relevance</span>
                                 <template #dropdown >
                                 <el-dropdown-menu>
-                                    <el-dropdown-item :key=index v-for="(item,index) in sortlist">{{ item.text }}</el-dropdown-item>
+                                    <el-dropdown-item :key=index v-for="(item,index) in sortlist" @click="changesort(item)">{{ item.text }}</el-dropdown-item>
                                 </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
@@ -98,7 +98,7 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted, onUnmounted ,onBeforeMount} from "vue";
+import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} from "vue";
 import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
@@ -106,11 +106,16 @@ import { Search} from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
 //搜索框
-const searchcontent = ref("adasd");
+const searchcontent = ref("AI");
+//搜索函数
+function keysearch(){
+    console.log(searchcontent.value);
+    return;
+    getpaperlist();
+}
 //初始化函数
 onBeforeMount(() => {
   //搜索框
-  //searchcontent = Store.getters.and_list[0].content;
   tst();
   totalpage.value =100; //获取总数
   dropsort();
@@ -119,11 +124,9 @@ onBeforeMount(() => {
 //额外的请求参数
 const search_first_search = ref(1)
 const search_type = ref(0)
-const search_work_clustering = ref(1)
+const search_work_clustering = ref("")
 const search_author_clustering = ref(1)
-const search_size = ref(20)
-const search_from  = ref(0)
-const search_to = ref(20)
+
 const search_sort = ref(-1)
 const search_extend_list = ref([])
 
@@ -133,9 +136,9 @@ const paper_list = ref([])
 const search_title = ref("ai")
 
 //下一行的滑动
-const activeName = ref('first');
+const activeName = ref('RESULTS');
 const handleClick = (tab, event) => {
-    if(tab.props.name == "RESULT"){
+    if(tab.props.name == "RESULTS"){
         search_type.value = 0;
     }
     else if(tab.props.name == "SCHOLARS"){
@@ -147,10 +150,14 @@ const handleClick = (tab, event) => {
     else if(tab.props.name == "SUBJECTS"){
         search_type.value = 3;
     }
+    console.log(search_type.value);
     getpaperlist();
+    resetpage();
 };
 
 function getpaperlist(){
+    tst();
+    console.log(paper_list.value);
     return;
     axios({
       url: "http://122.9.5.156:8000/api/v1/search_result/search",
@@ -183,41 +190,63 @@ function getpaperlist(){
       });
 }
 //选择显示论文的条数
-const papernum = ref(2)
+const papernum = ref(20)
+const search_from  = ref(1)
+const search_to = ref(20)
+
 function changeSize(size){
     papernum.value = size;
     getpaperlist();
+    search_to.value = search_from.value + (papernum.value - 1);
+}
+function resetpage(){
+    search_from.value = 1;
+    search_to.value = search_from.value + papernum.value;
+}
+//左侧的聚类
+const getCluster = computed(()=>{
+	//返回的是ref对象
+	return Store.getters.getCluster;
+})
+watch(getCluster, (newVal, oldVal) => {
+	console.log('newVal, oldVal', newVal, oldVal);
+    getnewagg();
+}, {immediate:true,deep:true});
+function getnewagg(){
+    search_work_clustering.value = getCluster;
+    // getpaperlist();
+    resetpage();
 }
 //翻页功能的实现
 const currentPage = ref(1);
 const totalpage = ref(0);
-const user_article_content = ref(0);
 const currentChange = () => {
-    user_article_content.value = currentPage.value;
-    search_from.value = (currentPage.value-1) * papernum.value;
+    search_from.value = (currentPage.value-1) * papernum.value + 1;
     search_to.value = (currentPage.value ) * papernum.value;
+    getpaperlist();
   };
   
-  //点击左边一页, 切换呈现<新的页码-1>号子数组
-  const prevClick = () => {
+//点击左边一页, 切换呈现<新的页码-1>号子数组
+const prevClick = () => {
     currentPage.value - 1;
-    user_article_content.value = currentPage.value;
-    search_from.value = (currentPage.value-1) * papernum.value;
+    search_from.value = (currentPage.value-1) * papernum.value + 1;
     search_to.value = (currentPage.value ) * papernum.value;
-  };
-  
-  //点击向右一页, 切换呈现<新的页码+1>号子数组
-  const nextClick = () => {
+    getpaperlist();
+};
+
+//点击向右一页, 切换呈现<新的页码+1>号子数组
+const nextClick = () => {
     currentPage.value + 1;
-    user_article_content.value = currentPage.value;
-    search_from.value = (currentPage.value-1) * papernum.value;
+    search_from.value = (currentPage.value-1) * papernum.value + 1;
     search_to.value = (currentPage.value ) * papernum.value;
-  };
+    getpaperlist();
+};
 
 //下拉框排序
 const sortlist = ref([])
 function dropsort(){
-    sortlist.value.splice(0, sortlist.length);
+    sortlist.value = [];
+    console.log(search_type.value)
     if(search_type.value == 0){
         sortlist.value.push({id:0,text:"Cited least"});
         sortlist.value.push({id:1,text:"Cited most"});
@@ -249,9 +278,13 @@ function dropsort(){
         sortlist.value.push({id:7,text:"Name up"});
     }
 }
+function changesort(item){
+    search_sort.value = item.id;
+    getpaperlist();
+}
 //用于测试
 function tst(){
-    console.log("pppppp"+papernum.value);
+    paper_list.value = [];
     for(let i = 0;i<papernum.value;i++){
         paper_list.value.push(test);
     }
@@ -259,7 +292,7 @@ function tst(){
 const test = {
     title: "AI4TV '19: Proceedings of the 1st International Workshop on AI for Smart TV Content Production, Access and Delivery",
     id: "4254080329",
-    abstract: "It is our great pleasure to welcome you to the  Production, Access and Delivery - AI4TV 2019. New scientific breakthroughs in video understanding through the application of AI techniques along with ...",
+    abstract: "It is our great pleasure to welcome you to the  Production, Access and Delivery - AI4TV 2019. New scientific breakthroughs in video understanding through the d as dasdasd a sda sda sdasd asd adas ad sdas d sd a d as d a d a sd a s d a d as da sdasd a sd a sdapplication of AI techniques along with ...",
     cited_count: 0,
     domain: [
         {
@@ -363,7 +396,7 @@ ul{
     top: 0px;
     height: 150px;
     width: 87%;
-    background-color: aqua;
+    background-image: url("../../assets/border.jpg");
     display: flex;
     padding: 0px 100px;
     margin-bottom: 50px;
@@ -465,6 +498,9 @@ ul{
                 left: 20%;
                 width: 50%;
                 margin: auto 0;
+                .demo-tabs{
+                    padding-left: 10px;
+                }
             }
             .nav-result{
                 position: relative;

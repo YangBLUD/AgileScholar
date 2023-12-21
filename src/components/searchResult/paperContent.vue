@@ -6,11 +6,11 @@
                     PROCEEDING
                 </div>
                 <div class="time">
-                    October 2022
+                    {{ props.info.publication_date }}
                 </div>
             </div>
-            <div class="pic">
-                <img src="../../assets/test.jpg" alt="" width="100px" height="120px">
+            <div class="pic" >
+                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;">
             </div>
         </div>
         <div class="right">
@@ -24,7 +24,8 @@
                 </div>
             </div>
             <div class="abstract">
-                {{ props.info.abstract }}
+                <div v-if="props.info.abstract" class="ab-text">{{ props.info.abstract }}</div>
+                <div v-else>without abstract</div>
             </div>
             <div class="bottom">
                 <div class="data">
@@ -38,7 +39,10 @@
                     </div>
                 </div>
                 <div class="choice">
-                    <div class="introduce">
+                    <div class="introduce" v-if="props.info.pdf_url">
+                        <el-icon @click="gotopdf"><Document /></el-icon>
+                    </div>
+                    <div class="introduce" v-if="props.info.landing_page_url">
                         <el-icon @click="gotolink"><Link /></el-icon>
                     </div>
                     <div class="introduce">
@@ -51,7 +55,7 @@
 </div>
 </template>
 <script setup>
-import { Edit ,DocumentAdd,StarFilled,Link} from "@element-plus/icons-vue";
+import { Edit ,DocumentAdd,StarFilled,Link,Document} from "@element-plus/icons-vue";
 import { defineProps } from 'vue';
 import { reactive, ref, onMounted, onUnmounted ,onBeforeMount} from "vue";
 import axios from "axios";
@@ -106,6 +110,10 @@ function addstar(){
 function gotolink(){
     window.open(props.info.landing_page_url);
 }
+//用于pdf
+function gotopdf(){
+    window.open(props.info.pdf_url);
+}
 const props = defineProps({
     info:Object,
 })
@@ -125,7 +133,7 @@ const props = defineProps({
             font-weight:500;
         }
         .time{
-            font-size: 12px;
+            font-size: 14px;
             color: gray;
         }
     }
@@ -173,8 +181,13 @@ const props = defineProps({
     }
     
     .abstract{
+        font-size: 15px;
         width: 87%;
+        height: 78px;
         white-space: pre-wrap;
+        text-overflow:ellipsis ;
+        overflow: hidden;
+        
     }
     .bottom{
         position: relative;
