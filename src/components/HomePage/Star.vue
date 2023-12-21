@@ -11,7 +11,7 @@
     <el-tree :data="favorites_list" :props="treeProps" ref="tree">
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
-          <span style="width: 160px; overflow: hidden">{{
+          <span style="width: 260px; overflow: hidden">{{
             nodeData.name || nodeData.data.display_name || nodeData.data.title
           }}</span>
           <span>
@@ -62,7 +62,7 @@ const newFolderName = ref("");
 const showCreateDialog = ref(false);
 const tree = ref();
 onMounted(() => {
-  getFavorites();
+  //getFavorites();
   listener = document.addEventListener("click", (e) => {
     if (showFavorite.value) {
       if (firstTime) {
@@ -115,7 +115,8 @@ let favorites_list = ref([
         folder_id: 1,
         folder_name: "谢秉书没牛牛1",
         data: {
-          display_name: "Omega Piezo Technologies (United States)",
+          display_name:
+            "Omega Piezo Technologies (United States) asdasd asdadsa asdas",
           id: "4210092899",
           image_url: null,
           ror: "https://ror.org/00jch3e54",
@@ -290,7 +291,9 @@ function remove(node: Node, data) {
 </script>
 <style scoped lang="scss">
 .star-dialog {
-  width: 300px;
+  border-radius: 10px;
+  box-shadow: black 0px 0px 10px 0px;
+  width: 400px;
   max-height: 500px;
   background-color: white;
   position: fixed;
@@ -320,8 +323,5 @@ function remove(node: Node, data) {
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;
-  &:hover {
-    background-color: #b7cbff;
-  }
 }
 </style>

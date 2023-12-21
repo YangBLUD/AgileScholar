@@ -67,9 +67,12 @@
             style="width: 60%; float: left"
           />
           <label>Captcha</label>
-          <el-button type="primary" @click="getCaptcha" style="float: right">{{
-            captcha_time
-          }}</el-button>
+          <el-button
+            type="primary"
+            @click="getCaptcha"
+            style="float: right; margin-top: 7px"
+            >{{ captcha_time }}</el-button
+          >
         </div>
         <a href="#" @click="handleSubmit">
           <span></span>
@@ -171,6 +174,14 @@ function refresh() {
   showRegister.value = false;
   showStar.value = false;
   showHistory.value = false;
+  loginForm.username = "";
+  loginForm.password = "";
+  form.username = "";
+  (form.password = ""),
+    (form.email = ""),
+    (form.captcha = ""),
+    (form.captcha_get = ""),
+    (form.email_change = false);
 }
 const performSearch = () => {
   if (input.value === "") {
@@ -239,7 +250,7 @@ function handleLoginSubmit() {
 
 //注册
 const captcha_time = ref("Get Captcha");
-const form = reactive({
+let form = reactive({
   username: "",
   password: "",
   email: "",
@@ -323,7 +334,7 @@ function handleSubmit() {
 watch(
   () => form.email,
   (newVal, oldVal) => {
-    if (form.captcha_get != "") {
+    if (form.captcha_get != "" && showRegister.value) {
       form.email_change = true;
       form.captcha_get = "";
     }
@@ -592,7 +603,6 @@ function getCaptcha() {
   }
 }
 :deep(.el-button) {
-  margin-top: 7px;
   background-color: #000000;
   color: rgb(255, 255, 255);
   &:hover {
