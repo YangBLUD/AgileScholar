@@ -135,7 +135,9 @@ const Store = useStore();
 const router = useRouter();
 const have_user_info = ref(false);
 const is_scholar = ref(false);
-
+onMounted(() => {
+  have_user_info.value = Store.getters.getLoginState;
+});
 watch(
   () => Store.getters.getLoginState,
   (newVal) => {
