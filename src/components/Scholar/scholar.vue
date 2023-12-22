@@ -86,7 +86,7 @@ const fetchAuthorNetwork = () =>{
     url: "http://122.9.5.156:8000/api/v1/author/author_network",
     method: "post",
     data: JSON.stringify({
-      author_id: 5053369574
+      author_id: 5046279102
     }),
   })
       .then((res) => {
@@ -97,12 +97,14 @@ const fetchAuthorNetwork = () =>{
         console.log(err);
       });
 }
-
+function getAuthorStates(){
+  return store.getters.getAuthorState
+}
 // 在页面加载时触发请求
-onMounted(() => {
+onMounted(async () => {
   fetchAuthorNetwork();
   fetchAuthorInformation();
-  //authorInformation.value = load.data;
+  authorInformation.value = getAuthorStates().authorInformation
 });
 
 

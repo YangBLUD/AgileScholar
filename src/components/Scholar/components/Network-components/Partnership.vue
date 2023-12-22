@@ -1,135 +1,125 @@
 <template>
-  <div ref="chartDiv" style="width: 100%; height: 400px;"></div>
+  <div ref="chartDiv" :style="{ width: '100%', height: chartHeight + 'px' }"></div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, watchEffect} from 'vue';
 import * as echarts from 'echarts';
-
+import {useStore} from "vuex";
+const store = useStore()
 const chartDiv = ref(null);
-// ECharts 配置项
-var data = [
-  {
-    name: 'Grandpa',
-    children: [
-      {
-        name: 'Uncle Leo',
-        value: 15,
-        children: [
-          {
-            name: 'Cousin Jack',
-            value: 2
-          },
-          {
-            name: 'Cousin Mary',
-            value: 5,
-            children: [
-              {
-                name: 'Jackson',
-                value: 2
-              }
-            ]
-          },
-          {
-            name: 'Cousin Ben',
-            value: 4
+const chartHeight = ref(680);
+function getAuthorStates(){
+  return store.getters.getAuthorState
+}
+const referdata = getAuthorStates().authorNetwork
+var nodes = [];
+var links = [];
+const colors = ['#1f77b4', '#2ca02c', '#ff7f0e', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+var mainAuthor = { name: getAuthorStates().authorInformation.display_name, symbolSize: 100 , itemStyle: {
+    color: colors[0] // Call the function to get a random color
+  }};
+nodes.push(mainAuthor)
+console.log(getAuthorStates().authorNetwork.co_work_list)
+console.log(getAuthorStates().authorNetwork.refer_list)
+console.log(getAuthorStates().authorNetwork.referred_list)
+getLinks()
+function getLinks(){
+  if  (referdata.co_work_list.length!=0){
+    referdata.co_work_list.slice(0,10).forEach(function (author) {
+      nodes.push({
+        name: author.name,
+        symbolSize: author.count>5?100:author.count*20,
+        itemStyle: {
+          color: colors[nodes.length%10] // Call the function to get a random color
+        }
+      });
+      links.push({
+        source: getAuthorStates().authorInformation.display_name,
+        target: author.name,
+        market:false,
+        lineStyle: {
+          normal: {
+            color:colors[nodes.length%10-1],
+            width: 2, // 设置线条宽度
+            curveness: 0, // 设置线条的弯曲度，值在 0 到 1 之间
           }
-        ]
-      },
-      {
-        name: 'Aunt Jane',
-        children: [
-          {
-            name: 'Cousin Kate',
-            value: 4
-          }
-        ]
-      },
-      {
-        name: 'Father',
-        value: 10,
-        children: [
-          {
-            name: 'Me',
-            value: 5,
-            itemStyle: {
-              color: 'red'
-            }
-          },
-          {
-            name: 'Brother Peter',
-            value: 1
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Mike',
-    children: [
-      {
-        name: 'Uncle Dan',
-        children: [
-          {
-            name: 'Cousin Lucy',
-            value: 3
-          },
-          {
-            name: 'Cousin Luck',
-            value: 4,
-            children: [
-              {
-                name: 'Nephew',
-                value: 2
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Nancy',
-    children: [
-      {
-        name: 'Uncle Nike',
-        children: [
-          {
-            name: 'Cousin Betty',
-            value: 1
-          },
-          {
-            name: 'Cousin Jenny',
-            value: 2
-          }
-        ]
-      }
-    ]
+        }
+      });
+    });
   }
-];
+}
+console.log(nodes)
+console.log(links)
+function getRandomColor() {
+  // Generate a random hexadecimal color code
+  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+}
+function getRandomNumber() {
+  return Math.floor(Math.random() * 200) + 1; // 生成 1 到 100 之间的随机整数
+}
+
 const chartOptions = {
-  visualMap: {
-    type: 'continuous',
-    min: 0,
-    max: 10,
-    inRange: {
-      color: ['#2F93C8', '#AEC48F', '#FFDB5C', '#F98862']
+  title: {
+    text: 'Author Relationship Graph',
+    textStyle: {
+      color: '#009688', // Tech-like color for title
+      fontFamily: 'Arial, sans-serif'
     }
   },
-  series: {
-    type: 'sunburst',
-    data: data,
-    radius: [0, '90%'],
-    label: {
-      rotate: 'radial'
+  tooltip: {
+    backgroundColor: 'rgba(50,50,50,0.7)', // Dark tooltip for tech feel
+    textStyle: {
+      color: '#fff'
     }
-  }
+  },
+  animationDurationUpdate: 1500,
+  animationEasingUpdate: 'quinticInOut',
+  series: [
+    {
+      type: 'graph',
+      layout: 'force',
+      force: {
+        repulsion: 6000, // 调整节点之间的排斥力，值越大节点之间的间距越大
+      },
+      symbolSize: 50,
+      roam: true,
+      label: {
+        show: true,
+        color: '#fff', // Contrast color for labels
+        fontFamily: 'Arial, sans-serif'
+      },
+      edgeSymbol: ['rectangle', 'none'],
+      edgeSymbolSize: [4, 10],
+      edgeLabel: {
+        fontSize: 20,
+        color: '#fff'
+      },
+      data: nodes,
+      links: links,
+      lineStyle: {
+        normal: {
+          width: 3, // Thicker lines for better visibility
+          curveness: 0, // Slight curve for a modern look
+        }
+      },
+    }
+  ]
 };
+
 
 onMounted(() => {
   if (chartDiv.value) {
     const chart = echarts.init(chartDiv.value);
+
     chart.setOption(chartOptions);
+    // 监听图表内容变化
+    watchEffect(() => {
+      // 获取图表内容的高度
+      const chartContentHeight = chartDiv.value.firstChild.clientHeight;
+      // 设置图表的高度为内容高度
+      chartHeight.value = chartContentHeight+100;
+    });
   } else {
     console.error("Chart element is not available");
   }

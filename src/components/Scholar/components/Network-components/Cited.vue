@@ -15,49 +15,58 @@ function getAuthorStates(){
 const referdata = getAuthorStates().authorNetwork
 var nodes = [];
 var links = [];
-var mainAuthor = { name: getAuthorStates().authorInformation.display_name, symbolSize: 10 };
+let curcolor ='#5470C6';
+var mainAuthor = { name: getAuthorStates().authorInformation.display_name, symbolSize: 100 , itemStyle: {
+    color: getRandomColor() // Call the function to get a random color
+  }};
 nodes.push(mainAuthor)
 console.log(getAuthorStates().authorNetwork.co_work_list)
+console.log(getAuthorStates().authorNetwork.refer_list)
+console.log(getAuthorStates().authorNetwork.referred_list)
  getLinks()
 function getLinks(){
-  var index = 0;
-  if  (referdata.co_work_list.length!=0){
-    referdata.co_work_list.forEach(function (author) {
-      nodes.push({
-        name: author.name+(index++),
-        symbolSize: 100
-      });
-      links.push({
-        source: 'Main Author',
-        target: author.name+(index++),
-        label: {
-          show: true,
-          formatter: 'Co-Work'
-        }
-      });
-    });
-  }
 // 添加被引用关系
   if (referdata.referred_list.length!=0){
-    referdata.referred_list.forEach(function (author) {
+    referdata.referred_list.slice(0,10).forEach(function (author) {
       nodes.push({
-        name: author.name+(index++),
-        symbolSize: 100
+        name: author.name,
+        symbolSize: author.count*50,
+        itemStyle: {
+          color: curcolor=getRandomColor() // Call the function to get a random color
+        }
       });
       links.push({
-        source: author.name+(index++),
-        target: 'Main Author',
+        source: getAuthorStates().authorInformation.display_name,
+        target: author.name,
         label: {
           show: true,
-          formatter: 'Referred'
+          formatter: 'Referred',
+          fontSize: 12
+        },
+        lineStyle: {
+          normal: {
+            color: curcolor,
+            width: 2, // 设置线条宽度
+            curveness: 0.1 // 设置线条的弯曲度，值在 0 到 1 之间
+          }
         }
       });
     });
   }
 }
+console.log(nodes)
+console.log(links)
+function getRandomColor() {
+  // Generate a random hexadecimal color code
+  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+}
+function getRandomNumber() {
+  return Math.floor(Math.random() * 200) + 1; // 生成 1 到 100 之间的随机整数
+}
+
 const chartOptions = {
   title: {
-    text: 'Author Relationship Graph'
+    text: 'Author Citation Graph'
   },
   tooltip: {},
   animationDurationUpdate: 1500,
@@ -66,6 +75,9 @@ const chartOptions = {
     {
       type: 'graph',
       layout: 'force',
+      force: {
+        repulsion: 6000, // 调整节点之间的排斥力，值越大节点之间的间距越大
+      },
       symbolSize: 50,
       roam: true,
       label: {
@@ -89,13 +101,14 @@ const chartOptions = {
 onMounted(() => {
   if (chartDiv.value) {
     const chart = echarts.init(chartDiv.value);
+
     chart.setOption(chartOptions);
     // 监听图表内容变化
     watchEffect(() => {
       // 获取图表内容的高度
       const chartContentHeight = chartDiv.value.firstChild.clientHeight;
       // 设置图表的高度为内容高度
-      chartHeight.value = chartContentHeight;
+      chartHeight.value = chartContentHeight+100;
     });
   } else {
     console.error("Chart element is not available");
