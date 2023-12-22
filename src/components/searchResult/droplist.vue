@@ -34,8 +34,9 @@ const handleChange = (val) => {
 const titlearr = ref([]);
 //点击进行聚类
 function aggchange(item){
+    console.log("eeeeeeeeeee");
     console.log(item.raw);
-    Store.commit("setCluster", item.raw);
+    Store.commit("setCluster", props.agginfo.text,item.raw);
     console.log(Store.getters.getCluster);
 }
 </script>

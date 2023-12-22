@@ -32,8 +32,8 @@
                     </div>
                 </div>
                 <div class="search-result-tabs">
-                    <div class="nav-container">
-                        <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                    <div  class="nav-container">
+                        <el-tabs v-if="!isadvance" v-model="activeName" class="demo-tabs" @tab-click="handleClick">
                             <el-tab-pane label="RESULTS" name="RESULTS"></el-tab-pane>
                             <el-tab-pane label="SCHOLARS" name="SCHOLARS"></el-tab-pane>
                             <el-tab-pane label="INSTITUTIONS" name="INSTITUTIONS"></el-tab-pane>
@@ -79,7 +79,7 @@
                                 <el-checkbox />
                             </div>
                             <div class="context" >
-                                <Content :info="item"/>
+                                <Content :info="item" :token="token"/>
                             </div>
                         </div>
                     </div>
@@ -102,19 +102,29 @@ import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} fr
 import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
-import { Search} from "@element-plus/icons-vue";
+import Scholars from './scholars.vue'
+import { Search, Sort} from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
 //搜索框
 const searchcontent = ref("AI");
 //搜索函数
 function keysearch(){
-    return;
+    const data1 = {
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    }
+    Store.commit("setGeneralSearch", data1);
     getpaperlist();
+    console.log(data1);   
 }
+const token = ref("");
+const isadvance = ref(false);
 //初始化函数
 onBeforeMount(() => {
+    isadvance.value = Store.getters.getSearch.isAdvancedSearch;
     searchcontent.value = Store.getters.getSearch.and_list[0].content;
+    token.value = Store.getters.getUserinfo.token;
     getpaperlist();
     totalpage.value =100; //获取总数
     dropsort();
@@ -153,6 +163,23 @@ const handleClick = (tab, event) => {
 };
 const totalye = ref(0);
 function getpaperlist(){
+    console.log("uuuuuuuuu")
+    console.log({
+            token :Store.getters.getUserinfo.token,
+            search_type : Store.getters.getSearch.searchType,
+            and_list : Store.getters.getSearch.and_list,
+            or_list : Store.getters.getSearch.or_list,
+            not_list : Store.getters.getSearch.not_list,
+            start_time : Store.getters.getSearch.start_time,
+            end_time : Store.getters.getSearch.end_time,
+            first_search : search_first_search.value,
+            work_clustering : search_work_clustering.value,
+            author_clustering : search_author_clustering.value,
+            size : papernum.value,
+            from : search_from.value - 1,
+            sort : search_sort.value,
+            extend_list : search_extend_list.value,
+      })
     axios({
       url: "http://122.9.5.156:8000/api/v1/search_result/search",
       method: "post",
@@ -180,7 +207,7 @@ function getpaperlist(){
         agg.value = data.agg;
         search_to.value = Math.min(data.total,papernum.value);
         totalye.value = parseInt(totalpage.value / papernum.value) +1;
-        console.log(data.agg.data);
+        console.log(data.agg[0]);
       })
       .catch((err) => {
         console.log(err);
@@ -211,7 +238,11 @@ watch(getCluster, (newVal, oldVal) => {
     getnewagg();
 }, {deep:true});
 function getnewagg(){
-    search_work_clustering.value = getCluster;
+    // search_work_clustering.value = getCluster();
+    search_extend_list.value.push({
+        text:getCluster().text,
+        raw:getCluster().raw
+    })
     getpaperlist();
     resetpage();
 }
@@ -278,42 +309,8 @@ function dropsort(){
 function changesort(item){
     search_sort.value = item.id;
     getpaperlist();
+    console.log(paper_list.value);
 }
-//用于测试
-function tst(){
-    paper_list.value = [];
-    for(let i = 0;i<papernum.value;i++){
-        paper_list.value.push(test);
-    }
-}
-const test = {
-    title: "AI4TV '19: Proceedings of the 1st International Workshop on AI for Smart TV Content Production, Access and Delivery",
-    id: "4254080329",
-    abstract: "It is our great pleasure to welcome you to the  Production, Access and Delivery - AI4TV 2019. New scientific breakthroughs in video understanding through the d as dasdasd a sda sda sdasd asd adas ad sdas d sd a d as d a d a sd a s d a d as da sdasd a sd a sdapplication of AI techniques along with ...",
-    cited_count: 0,
-    domain: [
-        {
-            "name": "Psychology",
-            "id": "15744967",
-            "level": "0",
-            "activity_level": "0.2911021"
-        }
-    ],
-    author_all: ["aaa","bbb","ccc","ddd"],
-    pdf_url: null,
-    landing_page_url: "https://doi.org/10.1007/978-3-319-15347-6_300037",
-    source: [
-        {
-            "name": "Springer eBooks",
-            "type": "ebook platform",
-            "id": "4310319965"
-        }
-    ],
-    publication_date: "2020-01-01",
-    type_num: 110,
-    is_star: false
-}
-
 </script>
 
 <style scoped>
