@@ -18,15 +18,16 @@
       <li style="width: 55%; margin-right: 0">
         <div style="float: right">
           <el-input
-            v-model="input"
-            class="w-50 m-2"
+            v-model="searchText"
+            @keyup="userNameKeyup($event)"
             size="large"
-            @keyup.enter="performSearch"
+            width="200px"
           >
             <template #prefix>
               <el-icon class="el-input__icon"><search /></el-icon>
             </template>
           </el-input>
+          <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
       <li class="right">
@@ -130,7 +131,7 @@ const showLogin = ref(false);
 const showRegister = ref(false);
 const showStar = ref(false);
 const showHistory = ref(false);
-const input = ref("");
+const searchText = ref("");
 const Store = useStore();
 const router = useRouter();
 const have_user_info = ref(false);
@@ -138,6 +139,34 @@ const is_scholar = ref(false);
 onMounted(() => {
   have_user_info.value = Store.getters.getLoginState;
 });
+function addHistory() {
+  let login = Store.getters.getLoginState;
+  if (!login) {
+    ElMessage.error("Please login first!");
+    return;
+  }
+  axios({
+    url: "http://122.9.5.156:8000/api/v1/home/star",
+    method: "post",
+    data: JSON.stringify({
+      token: Store.getters.getUserinfo.token,
+      paper_id: "2972869264",
+      type: 0,
+      folder_id: 9,
+    }),
+  })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+function userNameKeyup(event) {
+  if (event.keyCode == 13) {
+    performSearch();
+  }
+}
 watch(
   () => Store.getters.getLoginState,
   (newVal) => {
@@ -185,19 +214,18 @@ function refresh() {
     (form.captcha_get = ""),
     (form.email_change = false);
 }
-const performSearch = () => {
-  if (input.value === "") {
+function performSearch() {
+  if (searchText.value === "") {
     return;
   }
   const data = {
     searchType: 1,
-    keyword: input.value,
+    keyword: searchText.value,
   };
   Store.commit("setGeneralSearch", data);
-  input.value = "";
-  router.push("");
-};
-
+  searchText.value = "";
+  router.push("/searchResult");
+}
 //登录
 const loginForm = reactive({
   username: "",
@@ -233,6 +261,7 @@ function handleLoginSubmit() {
       } else {
         let data = res.data.data;
         const user = {
+          is_admin: data.is_admin,
           user_name: data.username,
           user_id: data.user_id,
           user_email: data.email,

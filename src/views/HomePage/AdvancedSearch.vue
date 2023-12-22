@@ -11,6 +11,7 @@
         <h4 style="margin-bottom: 20px">Search Type</h4>
         <el-radio-group
           v-model="searchType"
+          style="--el-color-primary: black"
           size="large"
           @change="clearAndChange"
         >
@@ -23,8 +24,8 @@
       <div class="keywords-select">
         <h4 style="margin-bottom: 20px">Search Constraint</h4>
         <el-table
+          style="--el-color-primary: black; width: 95%"
           :data="list"
-          style="width: 95%"
           :row-style="{ height: 80 + 'px' }"
         >
           <el-table-column>
@@ -32,8 +33,8 @@
               <el-row>
                 <el-col :span="3">
                   <el-select
+                    style="--el-color-primary: black; width: 100%"
                     v-model="props.row.type"
-                    style="width: 100%"
                     v-show="props.$index !== 0"
                   >
                     <el-option value="AND">AND</el-option>
@@ -42,7 +43,10 @@
                   </el-select>
                 </el-col>
                 <el-col :span="4">
-                  <el-select v-model="props.row.select" style="width: 100%">
+                  <el-select
+                    style="--el-color-primary: black; width: 100%"
+                    v-model="props.row.select"
+                  >
                     <el-option v-if="searchType === 0" value="Title"
                       >Title</el-option
                     >
@@ -114,11 +118,15 @@
                 </el-col>
                 <el-col :span="5">
                   <el-button
+                    style="--el-color-primary: black"
                     @click="addRow(props.row)"
                     v-if="props.$index === 0"
                     >Add</el-button
                   >
-                  <el-button @click="removeRow(props.row)" v-else
+                  <el-button
+                    style="--el-color-primary: black"
+                    @click="removeRow(props.row)"
+                    v-else
                     >Remove</el-button
                   >
                 </el-col>
@@ -130,13 +138,21 @@
       <div class="time-select">
         <h4 style="margin-bottom: 20px">Publication Date</h4>
         <div>
-          <el-radio-group v-model="timeSelect" size="default">
+          <el-radio-group
+            style="--el-color-primary: black"
+            v-model="timeSelect"
+            size="default"
+          >
             <el-radio-button label="AllDates">All Dates</el-radio-button>
             <el-radio-button label="CustomRange">Custom Range</el-radio-button>
           </el-radio-group>
         </div>
         <div style="margin: 20px 0">
           <el-date-picker
+            style="
+              --el-color-primary: black;
+              --el-datepicker-active-color: black;
+            "
             v-model="timePick"
             type="monthrange"
             unlink-panels
@@ -152,8 +168,17 @@
       </div>
       <div class="submit">
         <div style="margin-right: 20px">
-          <el-button size="large" @click="clearInf()">Clear</el-button>
-          <el-button type="primary" @click="search()" size="large"
+          <el-button
+            style="--el-color-primary: black"
+            size="large"
+            @click="clearInf()"
+            >Clear</el-button
+          >
+          <el-button
+            style="--el-color-primary: black; --el-button-hover-bg-color: black"
+            type="primary"
+            @click="search()"
+            size="large"
             >Search</el-button
           >
         </div>
@@ -331,7 +356,6 @@ function search() {
     start_time: begin,
     end_time: end,
   };
-  console.log(data)
   Store.commit("setAdvancedSearch", data);
   router.push({
     path: "/searchResult",

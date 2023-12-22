@@ -9,50 +9,58 @@
     <div @click="jump(4)" class="navigation-item">Institutions</div>
   </div>
   <div class="article-search" id="section1">
-    <div class="headline">
-      <h1>What Scholar</h1>
-    </div>
-    <div class="search_box">
-      <el-input
-        v-model="searchText"
-        placeholder="Search"
-        class="input-with-select"
-        @keyup.enter="performSearch"
-        size="large"
-        width="400px"
-        id="search"
-      >
-        <template #append>
-          <el-button :icon="Search" @click="performSearch" />
-        </template>
-      </el-input>
-      <div
-        style="
-          float: right;
-          cursor: pointer;
-          margin-right: 5px;
-          margin-top: 10px;
-          color: aliceblue;
-        "
-        @click="$router.push({ path: '/advanced' })"
-      >
-        <h5>Advanced Search</h5>
+    <div style="z-index: 5">
+      <div class="headline">
+        <h1>What Scholar</h1>
       </div>
-    </div>
-    <div class="carousel">
-      <el-carousel :interval="4000" height="130px" arrow="always">
-        <el-carousel-item
-          class="carousel-item"
-          v-for="(message, index) in messages"
-          :key="index"
+      <div class="search_box">
+        <el-input
+          v-model="searchText"
+          placeholder="Search"
+          class="input-with-select"
+          @keyup.enter="performSearch"
+          size="large"
+          width="400px"
+          id="search"
         >
-          {{ message }}
-        </el-carousel-item>
-      </el-carousel>
+          <template #append>
+            <el-button :icon="Search" @click="performSearch" />
+          </template>
+        </el-input>
+        <div
+          style="
+            float: right;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-top: 10px;
+            color: aliceblue;
+          "
+          @click="$router.push({ path: '/advanced' })"
+        >
+          <h5>Advanced Search</h5>
+        </div>
+      </div>
+      <div class="carousel">
+        <el-carousel :interval="4000" height="130px" arrow="always">
+          <el-carousel-item
+            class="carousel-item"
+            v-for="(message, index) in messages"
+            :key="index"
+          >
+            <p
+              v-for="(item, index) in message.list"
+              :key="index"
+              style="font-size: 14px; margin: 5px; font-style: italic"
+            >
+              {{ item }}
+            </p>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
     </div>
   </div>
   <div class="article-rank" id="section2">
-    <div class="section-title">Most Popular Articles</div>
+    <div class="section-title">Popular Articles</div>
     <div class="rank-content">
       <div
         class="rank-article-item"
@@ -155,11 +163,11 @@ import TopNav from "../../components/HomePage/TopNav.vue";
 import { Search, Right } from "@element-plus/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-function getUserInfo(){
-  return Store.getters.getUserInfo
+function getUserInfo() {
+  return Store.getters.getUserInfo;
 }
-function test(){
-  console.log(Store.getters.getUserinfo)
+function test() {
+  console.log(Store.getters.getUserinfo);
 }
 const Store = useStore();
 //窗口计算
@@ -191,9 +199,30 @@ function jump(targetId) {
 }
 //轮播图数据
 const messages = [
-  "我们去大草原的湖边等候鸟飞回来",
-  "你清澈又神秘，在贝加尔湖畔",
-  "菊花残，满地伤，花落人断肠",
+  {
+    list: [
+      "Welcome to What Scholar!",
+      "Here you will find a wealth of resources to support",
+      "your research and learning endeavors.",
+      "",
+    ],
+  },
+  {
+    list: [
+      "Whether you are a student, researcher,",
+      "or simply interested in expanding your knowledge,",
+      "we hope you'll find our site both useful and informative.",
+      "",
+    ],
+  },
+  {
+    list: [
+      "Thank you for visiting us,",
+      "and please don't hesitate to contact us if you have any questions.",
+      "Happy exploring!",
+      "",
+    ],
+  },
 ];
 const searchText = ref("");
 
@@ -629,6 +658,7 @@ function goInstitution(id) {
   font-size: 25px;
   color: rgb(232, 239, 247);
   margin-top: 120px;
+  z-index: 10;
 }
 .search_box {
   margin: auto;
@@ -657,6 +687,7 @@ function goInstitution(id) {
   background-size: 100% 100%;
   padding-top: 65px;
   overflow: hidden;
+  z-index: 8;
 }
 .carousel {
   margin: auto;
@@ -672,6 +703,7 @@ function goInstitution(id) {
   align-items: center;
   justify-content: center;
   display: flex;
+  flex-direction: column;
 }
 .article-rank {
   padding-top: 20px;
@@ -722,16 +754,20 @@ function goInstitution(id) {
   justify-content: space-between;
   position: relative;
   width: 80%;
+  height: 100%;
   float: right;
 }
 .rank-article-title {
   font-size: 16px;
   font-weight: 600;
-  min-height: 160px;
+  width: 100%;
+  min-height: 150px;
   padding: 0 10px;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
 .rank-article-author {
-  margin-top: 10px;
+  margin-top: 20px;
   font-size: 14px;
   color: #999;
 }
