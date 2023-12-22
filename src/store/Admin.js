@@ -1,4 +1,3 @@
-import {createStore} from 'vuex'
 const AdminMoudle = {
     state: {
         //isAdmin : false,
@@ -8,6 +7,14 @@ const AdminMoudle = {
         role: '超级管理员',
         lastLoginTime : '2023-12-26',
         lastLoginLocation : '北京',
+
+        affairList: [],
+        //申诉
+        appealList: [],
+        //认证
+        cliamList: [],
+        //举报
+        reportList: [],
 
         todoList : [
             {
@@ -58,6 +65,10 @@ const AdminMoudle = {
         },
         DeleteTodoList(state, index, num){
             state.todoList.splice(index, num)
+        },
+
+        initAffairList(state, affairList){
+            store.affairList = affairList
         },
     },
 

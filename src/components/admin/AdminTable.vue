@@ -162,10 +162,15 @@ let form = reactive({
 
 let idx: number = -1;
 const handleEdit = (index: number, row: any) => {
-	idx = index;
-	form.name = row.name;
-	form.address = row.address;
-	editVisible.value = true;
+	if(row.state == "已处理"){
+		alert("已经处理过啦")
+	}
+	else{
+		idx = index;
+		form.name = row.name;
+		form.address = row.address;
+		editVisible.value = true;
+	}
 };
 const saveEdit = () => {
 	
