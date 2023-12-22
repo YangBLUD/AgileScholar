@@ -132,34 +132,38 @@
     </div>
   </div>
   <!-- <div><Footer /></div> -->
-  <el-dialog v-model="dialogVisible" width="70%" :before-close="handleClose">
-    <div class="subject-name">{{ subjectInfo.name }}</div>
-    <img :src="subjectInfo.img_url" alt="Description of the image">
-    <div class="subject-description">{{ subjectInfo.description }}</div>
-    <el-descriptions title="Summary Statistics" direction="vertical" :column="4" border>
-      <el-descriptions-item label="Number of Citations">{{ subjectInfo.summary_stats.cited_by_count
-      }}</el-descriptions-item>
-      <!-- <el-descriptions-item label="2-Year i10 Index">{{ subjectInfo.summary_stats.2yr_i10_index
+  <!-- 学科详细信息dialog -->
+  <el-dialog v-model="dialogVisible" width="70%" :before-close="handleClose" show-close="false" open-delay="500">
+    <div style="max-height: 600px; overflow-y: auto;">
+      <div class="subject-name">{{ subjectInfo.name }}</div>
+      <img :src="subjectInfo.img_url" alt="" class="image"
+        style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
+      <div class="subject-description">{{ subjectInfo.description }}</div>
+      <el-descriptions title="Summary Statistics" direction="vertical" :column="4" border>
+        <el-descriptions-item label="Number of Citations">{{ subjectInfo.summary_stats.cited_by_count
+        }}</el-descriptions-item>
+        <!-- <el-descriptions-item label="2-Year i10 Index">{{ subjectInfo.summary_stats.2yr_i10_index
       }}</el-descriptions-item> -->
-      <el-descriptions-item label="H-Index">{{ subjectInfo.summary_stats.h_index
-      }}</el-descriptions-item>
-      <el-descriptions-item label="i10 Index" :span="2">{{ subjectInfo.summary_stats.i10_index
-      }}</el-descriptions-item>
-      <el-descriptions-item label="Open Access Percentage">{{ subjectInfo.summary_stats.oa_percent
-      }}
-      </el-descriptions-item>
-      <!-- <el-descriptions-item label="2-Year Mean Citedness">{{ subjectInfo.summary_stats.2yr_mean_citedness
+        <el-descriptions-item label="H-Index">{{ subjectInfo.summary_stats.h_index
+        }}</el-descriptions-item>
+        <el-descriptions-item label="i10 Index" :span="2">{{ subjectInfo.summary_stats.i10_index
+        }}</el-descriptions-item>
+        <el-descriptions-item label="Open Access Percentage">{{ subjectInfo.summary_stats.oa_percent
+        }}
+        </el-descriptions-item>
+        <!-- <el-descriptions-item label="2-Year Mean Citedness">{{ subjectInfo.summary_stats.2yr_mean_citedness
       }}
       </el-descriptions-item> -->
-      <el-descriptions-item label="Number of Works">{{ subjectInfo.summary_stats.works_count
-      }}</el-descriptions-item>
-      <!-- <el-descriptions-item label="2-Year Works Count">{{ subjectInfo.summary_stats.2yr_works_count
+        <el-descriptions-item label="Number of Works">{{ subjectInfo.summary_stats.works_count
+        }}</el-descriptions-item>
+        <!-- <el-descriptions-item label="2-Year Works Count">{{ subjectInfo.summary_stats.2yr_works_count
       }}</el-descriptions-item> -->
-      <!-- <el-descriptions-item label="2-Year H-Index">{{ subjectInfo.summary_stats.2yr_h_index
+        <!-- <el-descriptions-item label="2-Year H-Index">{{ subjectInfo.summary_stats.2yr_h_index
       }}</el-descriptions-item> -->
-      <!-- <el-descriptions-item label="2-Year Number of Citations">{{ subjectInfo.summary_stats.2yr_cited_by_count
+        <!-- <el-descriptions-item label="2-Year Number of Citations">{{ subjectInfo.summary_stats.2yr_cited_by_count
       }}</el-descriptions-item> -->
-    </el-descriptions>
+      </el-descriptions>
+    </div>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">
@@ -172,7 +176,6 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import EchartsDemo from "../../components/Echart.vue";
 import 'echarts/theme/macarons'; // 可选的主题，根据需要选择
 import { ref, onMounted, reactive } from "vue";
 import axios from "axios";
@@ -1470,6 +1473,7 @@ function showInfo(id) {
 .subject-description {
   margin-top: 40px;
   margin-bottom: 40px;
+  margin-left: 20px;
   color: black;
   font-weight: bold;
   font-size: 25px;
