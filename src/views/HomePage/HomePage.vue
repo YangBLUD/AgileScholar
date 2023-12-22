@@ -134,7 +134,7 @@
   <!-- <div><Footer /></div> -->
   <el-dialog v-model="dialogVisible" width="70%" :before-close="handleClose">
     <div class="subject-name">{{ subjectInfo.name }}</div>
-    <img :src="subjectInfo" alt="Description of the image">
+    <img :src="subjectInfo.img_url" alt="Description of the image">
     <div class="subject-description">{{ subjectInfo.description }}</div>
     <el-descriptions title="Summary Statistics" direction="vertical" :column="4" border>
       <el-descriptions-item label="Number of Citations">{{ subjectInfo.summary_stats.cited_by_count
@@ -189,10 +189,11 @@ const router = useRouter();
 const route = useRoute();
 const height = ref(0);
 const countByYear = ref("");
-const subjectInfo = ref({
+const subjectInfo = reactive({
   name: '',
   description: '',
   summary_stats: '',
+  img_url: '',
 },);
 onMounted(() => {
   calcHeight();
@@ -1093,11 +1094,13 @@ function showInfo(id) {
     }),
   })
     .then((res) => {
+      console.log(res.data.data)
       countByYear.value = res.data.data.counts_by_year;
-      subjectInfo.value.name = res.data.data.display_name;
-      subjectInfo.value.description = res.data.data.description;
-      subjectInfo.value.summary_stats = res.data.data.summary_stats;
-      console.log(subjectInfo.value)
+      subjectInfo.name = res.data.data.display_name;
+      subjectInfo.description = res.data.data.description;
+      subjectInfo.summary_stats = res.data.data.summary_stats;
+      subjectInfo.img_url = res.data.data.image_url
+      console.log(subjectInfo)
     })
     .catch((err) => {
       console.log(err);
