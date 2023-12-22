@@ -6,14 +6,6 @@
       width="30%"
       align-center
     >
-        <!-- <el-table :data="props.folderlist"  @row-click="handleEdit" >
-            <el-table-column property="folder_id" label="Folder_id" width="150px" />
-            <el-table-column property="folder_name" label="Name" width="200px" />
-            <el-table-column property="num" label="Star_num" width="150px"/>
-            <el-table-column label="operation" width="200px" algin="center">
-                <div class="add">add</div>
-            </el-table-column>      
-        </el-table> -->
         <div class="title"> Add To Folder</div>
         <div class="folder-list">
           <div class="folder-item" v-for="item in fold">
@@ -45,17 +37,39 @@
   import stardialog from "./stardialog.vue";
   import { useStore } from "vuex";
   const Store = useStore();
+  import { useRouter } from "vue-router";
+  const router = useRouter ();
+
   const centerDialogVisible = ref(false)
   const props = defineProps({
-      folderlist:Array,
       token:String,
       paper_id:String,    
       type:Number,
   })
+function getfold(){
+    axios({
+      url: "http://122.9.5.156:8000/api/v1/home/get_folders",
+      method: "post",
+      data: JSON.stringify({    
+            token :props.token,
+      }),
+    })
+      .then((res) => {
+            console.log(res);
+            fold.value = res.data.data
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
+
   const fold = ref([])
   function start(){
+    if(props.token==""){
+      router.push({ path: "home"});
+    }
     centerDialogVisible.value = true;
-    fold.value = props.folderlist;
+    getfold();
     choose.value = [];
   }
   const choose = ref([]);
@@ -70,10 +84,8 @@
   }
   function handleEdit() {
       centerDialogVisible.value = false;
-      console.log(choose.value);
       for(let i = 0;i < choose.value.length;i++){
         let folder_id = choose.value[i].folder_id;
-        console.log(folder_id);
         axios({
             url: "http://122.9.5.156:8000/api/v1/home/star",
             method: "post",

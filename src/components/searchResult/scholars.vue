@@ -1,61 +1,21 @@
 <template>
-    <div class="main" @click="console.log(info.title)">
-        <div class="left">
-            <div class="timer">
-                <div class="state">
-                    PROCEEDING
-                </div>
-                <div class="time">
-                    {{ props.info.publication_date }}
-                </div>
-            </div>
-            <div class="pic" >
-                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;" >
-            </div>
+    <div class="main">
+        <div class="pic">
+            <img src="../../assets/logo.png" class="scholar-pic"/>
         </div>
-        <div class="right">
-            <div class="title" >
-                <span v-html="props.info.title"></span>
-            </div>
-            <div class="wri_list" >
-                <div class="writer" v-for="item in props.info.author_all.slice(0,2)">
-                    <img src="../../assets/test.jpg" class="writer-pic"/>
-                    <div class="name"><span v-html="item.name"></span></div>
-                </div>
-            </div>
-            <div class="abstract">
-                <div v-if="props.info.abstract" class="ab-text"><span v-html="props.info.abstract"></span></div>
-                <div v-else>without abstract</div>
-            </div>
-            <div class="bottom">
-                <div class="data">
-                    <div class="inference">
-                        <el-icon><Edit /></el-icon>
-                        <div class="inf-num">{{ props.info.cited_count }}</div>
-                    </div>
-                    <div class="trend">
-                        <el-icon><DocumentAdd /></el-icon>
-                        <div class="tr-num">{{ props.info.type_num }}</div>
-                    </div>
-                </div>
-                <div class="choice">
-                    <div class="introduce" v-if="props.info.pdf_url">
-                        <el-icon @click="gotopdf"><Document /></el-icon>
-                    </div>
-                    <div class="introduce" v-if="props.info.landing_page_url">
-                        <el-icon @click="gotolink"><Link /></el-icon>
-                    </div>
-                    <div class="introduce">
-                        
-                        <stardialog :folderlist = "folderlist" :token = "props.token" :paper_id="paper_id" :type="type"></stardialog>
-                    </div>
-                </div>
-            </div>
+        <div class="name" style="text-align: center;">
+            <span v-html="props.info.display_name" style="display: inline-block;"></span>
         </div>
-</div>
+        <div class="jigou" v-if="props.info.institution && props.info.institution.length!=0" style="text-align: center;"> 
+            <span v-html="props.info.institution[0].name" style="display: inline-block;"></span>
+        </div>
+        <div class="star">
+            <stardialog :token = "props.token" :paper_id="paper_id" :type="type"></stardialog>
+        </div>
+        
+    </div>
 </template>
 <script setup>
-import { Edit ,DocumentAdd,StarFilled,Link,Document} from "@element-plus/icons-vue";
 import { defineProps } from 'vue';
 import { reactive, ref, onMounted, onUnmounted ,onBeforeMount} from "vue";
 import axios from "axios";
@@ -63,15 +23,13 @@ import stardialog from "./stardialog.vue";
 import { useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
-    //addstar();
-    getfold();
-    paper_id.value = props.info.id;
+    //getfold();
 });
 //用于收藏
 const paper_id = ref("2106749358");
 const type = ref(0);
 const folder_id = ref(2);
-const folderlist = ref([{"folder_id": 1,"folder_name": "谢秉书没牛牛1","num": 2},{"folder_id": 2,"folder_name": "谢秉书没牛牛2","num": 2}]);
+const folderlist = ref([]);
 function getfold(){
     axios({
       url: "http://122.9.5.156:8000/api/v1/home/get_folders",
@@ -88,15 +46,6 @@ function getfold(){
         console.log(err);
       });
 }
-
-//用于链接的分享
-function gotolink(){
-    window.open(props.info.landing_page_url);
-}
-//用于pdf
-function gotopdf(){
-    window.open(props.info.pdf_url);
-}
 const props = defineProps({
     info:Object,
     token:String,
@@ -105,172 +54,80 @@ const props = defineProps({
 <style scoped>
 .main{
     display: flex;
-}
-.left{
-    display: flex;
-    width:30%;
-    .timer{
-        width: 40%;
-        margin: 15px;
-        .state{
-            font-size: 18px;
-            font-weight:500;
-        }
-        .time{
-            font-size: 14px;
-            color: gray;
-        }
-    }
-    .pic{
-        position: relative;
-        left: 10%;
-        margin: 15px;
-        width: 30px;
-        height: 30px;
-        
-    }
-}
-.right{
-    margin: 15px;
-    position: relative;
-    left: 10%;
+    width: 100%;
     height: 100%;
-    /* width: 95%; */
-    .title{
-        font-size: 18px;
-        width: 87%;
-        height: 52px;
-        cursor: pointer;
-        white-space: pre-wrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-family: Merriweather,serif;
-        color: #0077c2;
-        font-weight: 600;
-        >>> em {
-        background-color: yellow;
-
-        }
-    }
-    .wri_list{
-        display: flex   ;
-        .writer{
-        display: flex;
-        cursor: pointer;
-        margin-right: 20px;
-        .writer-pic{
-
-            margin: 10px 5px 10px 0px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid;
-            /* -webkit-filter: grayscale(100%);
-            -moz-filter: grayscale(100%);
-            -ms-filter: grayscale(100%);
-            -o-filter: grayscale(100%);
-            filter: grayscale(100%);
-            filter: gray; */
-        }
-        .name{
-            margin: 15px 0;
-            color: #616374;
-            text-decoration: underline;
-            font-family: Merriweather,serif;
-            >>> em {
-        background-color: yellow;
-
-        }
-        }
-    }
-    }
-    
-    .abstract{
-        font-size: 16px;
-        width: 87%;
-        height: 65px;
-        overflow: hidden;
-        white-space: pre-wrap;
-        text-overflow:ellipsis ;
-        font-family: Merriweather Sans,sans-serif;
-        >>> em {
-        background-color: yellow;
-
-        }
-    }
-    .ab-text{
-        font-family: Merriweather Sans,sans-serif;
-        
-    }
-    .bottom{
-        position: relative;
-        left: 0px;
-        bottom : 0px;
-        margin: 15px 0;
-        display: flex;
-        width: 100%;
-        .data{
-            position: relative;
-            left: 0px;
-            display: flex;
-            width: 24%;
-            border-right: 1px solid #e6e6e6;
-            font-size: 18px;
-            .inference{
-                margin-top: 5px;
-                margin-right: 10px;
-                display: flex;
-                color: #0077c2;
-                font-size: 25px;
-                .inf-num{
-                    margin-top:3px;
-                    font-size: 17px;
-                    margin-left: 5px;
-                    font-family: icomoon!important;
-                }
-            }
-            .inference:hover{
-                cursor:pointer;
-                transform:translate(1px,-1px)
-            }
-            .trend{
-                margin-top: 5px;
-                margin-right: 10px;
-                display: flex;
-                color: #974dff;
-                font-size: 25px;
-                .tr-num{
-                    margin-top:3px;
-                    font-size: 17px;
-                    margin-left: 5px;
-                }
-            }
-            .trend:hover{
-                cursor:pointer;
-                transform:translate(1px,-1px)
-            }
-        }
-        .choice{
-            position: relative;
-            left:35%;
-            display: flex;
-            .introduce{
-                background-color: rgb(231, 229, 229);
-                margin: 5px;
-                margin-left: 5px;
-                font-size: 25px;
-                color: gray;
-                border-radius: 2px;
-                height: 30px;
-                width: 30px;
-                display: flex;
-                justify-content:center;
-                align-items:center;
-            }
-            .introduce:hover{
-                background-color: #d7d7d7;
-            }
-        }
+    cursor: pointer;
+}
+.pic{
+    width: 250px;
+    height: 140px;
+    .scholar-pic{
+        margin-left: 60%;
+        margin-top:20% ;
+        width: 110px;
+        height:110px;
+        border-radius: 50%;
     }
 }
+.name{
+    position: relative;
+    left: -40px;
+    top: 150px;
+    height: 20px;
+    width: 600px;
+    >>> em {
+        background-color: yellow;
+    }
+}
+.name span{
+    display:inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+    left: -50px;
+    width: 200px;
+}
+.jigou{
+    color: #0077c2;
+    font-size: .875rem;
+    position: relative;
+    left: -230px;
+    top: 180px;
+    width: 600px;
+    height: 20px;
+    /* white-space: pre-wrap; */
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    >>> em {
+        background-color: yellow;
+    }
+}
+.jigou span{
+    display:inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+    left: -50px;
+    width: 200px;
+}
+.star{
+    position: relative;
+    left: -300px;
+    top: 20px;
+    background-color: rgb(231, 229, 229);
+    color: gray;
+    font-size: 25px;
+    border-radius: 2px;
+    height: 30px;
+    width: 33px;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+.star:hover{
+    background-color: #d7d7d7;
+}
+
 </style>

@@ -18,7 +18,7 @@
                 <span v-html="props.info.title"></span>
             </div>
             <div class="wri_list" >
-                <div class="writer" v-for="item in props.info.author_all.slice(0,2)">
+                <div class="writer" v-if="props.info.author_all" v-for="item in props.info.author_all.slice(0,2)">
                     <img src="../../assets/test.jpg" class="writer-pic"/>
                     <div class="name"><span v-html="item.name"></span></div>
                 </div>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="introduce">
                         
-                        <stardialog :folderlist = "folderlist" :token = "props.token" :paper_id="paper_id" :type="type"></stardialog>
+                        <stardialog :token = "props.token" :paper_id="paper_id" :type="type"></stardialog>
                     </div>
                 </div>
             </div>

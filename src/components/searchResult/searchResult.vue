@@ -46,9 +46,9 @@
                 </div>
                 <div class="search-result-checkbox">
                     <div class="shai-checkbox">
-                        <el-checkbox />
+                        <!-- <el-checkbox /> -->
                     </div>
-                    <div class="select-all">Select all</div>
+                    <div class="select-all" @click="withoutagg()">&lt;  Normal</div>
                     <div class="per-page">per page:
                         <div v-if="papernum == 10"  class="page-num-active" >10  </div>
                         <div v-else class="page-num-com"  @click="changeSize(10)">10  </div>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="middle-right-list">
-                    <div class="paper-list" :key="index" v-for="(item,index) in paper_list">
+                    <div v-if="search_type==0" class="paper-list" :key="index" v-for="(item,index) in paper_list">
                         <div class="list-item">
                             <div class="checkbox">
                                 <el-checkbox />
@@ -81,6 +81,11 @@
                             <div class="context" >
                                 <Content :info="item" :token="token"/>
                             </div>
+                        </div>
+                    </div>
+                    <div v-if="search_type==1" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Scholars :info="item" :token="token"></Scholars>
                         </div>
                     </div>
                     <div class="bottom-page">
@@ -98,72 +103,51 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} from "vue";
+import { reactive, ref, onMounted ,onBeforeMount,watch} from "vue";
 import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
 import Scholars from './scholars.vue'
-import { Search, Sort} from "@element-plus/icons-vue";
+import { Search,ArrowLeft} from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
-//搜索框
-const searchcontent = ref("AI");
-//搜索函数
-function keysearch(){
-    const data1 = {
-        searchType : search_type.value,
-        keyword : searchcontent.value,
-    }
-    Store.commit("setGeneralSearch", data1);
-    getpaperlist();
-    console.log(data1);   
-}
+import { useRouter } from "vue-router";
+const router = useRouter ();
+
 const token = ref("");
 const isadvance = ref(false);
-//初始化函数
-onBeforeMount(() => {
-    isadvance.value = Store.getters.getSearch.isAdvancedSearch;
-    searchcontent.value = Store.getters.getSearch.and_list[0].content;
-    token.value = Store.getters.getUserinfo.token;
-    getpaperlist();
-    totalpage.value =100; //获取总数
-    dropsort();
-});
 //额外的请求参数
-const search_first_search = ref(1)
 const search_type = ref(0)
+const search_first_search = ref(1)
 const search_work_clustering = ref(0)
-const search_author_clustering = ref(1)
-
+const search_author_clustering = ref(0)
 const search_sort = ref(0)
 const search_extend_list = ref([])
-
 //用于论文列表的渲染
 const paper_list = ref([])
-//用于第一行的渲染
-const search_title = ref("ai")
+const search_title = ref("")
+//搜索框
+const searchcontent = ref("AI");
 
-//下一行的滑动
-const activeName = ref('RESULTS');
-const handleClick = (tab, event) => {
-    if(tab.props.name == "RESULTS"){
-        search_type.value = 0;
+function start(){
+    if(!isadvance.value){
+        Store.commit("settype", search_type);
     }
-    else if(tab.props.name == "SCHOLARS"){
-        search_type.value = 1;
-    }
-    else if(tab.props.name == "INSTITUTIONS"){
-        search_type.value = 2;
-    }
-    else if(tab.props.name == "SUBJECTS"){
-        search_type.value = 3;
-    }
+    isadvance.value = Store.getters.getSearch.isAdvancedSearch;
+    search_type.value = Store.getters.getSearch.searchType;
+    searchcontent.value = Store.getters.getSearch.and_list[0].content;
+    search_title.value = Store.getters.getSearch.and_list[0].content;
+    token.value = Store.getters.getUserinfo.token;
+}
+//初始化函数
+onBeforeMount(() => {
+    start();
     getpaperlist();
-    resetpage();
-};
-const totalye = ref(0);
+    dropsort();
+});
+
+//核心函数
 function getpaperlist(){
-    console.log("uuuuuuuuu")
     console.log({
             token :Store.getters.getUserinfo.token,
             search_type : Store.getters.getSearch.searchType,
@@ -185,7 +169,7 @@ function getpaperlist(){
       method: "post",
       data: JSON.stringify({
             token :Store.getters.getUserinfo.token,
-            search_type : search_type.value,
+            search_type : Store.getters.getSearch.searchType,
             and_list : Store.getters.getSearch.and_list,
             or_list : Store.getters.getSearch.or_list,
             not_list : Store.getters.getSearch.not_list,
@@ -202,17 +186,56 @@ function getpaperlist(){
     })
       .then((res) => {
         let data = res.data.data;
+        console.log(data);
         paper_list.value = data.result;
         totalpage.value = data.total;
         agg.value = data.agg;
+        // search_from.value = Math.max(1,papernum.value);
         search_to.value = Math.min(data.total,papernum.value);
         totalye.value = parseInt(totalpage.value / papernum.value) +1;
-        console.log(data.agg[0]);
       })
       .catch((err) => {
         console.log(err);
       });
 }
+//搜索函数
+function keysearch(){
+    if(isadvance.value){
+        router.push({ path: "home"});
+    }
+    const data1 = {
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    }
+    Store.commit("setGeneralSearch", data1);
+    getpaperlist();
+}
+
+
+//下一行的滑动
+const activeName = ref('RESULTS');
+const handleClick = (tab, event) => {
+    if(tab.props.name == "RESULTS"){
+        search_type.value = 0;
+    }
+    else if(tab.props.name == "SCHOLARS"){
+        search_type.value = 1;
+    }
+    else if(tab.props.name == "INSTITUTIONS"){
+        search_type.value = 2;
+    }
+    else if(tab.props.name == "SUBJECTS"){
+        search_type.value = 3;
+    }
+    Store.commit("setGeneralSearch",{
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    });
+    getpaperlist();
+    resetpage();
+};
+const totalye = ref(0);
+
 //选择显示论文的条数
 const papernum = ref(20)
 const search_to = ref(20)
@@ -220,31 +243,13 @@ const search_from  = ref(1)
 
 function changeSize(size){
     papernum.value = size;
+    resetpage();
     getpaperlist();
     search_to.value = search_from.value + (papernum.value - 1);
 }
 function resetpage(){
     search_from.value = 1;
     search_to.value = search_from.value + papernum.value;
-}
-//左侧的聚类
-const agg = ref([]);
-function getCluster(){
-	//返回的是ref对象
-	return Store.getters.getCluster;
-}
-watch(getCluster, (newVal, oldVal) => {
-	console.log('newVal, oldVal', newVal, oldVal);
-    getnewagg();
-}, {deep:true});
-function getnewagg(){
-    // search_work_clustering.value = getCluster();
-    search_extend_list.value.push({
-        text:getCluster().text,
-        raw:getCluster().raw
-    })
-    getpaperlist();
-    resetpage();
 }
 //翻页功能的实现
 const currentPage = ref(1);
@@ -271,21 +276,47 @@ const nextClick = () => {
     getpaperlist();
 };
 
+
+//左侧的聚类
+const agg = ref([]);
+function getCluster(){
+	return Store.getters.getCluster;
+}
+watch(getCluster, (newVal, oldVal) => {
+	console.log('newVal, oldVal', newVal, oldVal);
+    getnewagg();
+}, {deep:true});
+function getnewagg(){
+    let pp = getCluster();
+    search_extend_list.value.push({
+        text:pp.agg_text,
+        value:pp.agg_raw
+    })
+    getpaperlist();
+    resetpage();
+}
+//取消聚类的搜索
+function withoutagg(){
+    search_extend_list.value = [];
+    getpaperlist();
+    resetpage();
+}
+
 //下拉框排序
 const sortlist = ref([])
 function dropsort(){
     sortlist.value = [];
     if(search_type.value == 0){
-        sortlist.value.push({id:0,text:"Cited least"});
-        sortlist.value.push({id:1,text:"Cited most"});
-        sortlist.value.push({id:2,text:"Latest"});
-        sortlist.value.push({id:3,text:"Earliest"});
+        sortlist.value.push({id:0,text:"Cited down"});
+        sortlist.value.push({id:1,text:"Cited up"});
+        sortlist.value.push({id:2,text:"Time down"});
+        sortlist.value.push({id:3,text:"Time up"});
         sortlist.value.push({id:4,text:"Title down"});
         sortlist.value.push({id:5,text:"Title up"});
     }
     else if(search_type.value == 1 ||search_type.value == 2){
-        sortlist.value.push({id:0,text:"Cited least"});
-        sortlist.value.push({id:1,text:"Cited most"});
+        sortlist.value.push({id:0,text:"Cited down"});
+        sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Index down"});
         sortlist.value.push({id:3,text:"Index up"});
         sortlist.value.push({id:4,text:"More than 10 in 2"});
@@ -293,10 +324,10 @@ function dropsort(){
         sortlist.value.push({id:6,text:"Results down"});
         sortlist.value.push({id:7,text:"Results up"});
         sortlist.value.push({id:8,text:"Name down"});
-        sortlist.value.push({id:9,text:"Name down"});
+        sortlist.value.push({id:9,text:"Name up"});
     }
     else if(search_type.value == 3){
-        sortlist.value.push({id:0,text:"Cited least"});
+        sortlist.value.push({id:0,text:"Index down"});
         sortlist.value.push({id:1,text:"Index up"});
         sortlist.value.push({id:2,text:"Results down"});
         sortlist.value.push({id:3,text:"Results up"});
@@ -309,7 +340,6 @@ function dropsort(){
 function changesort(item){
     search_sort.value = item.id;
     getpaperlist();
-    console.log(paper_list.value);
 }
 </script>
 
@@ -447,11 +477,15 @@ ul{
                 left: 5px;
             }
             .select-all{
-                margin: 25px 20px;
+                margin: 18px 20px;
                 font-size: 15px;
                 color: #e6e6e6;
                 font-weight: 500;
                 width: 160px;
+                cursor: pointer;
+            }
+            .select-all:hover{
+                color: black;
             }
             .per-page{
                 margin-top: 25px;
@@ -487,7 +521,20 @@ ul{
         }
         .middle-right-list{
             height: 180px;
-            /* background-color: blanchedalmond; */
+            .people-list{
+                margin-left: 30px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                .people-item{
+                    width: 250px;
+                    height: 250px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    box-shadow: 0 0.3125rem 0.5rem rgba(0,0,0,.1);
+                }
+            }
             .paper-list{
                 .list-item{
                     margin: 20px 0px;
