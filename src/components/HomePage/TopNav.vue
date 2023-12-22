@@ -15,7 +15,7 @@
           >What Scholar</a
         >
       </li>
-      <li style="width: 55%; margin-right: 0">
+      <li style="width: 45%; margin-right: 0">
         <div style="float: right">
           <el-input
             v-model="searchText"
@@ -33,6 +33,7 @@
       <li class="right">
         <button v-if="have_user_info" @click="history">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
+        <button v-if="is_admin" @click="toAdmin">Admin</button>
         <button v-if="is_scholar" @click="toPersonal">Personal Homepage</button>
         <button v-if="have_user_info" @click="logout">Sign out</button>
         <button v-if="!have_user_info" @click="login">Sign in</button>
@@ -136,8 +137,12 @@ const Store = useStore();
 const router = useRouter();
 const have_user_info = ref(false);
 const is_scholar = ref(false);
+const is_admin = ref(false);
 onMounted(() => {
   have_user_info.value = Store.getters.getLoginState;
+  is_admin.value = Store.getters.getUserinfo.is_admin;
+  is_scholar.value =
+    Store.getters.getUserinfo.claimed_scholar_name != "" ? true : false;
 });
 function addHistory() {
   let login = Store.getters.getLoginState;
@@ -178,6 +183,11 @@ watch(
     if (newVal != "") {
       is_scholar.value = true;
     }
+  },
+  { deep: true },
+  () => Store.getters.getUserinfo.is_admin,
+  (newVal) => {
+    is_admin.value = newVal;
   },
   { deep: true }
 );
@@ -278,7 +288,9 @@ function handleLoginSubmit() {
       console.log(err);
     });
 }
-
+function toAdmin() {
+  router.push("/admin");
+}
 //注册
 const captcha_time = ref("Get Captcha");
 let form = reactive({
