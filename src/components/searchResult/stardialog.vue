@@ -71,9 +71,9 @@
   function handleEdit() {
       centerDialogVisible.value = false;
       console.log(choose.value);
-      return;
       for(let i = 0;i < choose.value.length;i++){
         let folder_id = choose.value[i].folder_id;
+        console.log(folder_id);
         axios({
             url: "http://122.9.5.156:8000/api/v1/home/star",
             method: "post",

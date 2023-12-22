@@ -139,7 +139,7 @@ const props = defineProps({
     .title{
         font-size: 18px;
         width: 87%;
-        height: 59px;
+        height: 52px;
         cursor: pointer;
         white-space: pre-wrap;
         overflow: hidden;
