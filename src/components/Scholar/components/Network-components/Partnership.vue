@@ -63,7 +63,6 @@ const chartOptions = {
   title: {
     text: 'Author Relationship Graph',
     textStyle: {
-      color: '#009688', // Tech-like color for title
       fontFamily: 'Arial, sans-serif'
     }
   },

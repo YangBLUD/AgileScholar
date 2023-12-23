@@ -33,7 +33,7 @@ function getLinks(){
         symbolSize: author.count*50,
         itemStyle: {
           color: curcolor=getRandomColor() // Call the function to get a random color
-        }
+        },
       });
       links.push({
         source: getAuthorStates().authorInformation.display_name,

@@ -3,11 +3,12 @@
     <el-aside width="200px">
       <el-menu>
         <el-menu-item index="1" @click="currentView = 'sector'">成果概览</el-menu-item>
+        <el-menu-item index="3" @click="currentView = 'interests'">研究兴趣</el-menu-item>
+        <el-menu-item index="4" @click="currentView = 'distribution'">学术成果</el-menu-item>
+        <el-menu-item index="5" @click="currentView = 'citationTrend'">引用趋势</el-menu-item>
         <el-menu-item index="2" @click="currentView = 'academicFocus'">学术关注点</el-menu-item>
-        <el-menu-item index="1" @click="currentView = 'interests'">研究兴趣</el-menu-item>
-        <el-menu-item index="2" @click="currentView = 'distribution'">文献分布</el-menu-item>
-        <el-menu-item index="1" @click="currentView = 'overview'">引用趋势</el-menu-item>
-        <el-menu-item index="2" @click="currentView = 'academicFocus'">基金资助</el-menu-item>
+<!--        <el-menu-item index="6" @click="currentView = 'overview'">总览</el-menu-item>-->
+<!--        <el-menu-item index="7" @click="currentView = 'academicFocus'">基金资助</el-menu-item>-->
       </el-menu>
     </el-aside>
 
@@ -27,6 +28,7 @@ import AcademicFocus from './Influence-components/AcademicFocus.vue';
 import Interests from './Influence-components/Interests.vue';
 import Distribution from './Influence-components/Distribution.vue';
 import Sector from './Influence-components/Sector.vue';
+import CitationTrend from "./Influence-components/CitationTrend.vue";
 // 引入其他子组件
 
 const currentView = ref('sector');
@@ -36,7 +38,8 @@ const componentsMap = {
   academicFocus: AcademicFocus,
   interests: Interests,
   distribution: Distribution,
-  sector: Sector
+  sector: Sector,
+  citationTrend: CitationTrend
 };
 
 const props = defineProps({

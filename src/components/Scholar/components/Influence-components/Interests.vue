@@ -1,55 +1,93 @@
 <template>
-  <div ref="chartDiv" style="width: 100%; height: 400px;"></div>
+  <div ref="chartDiv" style="width: 100%; height: 600px;"></div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import * as echarts from 'echarts';
+import { useStore } from "vuex";
 
+const chartHeight = ref(680);
+const store = useStore();
 const chartDiv = ref(null);
-// ECharts 配置项
+
+function getAuthorStates() {
+  return store.getters.getAuthorState;
+}
+
+const domaindata = reactive(getAuthorStates().authorInformation.domain.slice(0, 10)
+    .map(item => ({
+      value: parseFloat(item.activity_level) * 1000,
+      name: item.name
+    })),
+);
+
+let max = 1000;
+const valuedata = domaindata.map(item => {
+  max = Math.max(item.value, max);
+  return item.value;
+});
+
+const indicatedata = domaindata.map(item => ({
+  name: item.name,
+  max: max
+}));
+
 const chartOptions = {
   title: {
-    text: 'Basic Radar Chart'
+    text: 'Research Interests',
+    left: 'center',
+    textStyle: {
+      color: '#333',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      fontFamily: 'Arial',
+      fontSize: 20
+    }
   },
   legend: {
-    data: ['Allocated Budget', 'Actual Spending']
+    top: 'bottom'
   },
   radar: {
-    // shape: 'circle',
-    indicator: [
-      { name: 'Sales', max: 6500 },
-      { name: 'Administration', max: 16000 },
-      { name: 'Information Technology', max: 30000 },
-      { name: 'Customer Support', max: 38000 },
-      { name: 'Development', max: 52000 },
-      { name: 'Marketing', max: 25000 }
-    ]
+    name: {
+      textStyle: {
+        color: '#555',
+        backgroundColor: '#fff',
+        borderRadius: 3,
+        padding: [3, 5]
+      }
+    },
+    indicator: indicatedata
   },
-  series: [
-    {
-      name: 'Budget vs spending',
-      type: 'radar',
-      data: [
-        {
-          value: [4200, 3000, 20000, 35000, 50000, 18000],
-          name: 'Allocated Budget'
-        },
-        {
-          value: [5000, 14000, 28000, 26000, 42000, 21000],
-          name: 'Actual Spending'
-        }
-      ]
+  series: [{
+    type: 'radar',
+    data: [{
+      value: valuedata,
+      name: 'Research Interests',
+      areaStyle: {
+        color: '#1E90FF'
+      },
+      lineStyle: {
+        width: 2,
+        color: '#97FFFF'
+      },
+      symbol: 'circle',
+      symbolSize: 5
+    }]
+  }],
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    borderColor: '#fff',
+    borderWidth: 1,
+    textStyle: {
+      color: '#fff'
     }
-  ]
+  }
 };
 
 onMounted(() => {
-  if (chartDiv.value) {
-    const chart = echarts.init(chartDiv.value);
-    chart.setOption(chartOptions);
-  } else {
-    console.error("Chart element is not available");
-  }
+  const chart = echarts.init(chartDiv.value, null, { renderer: 'svg' });
+  chart.setOption(chartOptions);
 });
 </script>
