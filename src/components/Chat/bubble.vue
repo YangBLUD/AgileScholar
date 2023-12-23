@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <div class="avatar">
-            <img :src="props.avatar" alt="Avatar">
+            <!-- <img :src="props.avatar" alt="Avatar"> -->
+            <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" />
         </div>
         <div class="username">
             {{ props.sender }}

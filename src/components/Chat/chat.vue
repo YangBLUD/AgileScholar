@@ -1,29 +1,44 @@
 <template>
-  <button @click="test">askQuestion</button>
-  <button @click="resetList">resetList</button>
-  <el-scrollbar style=" max-height:100%; height:625px; min-height:200px;border-bottom: 1.5px solid rgb(220, 220, 220);"
-                wrap-class="scroll-wrap" ref="scrollContainer">
-    <div style="min-height: 667px">
-      <template v-for="(item, index) in messageList" :key="index">
-        <div class="rightContainer">
-          <bubbleSelf :content="item.content" :avatar="config.peopleAvatar" :sender="config.peopleName" v-if="item.isLlm === false"></bubbleSelf>
-          <bubble :content="item.content" :avatar="config.llmAvatar" :sender="config.llmName" v-if="item.isLlm"></bubble>
+  <div
+    style="line-height: 30px; height: 30px; font-size: 20px; text-align: center; margin-bottom: 10px; font-weight: bold;">
+    智能助手<el-button :icon="Refresh" circle style="position:absolute; margin-left: 120px;" @click="resetList" />
+  </div>
+  <div style="width: 400px;">
+    <el-scrollbar style=" max-height:100%; height:700px; min-height:200px; border-bottom: 1.5px solid rgb(220, 220, 220);"
+      wrap-class="scroll-wrap" ref="scrollContainer">
+      <div style="min-height: 667px">
+        <template v-for="(item, index) in messageList" :key="index">
+          <div class="rightContainer">
+            <bubbleSelf :content="item.content" :avatar="config.peopleAvatar" :sender="config.peopleName"
+              v-if="item.isLlm === false"></bubbleSelf>
+            <bubble :content="item.content" :avatar="config.llmAvatar" :sender="config.llmName" v-if="item.isLlm">
+            </bubble>
+          </div>
+        </template>
+      </div>
+    </el-scrollbar>
+    <el-input placeholder="Please input" v-model="input" maxlength="1000" type="text" clearable="true">
+      <template #append>
+        <div>
+          <el-button :icon="Search" @click="ask(input)" />
         </div>
       </template>
-    </div>
-  </el-scrollbar>
+    </el-input>
+  </div>
 </template>
 
 <script setup>
 
-import BubbleSelf from "./bubbleSelf.vue";
-import Bubble from "./bubble.vue";
-import {onMounted, reactive, ref, watch} from "vue";
-import {useStore} from "vuex";
+import bubbleSelf from "./bubbleSelf.vue";
+import bubble from "./bubble.vue";
+import { onMounted, reactive, ref, watch } from "vue";
+import { Search, Refresh } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
 import axios from "axios";
 const store = useStore()
 const messageList = ref([])
-function getMessageList(){
+const input = ref('')
+function getMessageList() {
   return store.getters.getList
 }
 const config = reactive({
@@ -37,13 +52,13 @@ onMounted(() => {
 })
 watch(() => getMessageList(), (newVal, oldVal) => {
   messageList.value = newVal
-},{deep: true})
-function getUserInfo(){
+}, { deep: true })
+function getUserInfo() {
   return store.getters.getUserinfo
 }
-function askSentence(question){
+function askSentence(question) {
   let chatHistory = 0;
-  if(messageList.value.length > 0){
+  if (messageList.value.length > 0) {
     chatHistory = 1
   }
   store.commit('addSentence', {
@@ -72,14 +87,13 @@ function askSentence(question){
     console.log(err)
   })
 }
-function resetList(){
+function resetList() {
   store.commit('resetList')
 }
-function test(){
-  askSentence("杨哥是sb")
+function ask(s) {
+  askSentence(s)
+  input.value = ""
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

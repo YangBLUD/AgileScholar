@@ -142,8 +142,8 @@
       <el-descriptions title="Summary Statistics" direction="vertical" :column="4" border>
         <el-descriptions-item label="Number of Citations">{{ subjectInfo.summary_stats.cited_by_count
         }}</el-descriptions-item>
-        <!-- <el-descriptions-item label="2-Year i10 Index">{{ subjectInfo.summary_stats.2yr_i10_index
-      }}</el-descriptions-item> -->
+        <el-descriptions-item label="2-Year i10 Index">{{ subjectInfo.summary_stats.yr2_i10_index
+        }}</el-descriptions-item>
         <el-descriptions-item label="H-Index">{{ subjectInfo.summary_stats.h_index
         }}</el-descriptions-item>
         <el-descriptions-item label="i10 Index" :span="2">{{ subjectInfo.summary_stats.i10_index
@@ -151,18 +151,19 @@
         <el-descriptions-item label="Open Access Percentage">{{ subjectInfo.summary_stats.oa_percent
         }}
         </el-descriptions-item>
-        <!-- <el-descriptions-item label="2-Year Mean Citedness">{{ subjectInfo.summary_stats.2yr_mean_citedness
-      }}
-      </el-descriptions-item> -->
+        <el-descriptions-item label="2-Year Mean Citedness">{{ subjectInfo.summary_stats.yr2_mean_citedness
+        }}
+        </el-descriptions-item>
         <el-descriptions-item label="Number of Works">{{ subjectInfo.summary_stats.works_count
         }}</el-descriptions-item>
-        <!-- <el-descriptions-item label="2-Year Works Count">{{ subjectInfo.summary_stats.2yr_works_count
-      }}</el-descriptions-item> -->
-        <!-- <el-descriptions-item label="2-Year H-Index">{{ subjectInfo.summary_stats.2yr_h_index
-      }}</el-descriptions-item> -->
-        <!-- <el-descriptions-item label="2-Year Number of Citations">{{ subjectInfo.summary_stats.2yr_cited_by_count
-      }}</el-descriptions-item> -->
+        <el-descriptions-item label="2-Year Works Count">{{ subjectInfo.summary_stats.yr2_works_count
+        }}</el-descriptions-item>
+        <el-descriptions-item label="2-Year H-Index">{{ subjectInfo.summary_stats.yr2_h_index
+        }}</el-descriptions-item>
+        <el-descriptions-item label="2-Year Number of Citations">{{ subjectInfo.summary_stats.yr2_cited_by_count
+        }}</el-descriptions-item>
       </el-descriptions>
+      <Echart :xData="xData" :yData="yData"></Echart>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -177,8 +178,10 @@
 <script setup lang="ts">
 import * as echarts from 'echarts';
 import 'echarts/theme/macarons'; // 可选的主题，根据需要选择
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, nextTick } from "vue";
 import axios from "axios";
+import Echart from "../HomePage/Echats.vue"
+import AI from "../../components/Chat/chat.vue";
 import TopNav from "../../components/HomePage/TopNav.vue";
 import Footer from "../../components/HomePage/Footer.vue";
 import { ElMessageBox } from 'element-plus'
@@ -191,13 +194,15 @@ const Store = useStore();
 const router = useRouter();
 const route = useRoute();
 const height = ref(0);
-const countByYear = ref("");
 const subjectInfo = reactive({
   name: '',
   description: '',
   summary_stats: '',
   img_url: '',
 },);
+var xData = ref("");
+var yData = ref("");
+
 onMounted(() => {
   calcHeight();
   initArticles();
@@ -1097,13 +1102,12 @@ function showInfo(id) {
     }),
   })
     .then((res) => {
-      console.log(res.data.data)
-      countByYear.value = res.data.data.counts_by_year;
       subjectInfo.name = res.data.data.display_name;
       subjectInfo.description = res.data.data.description;
       subjectInfo.summary_stats = res.data.data.summary_stats;
       subjectInfo.img_url = res.data.data.image_url
-      console.log(subjectInfo)
+      xData = res.data.data.counts_by_year.map(item => String(item.year)).reverse();
+      yData = res.data.data.counts_by_year.map(item => String(item.cited_by_count)).reverse();
     })
     .catch((err) => {
       console.log(err);
