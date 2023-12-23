@@ -1,5 +1,5 @@
 <template>
-    <div class="main" @click="console.log(info.title)">
+    <div class="main" @click="">
         <div class="left">
             <div class="timer">
                 <div class="state">
@@ -47,7 +47,7 @@
                     </div>
                     <div class="introduce">
                         
-                        <stardialog :token = "props.token" :paper_id="paper_id" :type="type"></stardialog>
+                        <stardialog  :token = "props.token" :paper_id="paper_id" :type="type" :is_star="props.info.is_star"></stardialog>
                     </div>
                 </div>
             </div>
@@ -63,31 +63,11 @@ import stardialog from "./stardialog.vue";
 import { useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
-    //addstar();
-    getfold();
     paper_id.value = props.info.id;
 });
 //用于收藏
 const paper_id = ref("2106749358");
 const type = ref(0);
-const folder_id = ref(2);
-const folderlist = ref([{"folder_id": 1,"folder_name": "谢秉书没牛牛1","num": 2},{"folder_id": 2,"folder_name": "谢秉书没牛牛2","num": 2}]);
-function getfold(){
-    axios({
-      url: "http://122.9.5.156:8000/api/v1/home/get_folders",
-      method: "post",
-      data: JSON.stringify({    
-            token :props.token,
-      }),
-    })
-      .then((res) => {
-            console.log(res);
-            folderlist.value = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-}
 
 //用于链接的分享
 function gotolink(){

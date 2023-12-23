@@ -1,5 +1,8 @@
 <template>
-    <el-icon @click="start"><StarFilled /></el-icon>
+    <el-icon @click="start" v-if="!is_star"><StarFilled /></el-icon>
+    <div v-else class="kk">
+      <el-icon @click="start"  ><StarFilled /></el-icon>
+    </div>
     <el-dialog  
       v-model="centerDialogVisible"
       class="tan-win"
@@ -39,12 +42,16 @@
   const Store = useStore();
   import { useRouter } from "vue-router";
   const router = useRouter ();
-
+  const is_star = ref(false);
+  onMounted(() => {
+    is_star.value = props.is_star;
+});
   const centerDialogVisible = ref(false)
   const props = defineProps({
       token:String,
       paper_id:String,    
       type:Number,
+      is_star:Boolean,
   })
 function getfold(){
     axios({
@@ -98,6 +105,7 @@ function getfold(){
             })
             .then((res) => {
                     console.log(res);
+                    is_star.value = true;
             })
             .catch((err) => {
                 console.log(err);
@@ -108,6 +116,10 @@ function getfold(){
 
 </script>
 <style scoped>
+.kk{
+  color: #f4bf41;
+  padding-top: 2px;
+}
   .tan-win{
     border-radius: 10%;
     padding-top: 5px;

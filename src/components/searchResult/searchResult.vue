@@ -13,8 +13,15 @@
         </div>
         <div class="middle">
             <div class="middle-left">
-                <div class="middle-left-people" :key="index" v-for="(item,index) in agg">
-                    <Droplist :agginfo="item"/>
+                <div v-if="search_type!=0" class="middle-left-people" :key="index" v-for="(item,index) in agg">
+                    <Droplist :agginfo="item" class="drop1"/>
+                </div>
+                <div v-else class="middle-left-people" >
+                    <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)"/>
+                    <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)"/>
+                    <Droplist :agginfo="sourceagg" class="drop1" @click="getaggagain(2)"/>
+                    <Droplist :agginfo="domainagg" class="drop1" @click="getaggagain(3)"/>
+                    <Droplist :agginfo="typeagg" class="drop1" @click="getaggagain(4)"/>
                 </div>
             </div>
             <div class="middle-right">
@@ -22,7 +29,8 @@
                 <div class="middle-right-sum">
                     <div class="first-line">
                         <div class="search-num">
-                            {{ totalpage }}
+                            <div v-if="totalpage==10000">{{ totalpage }}+</div>
+                            <div v-else>{{ totalpage }}</div>
                             <div style="font-weight: 300;">Results for: </div>
                             All: {{ search_title }}
                         </div>
@@ -72,7 +80,7 @@
                         </el-col>
                     </div>
                 </div>
-                <div class="middle-right-list">
+                <div class="middle-right-list">{{ search_type }}
                     <div v-if="search_type==0" class="paper-list" :key="index" v-for="(item,index) in paper_list">
                         <div class="list-item">
                             <div class="checkbox">
@@ -86,6 +94,16 @@
                     <div v-if="search_type==1" class="people-list"  >
                         <div class="people-item" :key="index" v-for="(item,index) in paper_list">
                             <Scholars :info="item" :token="token"></Scholars>
+                        </div>
+                    </div>
+                    <div v-if="search_type==2" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Institutions :info="item" :token="token"></Institutions>
+                        </div>
+                    </div>
+                    <div v-if="search_type==3" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Subjects :info="item" :token="token"></Subjects>
                         </div>
                     </div>
                     <div class="bottom-page">
@@ -108,6 +126,8 @@ import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
 import Scholars from './scholars.vue'
+import Institutions from './institution.vue'
+import Subjects from './subject.vue'
 import { Search,ArrowLeft} from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
@@ -148,6 +168,7 @@ onBeforeMount(() => {
 
 //核心函数
 function getpaperlist(){
+    console.log("iiiiiiiiiiii")
     console.log({
             token :Store.getters.getUserinfo.token,
             search_type : Store.getters.getSearch.searchType,
@@ -186,13 +207,39 @@ function getpaperlist(){
     })
       .then((res) => {
         let data = res.data.data;
-        console.log(data);
         paper_list.value = data.result;
         totalpage.value = data.total;
-        agg.value = data.agg;
         // search_from.value = Math.max(1,papernum.value);
         search_to.value = Math.min(data.total,papernum.value);
         totalye.value = parseInt(totalpage.value / papernum.value) +1;
+        if(search_type.value == 0){
+            if(search_work_clustering.value == 0){
+                timeagg.value.data = dealagg(data.agg[0].data,"Publication Date");
+            }
+            else if(search_work_clustering.value == 1){
+                writeragg.value.data = dealagg(data.agg[0].data,"Main Author");
+            }
+            else if(search_work_clustering.value == 2){
+                sourceagg.value.data = dealagg(data.agg[0].data,"Source");
+            }
+            else if(search_work_clustering.value == 3){
+                domainagg.value.data = dealagg(data.agg[0].data,"Main Domain");
+            }
+            else if(search_work_clustering.value == 4){
+                typeagg.value.data = dealagg(data.agg[0].data,"Type");
+            }
+        }
+        else{
+            agg.value = [];
+            for(let i = 0;i<data.agg.length;i++){
+                agg.value.push({
+                    name:data.agg[i].name,
+                    text:data.agg[i].text,
+                    data:dealagg(data.agg[i].data,data.agg[i].name)
+                })
+            }
+        }
+        
       })
       .catch((err) => {
         console.log(err);
@@ -231,6 +278,7 @@ const handleClick = (tab, event) => {
         searchType : search_type.value,
         keyword : searchcontent.value,
     });
+    search_extend_list.value = [];
     getpaperlist();
     resetpage();
 };
@@ -288,6 +336,7 @@ watch(getCluster, (newVal, oldVal) => {
 }, {deep:true});
 function getnewagg(){
     let pp = getCluster();
+    search_extend_list.value = [];
     search_extend_list.value.push({
         text:pp.agg_text,
         value:pp.agg_raw
@@ -302,6 +351,82 @@ function withoutagg(){
     resetpage();
 }
 
+//关于聚类的更改
+const timeagg = ref({'name': 'Publication Date', 'text': 'publication_date', 'data': []})
+const writeragg = ref({'name': 'Main Author', 'text': 'author_main', 'data': []})
+const sourceagg = ref({'name': 'Source', 'text': 'source', 'data': []})
+const domainagg = ref({'name': 'Main Domain', 'text': 'domain_main', 'data': []})
+const typeagg = ref({'name': 'Type', 'text': 'type_num', 'data': []})
+function getaggagain(type){
+    // if(type == 0 && timeagg.value.data.length != 0){
+    //     timeagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 1 && writeragg.value.data.length != 0){
+    //     writeragg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 2 && sourceagg.value.data.length != 0){
+    //     sourceagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 3 && domainagg.value.data.length != 0){
+    //     domainagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 4 && typeagg.value.data.length != 0){
+    //     typeagg.value.data = [];
+    //     return;
+    // }
+    
+    
+    
+    search_work_clustering.value = type;
+    getpaperlist();
+}
+function dealagg(datalist,type){
+    let results = [];
+    if(type == "Main Author" || type == "Source" || type == "Main Domain" ||type == "Institution"){
+        for(let i=0;i<datalist.length;i++){
+            let pp = datalist[i].raw.indexOf("&");
+            let tmp = datalist[i].raw.substring(0,pp);
+            results.push({
+                show:tmp,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    else if(type == "Publication Date" || type == "Name" ||type == "Country Code" || type == "Institution Type"){
+        for(let i=0;i<datalist.length;i++){
+            results.push({
+                show:datalist[i].raw,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    else if(type == "Type"){
+        for(let i=0;i<datalist.length;i++){
+            let pp = parseInt(datalist[i].raw);
+            let abs,sou,land,pdf,tmp="";
+            abs = (parseInt(pp/1000));pp%=1000;
+            sou = (parseInt(pp/100));pp%=100;
+            land = (parseInt(pp/10));pp%=10;
+            pdf = pp;
+            if(abs == 1) tmp += "abstract ";
+            if(sou == 1) tmp += "source ";
+            if(land == 1) tmp += "landing_page_url ";
+            if(pdf == 1) tmp += "pdf_url ";
+            results.push({
+                show:tmp,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    return results;
+}
 //下拉框排序
 const sortlist = ref([])
 function dropsort(){
@@ -402,6 +527,9 @@ ul{
     display: flex;
     .middle-left{
         width: 25%;
+        .drop1{
+            margin-bottom: 5px;
+        }
     }
     .middle-right{
         width: 75%;

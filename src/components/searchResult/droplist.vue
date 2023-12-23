@@ -1,16 +1,16 @@
 <template>
     <div class="main">
         <div class="label">
-            <div class="label-content">{{ props.agginfo.text }}</div>
+            <div class="label-content">{{ props.agginfo.name }}</div>
         </div>
         <div class="list">
-            <el-collapse v-model="activeNames" @change="handleChange" v-if="props.agginfo.data.length!=0">
-                <el-collapse-item :title=item.raw :name=index v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" >
+            <el-collapse v-model="activeNames" @change="handleChange" v-if="props.agginfo.data && props.agginfo.data.length!=0">
+                <el-collapse-item :title=item.show :name=index v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" >
                     <template #title>
-                        <div class="el-collapse-item-title">{{ item.raw }}</div>
+                        <div class="el-collapse-item-title">{{ item.show }}</div>
                     </template>
                     <div class="item-item" @click="aggchange(item)">
-                    {{ item.raw }}&nbsp;({{ item.value }})
+                    {{ item.show }}&nbsp;({{ item.value }})
                     </div>
                 </el-collapse-item>
             </el-collapse>
@@ -22,7 +22,9 @@ import { ref, onMounted ,onBeforeMount} from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 const Store = useStore();
-
+onMounted(() => {
+    console.log(props.agginfo)
+});
 const props = defineProps({
     agginfo:Object,
 })
@@ -56,6 +58,9 @@ function aggchange(item){
             left: 10px;
         }
 
+    }
+    .label:hover{
+        background-color: #c8c7c7;
     }
     .list{
         position: relative;
