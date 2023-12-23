@@ -34,14 +34,34 @@ export default {
                 xAxis: {
                     type: "category",
                     data: this.xData,
+                    axisLabel: {
+                        fontSize: 14, // 设置 x 轴单位的字体大小
+                    },
                 },
                 yAxis: {
                     type: "value",
+                    axisLabel: {
+                        fontSize: 14, // 设置 x 轴单位的字体大小
+                    },
+                },
+                legend: {
+                    show: true,
                 },
                 series: [
                     {
                         type: "line",
                         data: this.yData,
+                        label: {
+                            show: false, // 初始时不显示标签
+                            formatter: "{c}", // 标签内容为数值
+                            fontSize: 16,
+                        },
+                        symbolSize: 10, // 设置点的大小
+                        emphasis: {
+                            label: {
+                                show: true, // 鼠标悬停时显示标签
+                            },
+                        },
                     },
                 ],
             });

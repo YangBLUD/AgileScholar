@@ -139,7 +139,8 @@
       <img :src="subjectInfo.img_url" alt="" class="image"
         style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
       <div class="subject-description">{{ subjectInfo.description }}</div>
-      <el-descriptions title="Summary Statistics" direction="vertical" :column="4" border>
+      <div class="summary">Summary Statistics</div>
+      <el-descriptions direction="vertical" :column="4" border>
         <el-descriptions-item label="Number of Citations">{{ subjectInfo.summary_stats.cited_by_count
         }}</el-descriptions-item>
         <el-descriptions-item label="2-Year i10 Index">{{ subjectInfo.summary_stats.yr2_i10_index
@@ -164,9 +165,12 @@
         }}</el-descriptions-item>
       </el-descriptions>
       <el-button-group style="margin-top: 50px; margin-bottom: 50px;">
-        <el-button type="primary" @click="showChart1()" text style="font-size: 16px;">cited_by_count</el-button>
-        <el-button type="primary" @click="showChart2()" text style="font-size: 16px;">works_count</el-button>
-        <el-button type="primary" @click="showChart3()" text style="font-size: 16px;">oa_works_count</el-button>
+        <el-button type="primary" @click="showChart1()" text
+          style="font-size: 20px; font-weight: bold; font-style: italic;">Total cited by count</el-button>
+        <el-button type="primary" @click="showChart2()" text
+          style="font-size: 20px;font-weight: bold; font-style: italic;">Total works count</el-button>
+        <el-button type="primary" @click="showChart3()" text
+          style="font-size: 20px;font-weight: bold; font-style: italic;">Total open access works count</el-button>
       </el-button-group>
       <Echart v-if="flag === 1" :xData="xData" :yData="yData1"></Echart>
       <Echart v-if="flag === 2" :xData="xData" :yData="yData2"></Echart>
@@ -183,8 +187,6 @@
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts';
-import 'echarts/theme/macarons'; // 可选的主题，根据需要选择
 import { ref, onMounted, reactive, nextTick } from "vue";
 import axios from "axios";
 import Echart from "../HomePage/Echats.vue"
@@ -1520,5 +1522,14 @@ function showInfo(item_id) {
   width: 500px;
   height: 450px;
   display: block;
+}
+
+.summary {
+  margin-left: 5px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 20px;
+  color: rgb(90, 156, 248);
 }
 </style>
