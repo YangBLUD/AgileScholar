@@ -163,7 +163,14 @@
         <el-descriptions-item label="2-Year Number of Citations">{{ subjectInfo.summary_stats.yr2_cited_by_count
         }}</el-descriptions-item>
       </el-descriptions>
-      <Echart :xData="xData" :yData="yData"></Echart>
+      <el-button-group style="margin-top: 50px; margin-bottom: 50px;">
+        <el-button type="primary" @click="showChart1()" text style="font-size: 16px;">cited_by_count</el-button>
+        <el-button type="primary" @click="showChart2()" text style="font-size: 16px;">works_count</el-button>
+        <el-button type="primary" @click="showChart3()" text style="font-size: 16px;">oa_works_count</el-button>
+      </el-button-group>
+      <Echart v-if="flag === 1" :xData="xData" :yData="yData1"></Echart>
+      <Echart v-if="flag === 2" :xData="xData" :yData="yData2"></Echart>
+      <Echart v-if="flag === 3" :xData="xData" :yData="yData3"></Echart>
     </div>
     <template #footer>
       <span class="dialog-footer">
@@ -194,15 +201,28 @@ const Store = useStore();
 const router = useRouter();
 const route = useRoute();
 const height = ref(0);
+var id = ref("");
 const subjectInfo = reactive({
   name: '',
   description: '',
   summary_stats: '',
   img_url: '',
 },);
+var flag = ref(0);
 var xData = ref("");
-var yData = ref("");
+var yData1 = ref("");
+var yData2 = ref("");
+var yData3 = ref("");
 
+function showChart1() {
+  flag.value = 1
+}
+function showChart2() {
+  flag.value = 2
+}
+function showChart3() {
+  flag.value = 3
+}
 onMounted(() => {
   calcHeight();
   initArticles();
@@ -1088,7 +1108,7 @@ function goAllSubjects() {
 function change(item) {
   item.show = !item.show
 }
-function showInfo(id) {
+function showInfo(item_id) {
   dialogVisible.value = true
   axios({
     url: "http://122.9.5.156:8000/api/v1/institutions/get_concept_information",
@@ -1098,16 +1118,20 @@ function showInfo(id) {
     },
     data: JSON.stringify({
       token: getUserInfo().token,
-      concept_id: id
+      concept_id: item_id
     }),
   })
     .then((res) => {
+      id.value = String(item_id);
+      flag.value = 0;
       subjectInfo.name = res.data.data.display_name;
       subjectInfo.description = res.data.data.description;
       subjectInfo.summary_stats = res.data.data.summary_stats;
       subjectInfo.img_url = res.data.data.image_url
       xData = res.data.data.counts_by_year.map(item => String(item.year)).reverse();
-      yData = res.data.data.counts_by_year.map(item => String(item.cited_by_count)).reverse();
+      yData1 = res.data.data.counts_by_year.map(item => String(item.cited_by_count)).reverse();
+      yData2 = res.data.data.counts_by_year.map(item => String(item.works_count)).reverse();
+      yData3 = res.data.data.counts_by_year.map(item => String(item.oa_works_count)).reverse();
     })
     .catch((err) => {
       console.log(err);
