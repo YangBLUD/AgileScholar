@@ -177,14 +177,18 @@ watch(
   (newVal) => {
     have_user_info.value = newVal;
   },
-  { deep: true },
+  { deep: true }
+);
+watch(
   () => Store.getters.getScholarName,
   (newVal) => {
     if (newVal != "") {
       is_scholar.value = true;
     }
   },
-  { deep: true },
+  { deep: true }
+);
+watch(
   () => Store.getters.getUserinfo.is_admin,
   (newVal) => {
     is_admin.value = newVal;
@@ -289,6 +293,7 @@ function handleLoginSubmit() {
     });
 }
 function toAdmin() {
+  Store.commit("AdminLogin");
   router.push("/admin");
 }
 //注册
