@@ -4,8 +4,13 @@
             <div class="label-content">{{ props.agginfo.name }}</div>
         </div>
         <div class="list">
-            <el-collapse v-model="activeNames" @change="handleChange" v-if="props.agginfo.data && props.agginfo.data.length!=0">
-                <el-collapse-item :title=item.show :name=index v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" >
+            <div class="list-item"  v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" @click="aggchange(item)" v-if="props.agginfo.data && props.agginfo.data.length!=0">
+                <div class="item-item">
+                    {{ item.show }}&nbsp;({{ item.value }})
+                </div>
+            </div>            
+            <!-- <el-collapse v-model="activeNames" @change="handleChange" v-if="props.agginfo.data && props.agginfo.data.length!=0">
+                <el-collapse-item :title=item.show :name=index v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" accordion=true>
                     <template #title>
                         <div class="el-collapse-item-title">{{ item.show }}</div>
                     </template>
@@ -13,14 +18,14 @@
                     {{ item.show }}&nbsp;({{ item.value }})
                     </div>
                 </el-collapse-item>
-            </el-collapse>
+            </el-collapse> -->
         </div>
     </div>
 </template>
 <script setup>
 import { ref, onMounted ,onBeforeMount} from "vue";
 import axios from "axios";
-import { useStore } from "vuex";
+import { storeKey, useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
     console.log(props.agginfo)
@@ -69,18 +74,26 @@ function aggchange(item){
         text-overflow:ellipsis 
         
     }
+    .list-item{
+        padding-top: 12px;
+        height: 28px;
+        
+        margin-bottom: 3px;
+        word-break: break-all;
+        cursor: pointer;
+        border-bottom:1px solid #e4e1e1;
+    }
     .item-item{
-            margin-left: 15px;
-            margin-bottom: 3px;
-            word-break: break-all;
-            cursor: pointer;
-        }
-    .el-collapse-item-title {
-            width: 90%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
+        width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-left: 15px;
+        font-weight: 500;
+        font-size: .875rem;
+    }
+    .list-item:hover{
+        background-color: #f0f0f0;
+    }
 }
 </style>
