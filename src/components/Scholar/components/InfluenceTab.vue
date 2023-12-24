@@ -7,7 +7,7 @@
         <el-menu-item index="4" @click="currentView = 'distribution'">学术成果</el-menu-item>
         <el-menu-item index="5" @click="currentView = 'citationTrend'">引用趋势</el-menu-item>
         <el-menu-item index="2" @click="currentView = 'academicFocus'">学术关注点</el-menu-item>
-<!--        <el-menu-item index="6" @click="currentView = 'overview'">总览</el-menu-item>-->
+        <el-menu-item index="6" @click="currentView = 'overview'">学者指数</el-menu-item>
 <!--        <el-menu-item index="7" @click="currentView = 'academicFocus'">基金资助</el-menu-item>-->
       </el-menu>
     </el-aside>
