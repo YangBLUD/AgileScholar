@@ -1,5 +1,5 @@
 <template>
-    <div class="article-show-content-comment">
+    <div class="article-show-content-comment" id="comment">
         <div class="article-show-content-nav">
             <div class="article-show-content-nav-block">
                 <div class="article-show-content-nav-holder"></div>
@@ -9,108 +9,98 @@
         <div class="comment-global">
             <div class="comment-line">
                 <img class="sender-img" src="../../assets/ArticleDisplay/head.jpg" alt="">
-                <input class="comment-input" type="text">
-                <el-icon class="comment-send"><Promotion /></el-icon>
+                <input v-model="input_content" class="comment-input" type="text" :placeholder="input_placeholder">
+                <el-tooltip
+                    effect="dark"
+                    content="Cancel"
+                    placement="bottom"
+                >
+                    <el-icon class="comment-send" style="margin-right: 10px" @click="clearReplyTo()"><CloseBold /></el-icon>
+                </el-tooltip>
+                <el-tooltip
+                    effect="dark"
+                    content="Send"
+                    placement="bottom"
+                >
+                    <el-icon class="comment-send" @click="sendComment()"><Promotion /></el-icon>
+                </el-tooltip>
+
             </div>
             <div class="article-show-content-comment-content">
                 <ul id="comments-list" class="comments-list">
-                    <li>
+                    <li v-for="comment in comments">
                         <div class="comment-main-level">
-                            <!-- Avatar -->
-                            <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
-                            <!-- Contenedor del Comentario -->
+                            <div class="comment-avatar"><img src="../../assets/ArticleDisplay/lu.png" alt=""></div>
                             <div class="comment-box">
                                 <div class="comment-head">
-                                    <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">Agustin Ortiz</a></h6>
-                                    <span>hace 20 minutos</span>
+                                    <h6 v-if="comment.is_scholar" class="comment-name by-author"><a href="">{{ comment.user }}</a></h6>
+                                    <h6 v-if="!comment.is_scholar" class="comment-name"><a href="">{{ comment.user }}</a></h6>
+                                    <span>{{ comment.comment_time }}</span>
                                     <el-tooltip
                                             effect="dark"
                                             content="Comment"
                                             placement="bottom"
                                     >
-                                        <el-icon class="comment-icon"><Comment /></el-icon>
+                                        <el-icon class="comment-icon" @click="confirmReplyTo(comment.user, comment.id, comment.id)"><Comment /></el-icon>
                                     </el-tooltip>
                                     <el-tooltip
                                             effect="dark"
-                                            content="Report"
+                                            content="Delete"
                                             placement="bottom"
+                                            v-if="comment.user === user.user_name"
                                     >
-                                        <el-icon class="comment-icon"><WarningFilled /></el-icon>
+                                        <el-icon class="comment-icon" @click="deleteComment(comment.id)"><DeleteFilled /></el-icon>
+                                    </el-tooltip>
+                                    <el-tooltip
+                                        effect="dark"
+                                        content="Report"
+                                        placement="bottom"
+                                    >
+                                        <el-icon class="comment-icon" @click="reportComment(comment.id)"><WarningFilled /></el-icon>
                                     </el-tooltip>
                                 </div>
                                 <div class="comment-content">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
+                                    {{ comment.content }}
                                 </div>
                             </div>
                         </div>
-                        <!-- Respuestas de los comentarios -->
                         <ul class="comments-list reply-list">
-                            <li>
-                                <!-- Avatar -->
-                                <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
-                                <!-- Contenedor del Comentario -->
+                            <li v-for="sec_comment in comment.reply_list">
+                                <div class="comment-avatar"><img src="../../assets/ArticleDisplay/free.jpg" alt=""></div>
                                 <div class="comment-box">
                                     <div class="comment-head">
-                                        <h6 class="comment-name"><a href="http://creaticode.com/blog">Lorena Rojero</a></h6>
-                                        <span>hace 10 minutos</span>
+                                        <h6 v-if="sec_comment.is_scholar" class="comment-name by-author"><a href="">{{ sec_comment.user }}</a></h6>
+                                        <h6 v-if="!sec_comment.is_scholar" class="comment-name"><a href="">{{ sec_comment.user }}</a></h6>
+                                        <span>reply {{sec_comment.reply_to}} {{ sec_comment.comment_time }}</span>
+                                        <el-tooltip
+                                            effect="dark"
+                                            content="Comment"
+                                            placement="bottom"
+                                        >
+                                            <el-icon class="comment-icon" @click="confirmReplyTo(sec_comment.user, sec_comment.id, comment.id)"><Comment /></el-icon>
+                                        </el-tooltip>
                                         <el-tooltip
                                                 effect="dark"
-                                                content="Report"
+                                                content="Delete"
                                                 placement="bottom"
+                                                v-if="sec_comment.user === user.user_name"
                                         >
-                                            <el-icon class="comment-icon"><WarningFilled /></el-icon>
+                                            <el-icon class="comment-icon" @click="deleteComment(sec_comment.id)"><DeleteFilled /></el-icon>
+                                        </el-tooltip>
+                                        <el-tooltip
+                                            effect="dark"
+                                            content="Report"
+                                            placement="bottom"
+                                        >
+                                            <el-icon class="comment-icon" @click="reportComment(sec_comment.id)"><WarningFilled /></el-icon>
                                         </el-tooltip>
                                     </div>
                                     <div class="comment-content">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <!-- Avatar -->
-                                <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt=""></div>
-                                <!-- Contenedor del Comentario -->
-                                <div class="comment-box">
-                                    <div class="comment-head">
-                                        <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">Agustin Ortiz</a></h6>
-                                        <span>hace 10 minutos</span>
-                                        <el-tooltip
-                                                effect="dark"
-                                                content="Report"
-                                                placement="bottom"
-                                        >
-                                            <el-icon class="comment-icon"><WarningFilled /></el-icon>
-                                        </el-tooltip>
-                                    </div>
-                                    <div class="comment-content">
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
+                                        {{ sec_comment.content }}
                                     </div>
                                 </div>
                             </li>
                         </ul>
-                    </li>
-                    <li>
-                        <div class="comment-main-level">
-                            <!-- Avatar -->
-                            <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_2_zps7de12f8b.jpg" alt=""></div>
-                            <!-- Contenedor del Comentario -->
-                            <div class="comment-box">
-                                <div class="comment-head">
-                                    <h6 class="comment-name"><a href="http://creaticode.com/blog">Lorena Rojero</a></h6>
-                                    <span>hace 10 minutos</span>
-                                    <el-tooltip
-                                            effect="dark"
-                                            content="Report"
-                                            placement="bottom"
-                                    >
-                                        <el-icon class="comment-icon"><WarningFilled /></el-icon>
-                                    </el-tooltip>
-                                </div>
-                                <div class="comment-content">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
-                                </div>
-                            </div>
-                        </div>
                     </li>
                 </ul>
             </div>
@@ -118,14 +108,173 @@
     </div>
 </template>
 
-<script>
+<script setup>
 
-import {defineComponent} from "vue";
-import {Comment, Promotion, WarningFilled} from "@element-plus/icons-vue";
+import {defineComponent, reactive, ref, watch} from "vue";
+import {CloseBold, Comment, Delete, DeleteFilled, Promotion, WarningFilled} from "@element-plus/icons-vue";
+import store from "../../store/index.js";
+import axios from "axios";
+import {ElMessage} from "element-plus";
 
-export default defineComponent({
-    components: {Promotion, Comment, WarningFilled}
+let user = ref(store.getters.getUserinfo)
+let comments = ref(store.state.Article.comments)
+watch(()=>store.state.Article.id, (newVal, oldVal)=>{
+    comments.value = store.state.Article.comments
+    user.value = store.getters.getUserinfo
+    initCommentForm()
 })
+watch(()=>store.state.Article.comment_add_num, (newVal, oldVal)=>{
+    comments.value = store.state.Article.comments
+    user.value = store.getters.getUserinfo
+    initCommentForm()
+})
+
+
+const new_comment = reactive({
+    paper_id: "",
+    content: "",
+    reply_to: null,
+    id: -1,
+    user: "",
+    user_id: -1,
+    comment_time: "",
+    is_scholar: false,
+    author_id: "",
+    reply_list: []
+})
+const new_create = reactive({
+    new_comment: {},
+    first_id: -1,
+})
+let input_placeholder = ref("请输入评论内容……")
+let input_content = ref("")
+function confirmReplyTo(username, reply_id, first_id){
+    input_placeholder.value = "reply to " + username
+    const targetElement = document.getElementById('comment');
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+    new_comment.reply_to = reply_id
+    new_create.first_id = first_id
+}
+function clearReplyTo(){
+    initCommentForm()
+}
+function sendComment(){
+    new_comment.content = input_content.value
+    new_comment.paper_id = store.state.Article.id
+    new_comment.user = store.state.User.user_name
+    new_comment.user_id = -store.state.User.user_id
+
+    new_comment.is_scholar = false
+    new_comment.author_id = ""
+    new_comment.reply_list = []
+    console.log(store.state.User.token)
+    console.log(new_comment.paper_id)
+    console.log(new_comment.content)
+    console.log(new_comment.reply_to)
+    axios({
+        // 接口网址：包含协议名，域名，端口和路由
+        url: 'http://122.9.5.156:8000/api/v1/paper/comment',
+        // 请求方式，默认为get，可以不写
+        method: 'post',
+        // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+        data: JSON.stringify({
+            token: store.state.User.token,
+            paper_id: new_comment.paper_id,
+            content: new_comment.content,
+            reply_to: new_comment.reply_to
+        }),
+// 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+        if(res.data.errno === 0){
+            new_comment.comment_time = res.data.data.comment_time
+            new_comment.id = res.data.data.comment_id
+            new_create.new_comment = new_comment
+            console.log(res.data.data)
+            // store.commit("addComment", new_create)
+            getComment()
+            initCommentForm()
+        }
+        else{
+            ElMessage.error('出错啦，找周霄')
+
+            console.log(res.data)
+            console.log(user.token)
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
+}
+function initCommentForm(){
+    input_placeholder.value = "请输入评论内容……"
+    input_content.value = ""
+    new_create.new_comment = {}
+    new_create.first_id = -1
+
+    new_comment.paper_id = ""
+    new_comment.content = ""
+    new_comment.reply_to = null
+    new_comment.id = -1
+    new_comment.user = ""
+    new_comment.user_id = -1
+    new_comment.comment_time = ""
+    new_comment.is_scholar = false
+    new_comment.author_id = ""
+    new_comment.reply_list = []
+}
+function reportComment(comment_id){
+
+}
+function deleteComment(comment_id){
+    axios({
+        // 接口网址：包含协议名，域名，端口和路由
+        url: 'http://122.9.5.156:8000/api/v1/paper/delete_comment',
+        // 请求方式，默认为get，可以不写
+        method: 'post',
+        // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+        data: JSON.stringify({
+            token: store.state.User.token,
+            comment_id: comment_id
+        }),
+// 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+        if(res.data.errno === 0){
+            getComment()
+        }
+        else{
+            ElMessage.error('出错啦，找周霄')
+            console.log(res.data)
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
+}
+
+function getComment(){
+    axios({
+        // 接口网址：包含协议名，域名，端口和路由
+        url: 'http://122.9.5.156:8000/api/v1/paper/get_comment',
+        // 请求方式，默认为get，可以不写
+        method: 'post',
+        // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+        data: JSON.stringify({
+            paper_id: store.state.Article.id,
+        }),
+// 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+        if(res.data.errno === 0){
+            store.commit('updateComment', res.data.data)
+            store.commit("updateCommentNum")
+            console.log(res.data.data)
+        }
+        else{
+            ElMessage.error('出错啦，找周霄')
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
+}
 </script>
 
 <style scoped>
@@ -325,6 +474,7 @@ export default defineComponent({
 
 .reply-list .comment-box {
     width: 710px;
+    min-width: 340px;
 }
 .comment-box .comment-head {
     background: #FCFCFC;
@@ -384,7 +534,7 @@ export default defineComponent({
 
 .comment-box .comment-name.by-author, .comment-box .comment-name.by-author a {color: #03658c;}
 .comment-box .comment-name.by-author:after {
-    content: 'autor';
+    content: 'scholar';
     background: #03658c;
     color: #FFF;
     font-size: 12px;
@@ -419,6 +569,7 @@ export default defineComponent({
 .comment-icon :hover{
     color: #535bf2;
 }
+
 .comment-line{
     display: flex;
     flex-direction: row;
@@ -445,9 +596,14 @@ export default defineComponent({
 .comment-send{
     font-size: 20px;
     width: 37px;
+    min-width: 37px;
     height: 37px;
     border-radius: 50%;
     border: 1px solid #d0d0d0;
     color: #6b6b6b;
+    cursor: pointer;
+}
+.comment-global{
+    margin-top: 25px;
 }
 </style>

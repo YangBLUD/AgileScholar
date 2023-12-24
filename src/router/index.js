@@ -20,13 +20,11 @@ const routes = [
     props: true
   },
   {
-    path: "/institution",
-    component: InstitutionDisplay
-  },
-  {
-    path: '/searchResult',
-    component: ()=>import('../components/searchResult/searchResult.vue'),
-  },
+    path: "/institution/:id",
+    name: "institution-display",
+    component: InstitutionDisplay,
+    props: true,
+  }
 ];
 const router = createRouter({
   history: createWebHashHistory(),

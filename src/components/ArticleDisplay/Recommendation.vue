@@ -46,7 +46,9 @@ import {ref, watch} from "vue";
 import store from "../../store/index.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-
+import {useRoute , useRouter} from "vue-router";
+import router from "../../router/index.js";
+const route = useRoute()
 let recommendation_i = ref(true);
 
 const recommendations_1 = ref(store.getters.get_recommendations)
@@ -55,7 +57,9 @@ watch(()=>store.state.Article.id, (newVal, oldVal)=>{
     recommendations_1.value = store.getters.get_recommendations
     recommendations_2.value = store.getters.get_few_recommendations
 })
-
+watch(()=>route.params.id, (newVal, oldVal)=>{
+    jump(newVal)
+})
 
 function getMoreRecommendation_i(){
     recommendation_i.value = false;
@@ -63,7 +67,29 @@ function getMoreRecommendation_i(){
 function getFewerRecommendation_i(){
     recommendation_i.value = true;
 }
+
 function jump(article_id){
+    axios({
+        // 接口网址：包含协议名，域名，端口和路由
+        url: 'http://122.9.5.156:8000/api/v1/paper/get_comment',
+        // 请求方式，默认为get，可以不写
+        method: 'post',
+        // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+        data: JSON.stringify({
+            paper_id: article_id,
+        }),
+// 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+        if(res.data.errno === 0){
+            store.commit('updateComment', res.data.data)
+            console.log(res.data.data)
+        }
+        else{
+            ElMessage.error('出错啦，找周霄')
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
     axios({
         // 接口网址：包含协议名，域名，端口和路由
         url: 'http://122.9.5.156:8000/api/v1/paper/get_paper_information',
@@ -86,7 +112,6 @@ function jump(article_id){
     }).catch(err=>{
         console.log(err)
     })
-
 }
 </script>
 
