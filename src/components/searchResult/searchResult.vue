@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="sum-text">
-                        <div class="text-first">Searched The ACM Full-Text Collection ({{totalpage}} records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
+                        <div class="text-first">Searched The Full-Text Collection ({{totalpage}} records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
                     </div>
                 </div>
                 <div class="search-result-tabs">
@@ -80,7 +80,7 @@
                         </el-col>
                     </div>
                 </div>
-                <div class="middle-right-list">{{ search_type }}
+                <div class="middle-right-list">
                     <div v-if="search_type==0" class="paper-list" :key="index" v-for="(item,index) in paper_list">
                         <div class="list-item">
                             <div class="checkbox">

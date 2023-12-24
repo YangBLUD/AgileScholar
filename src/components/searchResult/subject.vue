@@ -6,7 +6,7 @@
         <div class="name" style="text-align: center;">
             <span v-html="props.info.display_name" style="display: inline-block;"></span>
         </div>
-        <div class="jigou" v-if="props.info.description && props.info.institution.length!=0" style="text-align: center;"> 
+        <div class="jigou" v-if="props.info.description " style="text-align: center;"> 
             <span v-html="props.info.description" style="display: inline-block;"></span>
         </div>
         <div class="star">
