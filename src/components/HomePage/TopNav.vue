@@ -3,35 +3,46 @@
   <div class="top-nav">
     <ul>
       <li style="padding-left: 30px">
-        <a
-          href="#"
-          style="
+        <a href="#" style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          "
-          >What Scholar</a
-        >
+          ">What Scholar</a>
       </li>
-      <li style="width: 55%; margin-right: 0">
+      <li style="width: 45%; margin-right: 0">
         <div style="float: right">
-          <el-input
-            v-model="input"
-            class="w-50 m-2"
-            size="large"
-            @keyup.enter="performSearch"
-          >
+          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px">
             <template #prefix>
-              <el-icon class="el-input__icon"><search /></el-icon>
+              <el-icon class="el-input__icon">
+                <search />
+              </el-icon>
             </template>
           </el-input>
+          <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="have_user_info">
+        <template #default>
+          <AI />
+        </template>
+        <template #reference>
+          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+        </template>
+      </el-popover>
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="!have_user_info">
+        <template #default>
+          <div>智能助手</div>
+        </template>
+        <template #reference>
+          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+        </template>
+      </el-popover>
       <li class="right">
         <button v-if="have_user_info" @click="history">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
+        <button v-if="is_admin" @click="toAdmin">Admin</button>
         <button v-if="is_scholar" @click="toPersonal">Personal Homepage</button>
         <button v-if="have_user_info" @click="logout">Sign out</button>
         <button v-if="!have_user_info" @click="login">Sign in</button>
@@ -59,20 +70,10 @@
           <label>E-mail</label>
         </div>
         <div class="user-box">
-          <input
-            type="text"
-            name=""
-            required=""
-            v-model="form.captcha"
-            style="width: 60%; float: left"
-          />
+          <input type="text" name="" required="" v-model="form.captcha" style="width: 60%; float: left" />
           <label>Captcha</label>
-          <el-button
-            type="primary"
-            @click="getCaptcha"
-            style="float: right; margin-top: 7px"
-            >{{ captcha_time }}</el-button
-          >
+          <el-button type="primary" @click="getCaptcha" style="float: right; margin-top: 7px">{{ captcha_time
+          }}</el-button>
         </div>
         <a href="#" @click="handleSubmit">
           <span></span>
@@ -92,12 +93,7 @@
           <label>Username</label>
         </div>
         <div class="user-box">
-          <input
-            type="password"
-            name=""
-            required=""
-            v-model="loginForm.password"
-          />
+          <input type="password" name="" required="" v-model="loginForm.password" />
           <label>Password</label>
         </div>
         <a href="#" @click="handleLoginSubmit">
@@ -115,6 +111,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted, onUnmounted } from "vue";
 import Login from "./Login.vue";
+import AI from "../Chat/chat.vue"
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
@@ -130,14 +127,47 @@ const showLogin = ref(false);
 const showRegister = ref(false);
 const showStar = ref(false);
 const showHistory = ref(false);
-const input = ref("");
+const searchText = ref("");
 const Store = useStore();
 const router = useRouter();
 const have_user_info = ref(false);
 const is_scholar = ref(false);
+const is_admin = ref(false);
+const dialogVisible = ref(false)
 onMounted(() => {
   have_user_info.value = Store.getters.getLoginState;
+  is_admin.value = Store.getters.getUserinfo.is_admin;
+  is_scholar.value =
+    Store.getters.getUserinfo.claimed_scholar_name != "" ? true : false;
 });
+function addHistory() {
+  let login = Store.getters.getLoginState;
+  if (!login) {
+    ElMessage.error("Please login first!");
+    return;
+  }
+  axios({
+    url: "http://122.9.5.156:8000/api/v1/home/star",
+    method: "post",
+    data: JSON.stringify({
+      token: Store.getters.getUserinfo.token,
+      paper_id: "2972869264",
+      type: 0,
+      folder_id: 9,
+    }),
+  })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+function userNameKeyup(event) {
+  if (event.keyCode == 13) {
+    performSearch();
+  }
+}
 watch(
   () => Store.getters.getLoginState,
   (newVal) => {
@@ -149,6 +179,11 @@ watch(
     if (newVal != "") {
       is_scholar.value = true;
     }
+  },
+  { deep: true },
+  () => Store.getters.getUserinfo.is_admin,
+  (newVal) => {
+    is_admin.value = newVal;
   },
   { deep: true }
 );
@@ -185,19 +220,18 @@ function refresh() {
     (form.captcha_get = ""),
     (form.email_change = false);
 }
-const performSearch = () => {
-  if (input.value === "") {
+function performSearch() {
+  if (searchText.value === "") {
     return;
   }
   const data = {
-    searchType: 1,
-    keyword: input.value,
+    searchType: 0,
+    keyword: searchText.value,
   };
   Store.commit("setGeneralSearch", data);
-  input.value = "";
-  router.push("");
-};
-
+  searchText.value = "";
+  router.push("/searchResult");
+}
 //登录
 const loginForm = reactive({
   username: "",
@@ -233,6 +267,7 @@ function handleLoginSubmit() {
       } else {
         let data = res.data.data;
         const user = {
+          is_admin: data.is_admin,
           user_name: data.username,
           user_id: data.user_id,
           user_email: data.email,
@@ -249,7 +284,9 @@ function handleLoginSubmit() {
       console.log(err);
     });
 }
-
+function toAdmin() {
+  router.push("/admin");
+}
 //注册
 const captcha_time = ref("Get Captcha");
 let form = reactive({
@@ -396,6 +433,7 @@ function getCaptcha() {
   left: 0;
   background: rgba(0, 0, 0, 0.61);
 }
+
 .close {
   font-size: 20px;
   position: absolute;
@@ -404,6 +442,7 @@ function getCaptcha() {
   color: aliceblue;
   cursor: pointer;
 }
+
 .top-nav {
   z-index: 999;
   position: fixed;
@@ -424,6 +463,7 @@ function getCaptcha() {
   display: flex;
   justify-content: space-between;
 }
+
 .top-nav li {
   margin-right: 20px;
 }
@@ -478,6 +518,7 @@ function getCaptcha() {
   outline: none;
   background: transparent;
 }
+
 .login-box .user-box label {
   position: absolute;
   top: 0;
@@ -489,16 +530,18 @@ function getCaptcha() {
   transition: 0.5s;
 }
 
-.login-box .user-box input:focus ~ label,
-.login-box .user-box input:valid ~ label {
+.login-box .user-box input:focus~label,
+.login-box .user-box input:valid~label {
   top: -20px;
   left: 0;
   color: #03e9f4;
   font-size: 12px;
 }
+
 .login-box form {
   text-align: center;
 }
+
 .login-box form a {
   position: relative;
   display: inline-block;
@@ -539,6 +582,7 @@ function getCaptcha() {
   0% {
     left: -100%;
   }
+
   50%,
   100% {
     left: 100%;
@@ -559,6 +603,7 @@ function getCaptcha() {
   0% {
     top: -100%;
   }
+
   50%,
   100% {
     top: 100%;
@@ -579,6 +624,7 @@ function getCaptcha() {
   0% {
     right: -100%;
   }
+
   50%,
   100% {
     right: 100%;
@@ -599,21 +645,26 @@ function getCaptcha() {
   0% {
     bottom: -100%;
   }
+
   50%,
   100% {
     bottom: 100%;
   }
 }
+
 :deep(.el-button) {
   background-color: #000000;
   color: rgb(255, 255, 255);
+
   &:hover {
     color: #03e9f4;
   }
 }
+
 :deep(.el-button--primary) {
   --el-button-border-color: white;
 }
+
 :deep(.el-button:hover) {
   border-color: #03e9f4;
 }

@@ -23,9 +23,18 @@
           <span class="icon" v-if="nodeData.list != undefined"
             ><el-icon><Folder /></el-icon
           ></span>
-          <span style="width: 220px; overflow: hidden">{{
-            nodeData.name || nodeData.data.display_name || nodeData.data.title
-          }}</span>
+          <span
+            style="
+              width: 220px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              word-break: break-all;
+            "
+            @click="jump(nodeData)"
+            >{{
+              nodeData.name || nodeData.data.display_name || nodeData.data.title
+            }}</span
+          >
           <span>
             <el-button @click="remove(node, nodeData)">Delete</el-button>
           </span>
@@ -66,6 +75,8 @@ import type Node from "element-plus/es/components/tree/src/model/node";
 import { ElDialog, ElForm, ElInput, ElButton, ElMessage } from "element-plus";
 import { defineEmits } from "vue";
 import { fa } from "element-plus/es/locale";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const Store = useStore();
 const emit = defineEmits(["refresh"]);
 const showFavorite = ref();
@@ -75,7 +86,7 @@ const newFolderName = ref("");
 const showCreateDialog = ref(false);
 const tree = ref();
 onMounted(() => {
-  //getFavorites();
+  getFavorites();
   listener = document.addEventListener("click", (e) => {
     if (showFavorite.value) {
       if (firstTime) {
@@ -206,15 +217,7 @@ function append() {
   })
     .then((res) => {
       if (res.data.errno == 0) {
-        ElMessage.success("Create successfully");
-        let n = res.data.data.folder_name;
-        let i = res.data.data.folder_id;
-        favorites_list.value.push({
-          name: newFolderName.value,
-          folder_id: i,
-          num: 0,
-          list: [],
-        });
+        getFavorites();
       } else {
         ElMessage.error("Create failed!");
       }
@@ -254,19 +257,7 @@ function remove(node: Node, data) {
       .then((res) => {
         if (res.data.errno == 0) {
           //暂时用的刷新机制，因为正常删除删不掉只能同步了
-          axios({
-            url: "http://122.9.5.156:8000/api/v1/home/get_stars",
-            method: "post",
-            data: JSON.stringify({
-              token: Store.getters.getUserinfo.token,
-            }),
-          })
-            .then((res) => {
-              favorites_list.value = res.data.data;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          getFavorites();
         } else {
           ElMessage.error("Delete failed!");
         }
@@ -299,6 +290,18 @@ function remove(node: Node, data) {
         console.log(err);
         ElMessage.error("Delete failed!");
       });
+  }
+}
+function jump(data) {
+  if (data.list != undefined) {
+    return;
+  }
+  if (data.type == 0) {
+    router.push("");
+  } else if (data.type == 1) {
+    router.push("");
+  } else if (data.type == 2) {
+    router.push("");
   }
 }
 </script>
