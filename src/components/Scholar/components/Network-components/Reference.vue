@@ -26,8 +26,8 @@ console.log(getAuthorStates().authorNetwork.referred_list)
 getLinks()
 function getLinks(){
 // 添加被引用关系
-  if (referdata.referred_list.length!=0){
-    referdata.referred_list.slice(0,10).forEach(function (author) {
+  if (referdata.refer_list.length!=0){
+    referdata.refer_list.slice(0,10).forEach(function (author) {
       nodes.push({
         name: author.name,
         symbolSize: author.count*50,
@@ -54,8 +54,7 @@ function getLinks(){
     });
   }
 }
-console.log(nodes)
-console.log(links)
+
 function getRandomColor() {
   // Generate a random hexadecimal color code
   return '#' + Math.floor(Math.random() * 16777215).toString(16);

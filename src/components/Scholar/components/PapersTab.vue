@@ -34,6 +34,9 @@ import {useStore} from "vuex";
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElTabs, ElTabPane } from 'element-plus';
 import axios from 'axios';
 const store = useStore()
+function getAuthorStates(){
+  return store.getters.getAuthorState
+}
 // 初始论文数据
 const papers = ref([
   { title: '论文1', authors: '作者1', journal: '期刊1', year: '2023', type: '期刊', download: '100', quote: '20' },
@@ -71,7 +74,26 @@ function filterBy(field, value) {
   }
 }
 function fetchPaperList(){
+  axios({
+    url: "http://122.9.5.156:8000/api/v1/search_result/search",
+    method: "post",
+    data: JSON.stringify({
+      search_type: 0,
+      add_list: [{
+        content: getAuthorStates().authorInformation.id,
+        select:  "Author",
+        clear:1,
+      }],
+      or_list: [],
+      not_list: [],
+      start_time:null,
+      end_time:null,
+      sort : -1,
+      first_search:-1,
+      work_clustering:0,
 
+    })
+  })
 }
 onMounted
 

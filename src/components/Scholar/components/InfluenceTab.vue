@@ -29,10 +29,10 @@ import Interests from './Influence-components/Interests.vue';
 import Distribution from './Influence-components/Distribution.vue';
 import Sector from './Influence-components/Sector.vue';
 import CitationTrend from "./Influence-components/CitationTrend.vue";
+import {useStore} from "vuex";
 // 引入其他子组件
-
+const store = useStore()
 const currentView = ref('sector');
-
 const componentsMap = {
   overview: Overview,
   academicFocus: AcademicFocus,
@@ -57,10 +57,6 @@ if(authorInformation!=null){
         name: item.name
       }));
 }
-
-onMounted( () =>{
-   console.log("?"+props.authorInformation)
-})
 
 const  PrintInfo = () =>{
   console.log(props)

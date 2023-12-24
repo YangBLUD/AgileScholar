@@ -76,6 +76,7 @@ const fetchAuthorInformation = () =>{
         }),
       })
       .then((res) => {
+        console.log(res.data.data)
         store.commit('setAuthorInformation', res.data.data)
       })
       .catch((err) => {
@@ -87,7 +88,7 @@ const fetchAuthorNetwork = () =>{
     url: "http://122.9.5.156:8000/api/v1/author/author_network",
     method: "post",
     data: JSON.stringify({
-      author_id: authorId
+      author_id: 5053369573
     }),
   })
       .then((res) => {
@@ -101,15 +102,16 @@ const fetchAuthorNetwork = () =>{
 function getAuthorStates(){
   return store.getters.getAuthorState
 }
-onBeforeMount(()=>{
-  authorInformation.value = getAuthorStates().authorInformation
-  authorId.value = authorInformation.value.authorId
-})
-// 在页面加载时触发请求
-onMounted(async () => {
+onBeforeMount(async ()=>{
+  authorId.value = 5053369573;
   fetchAuthorNetwork();
   fetchAuthorInformation();
+
+})
+// 在页面加载时触发请求
+onMounted( () => {
 });
+
 </script>
 
 <style scoped>

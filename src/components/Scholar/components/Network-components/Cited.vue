@@ -20,10 +20,8 @@ var mainAuthor = { name: getAuthorStates().authorInformation.display_name, symbo
     color: getRandomColor() // Call the function to get a random color
   }};
 nodes.push(mainAuthor)
-console.log(getAuthorStates().authorNetwork.co_work_list)
-console.log(getAuthorStates().authorNetwork.refer_list)
-console.log(getAuthorStates().authorNetwork.referred_list)
- getLinks()
+
+getLinks()
 function getLinks(){
 // 添加被引用关系
   if (referdata.referred_list.length!=0){
@@ -54,8 +52,7 @@ function getLinks(){
     });
   }
 }
-console.log(nodes)
-console.log(links)
+
 function getRandomColor() {
   // Generate a random hexadecimal color code
   return '#' + Math.floor(Math.random() * 16777215).toString(16);

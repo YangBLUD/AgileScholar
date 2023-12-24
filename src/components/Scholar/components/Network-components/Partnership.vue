@@ -15,24 +15,23 @@ function getAuthorStates(){
 const referdata = getAuthorStates().authorNetwork
 var nodes = [];
 var links = [];
+let curcolor ='#5470C6';
 const colors = ['#1f77b4', '#2ca02c', '#ff7f0e', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
 var mainAuthor = { name: getAuthorStates().authorInformation.display_name, symbolSize: 100 , itemStyle: {
     color: colors[0] // Call the function to get a random color
   }};
 nodes.push(mainAuthor)
-console.log(getAuthorStates().authorNetwork.co_work_list)
-console.log(getAuthorStates().authorNetwork.refer_list)
-console.log(getAuthorStates().authorNetwork.referred_list)
 getLinks()
 function getLinks(){
   if  (referdata.co_work_list.length!=0){
+    console.log("不等于")
     referdata.co_work_list.slice(0,10).forEach(function (author) {
       nodes.push({
         name: author.name,
-        symbolSize: author.count>5?100:author.count*20,
+        symbolSize: author.count*50,
         itemStyle: {
-          color: colors[nodes.length%10] // Call the function to get a random color
-        }
+          color: curcolor=getRandomColor() // Call the function to get a random color
+        },
       });
       links.push({
         source: getAuthorStates().authorInformation.display_name,
@@ -49,8 +48,7 @@ function getLinks(){
     });
   }
 }
-console.log(nodes)
-console.log(links)
+
 function getRandomColor() {
   // Generate a random hexadecimal color code
   return '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -110,7 +108,6 @@ const chartOptions = {
 onMounted(() => {
   if (chartDiv.value) {
     const chart = echarts.init(chartDiv.value);
-
     chart.setOption(chartOptions);
     // 监听图表内容变化
     watchEffect(() => {
