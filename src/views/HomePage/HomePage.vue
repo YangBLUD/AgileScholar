@@ -229,7 +229,7 @@ const searchText = ref("");
 const performSearch = () => {
   if (searchText.value === "") return;
   const data = {
-    searchType: 1,
+    searchType: 0,
     keyword: searchText.value,
   };
   Store.commit("setGeneralSearch", data);

@@ -229,7 +229,7 @@ function performSearch() {
     return;
   }
   const data = {
-    searchType: 1,
+    searchType: 0,
     keyword: searchText.value,
   };
   Store.commit("setGeneralSearch", data);
