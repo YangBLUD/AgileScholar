@@ -2,7 +2,7 @@
     <div class="institution-show-content-nav">
         <div class="institution-show-content-nav-block Basic-block">
             <div class="institution-show-content-nav-holder"></div>
-            <div class="institution-show-content-nav-title">Domain</div>
+            <div class="institution-show-content-nav-title">Author</div>
         </div>
         <div class="basic-block">
             <div v-for="domain in domains" class="domain-box">

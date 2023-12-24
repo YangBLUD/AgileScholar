@@ -298,6 +298,21 @@ const InstitutionModule ={
             if (geo === "")
                 geo = geo + "------"
             return geo;
+        },
+        getFewDomain(state){
+            let four = 4
+            let domains = []
+            if (state.institution.domain.length > 4){
+                domains = state.institution.domain.slice(0, four)
+            }
+            else domains = state.institution.domain
+            return domains
+        },
+        getHaveMore(state){
+            let have = false
+            if (state.institution.domain.length > 4)
+                have = true
+            return have
         }
     }
 }

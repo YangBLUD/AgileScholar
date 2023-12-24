@@ -1,16 +1,16 @@
 <template>
-    <div class="institution-show-content-nav abstract-nav">
+    <div class="institution-show-content-nav">
         <div class="institution-show-content-nav-block Basic-block">
             <div class="institution-show-content-nav-holder"></div>
-            <div class="institution-show-content-nav-title">BASIC INFORMATION</div>
+            <div class="institution-show-content-nav-title">ARTICLE</div>
         </div>
         <div class="basic-block">
             <img class="institution-img" src="../../assets/ArticleDisplay/free.jpg" alt="" />
             <div class="institution-basic">
-                <h2 class="institution-name">{{institution.display_name}}</h2>
-                <div class="institution-type"><strong>Type: </strong> {{ institution.type }}</div>
-                <div class="institution-area"><strong>Area: </strong> {{ institution_area }}</div>
-                <div class="institution-home"><strong>Home: </strong><a :href="institution.homepage_url">{{institution.homepage_url}}</a></div>
+                <h2 class="institution-name">{{institution_name}}</h2>
+                <div class="institution-type"><strong>Type: </strong> {{institution_type}}</div>
+                <div class="institution-area"><strong>Area: </strong> {{institution_area}}</div>
+                <div class="institution-home"><strong>Home: </strong><a :href="institution_home">{{institution_home}}</a></div>
             </div>
         </div>
     </div>
@@ -20,19 +20,20 @@
 
 <script setup>
 
-import {reactive, ref} from "vue";
+import {ref} from "vue";
 import HomePage from "../../views/HomePage/HomePage.vue";
-import store from "../../store/index.js";
 
-let institution = reactive(store.state.Institution.institution)
-let institution_area = ref(store.getters.getGeo)
+let institution_name = ref("BeiHang University")
+let institution_area = ref("Beijing, China")
+let institution_type = ref("Company")
+let institution_home = ref("https://buaa.edu.cn")
 </script>
 
 
 <style scoped>
 .institution-show-content-nav{
     background-color: #fafafa;
-    margin: 10px 0 15px 0;
+    margin: 10px 10px 15px 0;
     /*padding: 30px;*/
 }
 .institution-show-content-nav-block{
