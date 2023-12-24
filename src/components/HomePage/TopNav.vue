@@ -23,9 +23,17 @@
           <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
-      <el-popover placement="bottom" :width="425" trigger="click">
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="have_user_info">
         <template #default>
           <AI />
+        </template>
+        <template #reference>
+          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+        </template>
+      </el-popover>
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="!have_user_info">
+        <template #default>
+          <div>智能助手</div>
         </template>
         <template #reference>
           <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
