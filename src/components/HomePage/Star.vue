@@ -11,9 +11,30 @@
     <el-tree :data="favorites_list" :props="treeProps" ref="tree">
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
-          <span style="width: 160px; overflow: hidden">{{
-            nodeData.name || nodeData.data.display_name || nodeData.data.title
-          }}</span>
+          <span class="icon" v-if="nodeData.type == 0"
+            ><el-icon><Document /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 1"
+            ><el-icon><User /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 2"
+            ><el-icon><House /></el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.list != undefined"
+            ><el-icon><Folder /></el-icon
+          ></span>
+          <span
+            style="
+              width: 220px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              word-break: break-all;
+            "
+            @click="jump(nodeData)"
+            >{{
+              nodeData.name || nodeData.data.display_name || nodeData.data.title
+            }}</span
+          >
           <span>
             <el-button @click="remove(node, nodeData)">Delete</el-button>
           </span>
@@ -47,12 +68,15 @@
 
 <script setup lang="ts">
 import { reactive, ref, onMounted, onUnmounted } from "vue";
+import { House, User, Document, Folder } from "@element-plus/icons-vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { ElDialog, ElForm, ElInput, ElButton, ElMessage } from "element-plus";
 import { defineEmits } from "vue";
 import { fa } from "element-plus/es/locale";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const Store = useStore();
 const emit = defineEmits(["refresh"]);
 const showFavorite = ref();
@@ -115,7 +139,8 @@ let favorites_list = ref([
         folder_id: 1,
         folder_name: "谢秉书没牛牛1",
         data: {
-          display_name: "Omega Piezo Technologies (United States)",
+          display_name:
+            "Omega Piezo Technologies (United States) asdasd asdadsa asdas",
           id: "4210092899",
           image_url: null,
           ror: "https://ror.org/00jch3e54",
@@ -192,15 +217,7 @@ function append() {
   })
     .then((res) => {
       if (res.data.errno == 0) {
-        ElMessage.success("Create successfully");
-        let n = res.data.data.folder_name;
-        let i = res.data.data.folder_id;
-        favorites_list.value.push({
-          name: newFolderName.value,
-          folder_id: i,
-          num: 0,
-          list: [],
-        });
+        getFavorites();
       } else {
         ElMessage.error("Create failed!");
       }
@@ -240,19 +257,7 @@ function remove(node: Node, data) {
       .then((res) => {
         if (res.data.errno == 0) {
           //暂时用的刷新机制，因为正常删除删不掉只能同步了
-          axios({
-            url: "http://122.9.5.156:8000/api/v1/home/get_stars",
-            method: "post",
-            data: JSON.stringify({
-              token: Store.getters.getUserinfo.token,
-            }),
-          })
-            .then((res) => {
-              favorites_list.value = res.data.data;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          getFavorites();
         } else {
           ElMessage.error("Delete failed!");
         }
@@ -287,10 +292,25 @@ function remove(node: Node, data) {
       });
   }
 }
+function jump(data) {
+  if (data.list != undefined) {
+    return;
+  }
+  if (data.type == 0) {
+    router.push("");
+  } else if (data.type == 1) {
+    router.push("");
+  } else if (data.type == 2) {
+    router.push("");
+  }
+}
 </script>
 <style scoped lang="scss">
 .star-dialog {
-  width: 300px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: black 0px 0px 3px 0px;
+  width: 400px;
   max-height: 500px;
   background-color: white;
   position: fixed;
@@ -298,6 +318,11 @@ function remove(node: Node, data) {
   right: 80px;
   overflow-y: auto;
   z-index: 999;
+}
+.icon {
+  width: 10px;
+  margin-left: 5px;
+  padding-top: 5px;
 }
 .custom-tree-node {
   flex: 1;
@@ -320,8 +345,5 @@ function remove(node: Node, data) {
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;
-  &:hover {
-    background-color: #b7cbff;
-  }
 }
 </style>

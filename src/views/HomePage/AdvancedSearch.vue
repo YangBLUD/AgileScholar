@@ -11,6 +11,7 @@
         <h4 style="margin-bottom: 20px">Search Type</h4>
         <el-radio-group
           v-model="searchType"
+          style="--el-color-primary: black"
           size="large"
           @change="clearAndChange"
         >
@@ -23,8 +24,8 @@
       <div class="keywords-select">
         <h4 style="margin-bottom: 20px">Search Constraint</h4>
         <el-table
+          style="--el-color-primary: black; width: 95%"
           :data="list"
-          style="width: 95%"
           :row-style="{ height: 80 + 'px' }"
         >
           <el-table-column>
@@ -32,8 +33,8 @@
               <el-row>
                 <el-col :span="3">
                   <el-select
+                    style="--el-color-primary: black; width: 100%"
                     v-model="props.row.type"
-                    style="width: 100%"
                     v-show="props.$index !== 0"
                   >
                     <el-option value="AND">AND</el-option>
@@ -42,7 +43,10 @@
                   </el-select>
                 </el-col>
                 <el-col :span="4">
-                  <el-select v-model="props.row.select" style="width: 100%">
+                  <el-select
+                    style="--el-color-primary: black; width: 100%"
+                    v-model="props.row.select"
+                  >
                     <el-option v-if="searchType === 0" value="Title"
                       >Title</el-option
                     >
@@ -108,17 +112,21 @@
                 </el-col>
                 <el-col :span="3">
                   <el-select v-model="props.row.clear" style="width: 100%">
-                    <el-option value="0" label="Fuzzy">Fuzzy</el-option>
-                    <el-option value="1" label="Accurate">Accurate</el-option>
+                    <el-option :value="0" label="Fuzzy">Fuzzy</el-option>
+                    <el-option :value="1" label="Accurate">Accurate</el-option>
                   </el-select>
                 </el-col>
                 <el-col :span="5">
                   <el-button
+                    style="--el-color-primary: black"
                     @click="addRow(props.row)"
                     v-if="props.$index === 0"
                     >Add</el-button
                   >
-                  <el-button @click="removeRow(props.row)" v-else
+                  <el-button
+                    style="--el-color-primary: black"
+                    @click="removeRow(props.row)"
+                    v-else
                     >Remove</el-button
                   >
                 </el-col>
@@ -130,13 +138,21 @@
       <div class="time-select">
         <h4 style="margin-bottom: 20px">Publication Date</h4>
         <div>
-          <el-radio-group v-model="timeSelect" size="default">
+          <el-radio-group
+            style="--el-color-primary: black"
+            v-model="timeSelect"
+            size="default"
+          >
             <el-radio-button label="AllDates">All Dates</el-radio-button>
             <el-radio-button label="CustomRange">Custom Range</el-radio-button>
           </el-radio-group>
         </div>
         <div style="margin: 20px 0">
           <el-date-picker
+            style="
+              --el-color-primary: black;
+              --el-datepicker-active-color: black;
+            "
             v-model="timePick"
             type="monthrange"
             unlink-panels
@@ -152,8 +168,17 @@
       </div>
       <div class="submit">
         <div style="margin-right: 20px">
-          <el-button size="large" @click="clearInf()">Clear</el-button>
-          <el-button type="primary" @click="search()" size="large"
+          <el-button
+            style="--el-color-primary: black"
+            size="large"
+            @click="clearInf()"
+            >Clear</el-button
+          >
+          <el-button
+            style="--el-color-primary: black; --el-button-hover-bg-color: black"
+            type="primary"
+            @click="search()"
+            size="large"
             >Search</el-button
           >
         </div>
@@ -204,6 +229,7 @@ import TopNav from "../../components/HomePage/TopNav.vue";
 import { ElDialog, ElForm, ElInput, ElButton, ElMessage } from "element-plus";
 import { el } from "element-plus/es/locale";
 import { useStore } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 const Store = useStore();
 const searchType = ref(0);
 //搜索类型选择
@@ -220,22 +246,22 @@ function clearAndChange() {
   }
 }
 //过滤器选择
-const list = ref([{ content: "", select: "Title", type: "AND", clear: "0" }]);
+const list = ref([{ content: "", select: "Title", type: "AND", clear: 0 }]);
 const articleList = ref([
-  { content: "", select: "Title", type: "AND", clear: "0" },
-  { content: "", select: "Abstract", type: "AND", clear: "0" },
+  { content: "", select: "Title", type: "AND", clear: 0 },
+  { content: "", select: "Abstract", type: "AND", clear: 0 },
 ]);
 const authorList = ref([
-  { content: "", select: "Name", type: "AND", clear: "0" },
-  { content: "", select: "Domain", type: "AND", clear: "0" },
+  { content: "", select: "Name", type: "AND", clear: 0 },
+  { content: "", select: "Domain", type: "AND", clear: 0 },
 ]);
 const institutionList = ref([
-  { content: "", select: "Name", type: "AND", clear: "0" },
-  { content: "", select: "Acronyms", type: "AND", clear: "0" },
+  { content: "", select: "Name", type: "AND", clear: 0 },
+  { content: "", select: "Acronyms", type: "AND", clear: 0 },
 ]);
 const subjectList = ref([
-  { content: "", select: "Name", type: "AND", clear: "0" },
-  { content: "", select: "Description", type: "AND", clear: "0" },
+  { content: "", select: "Name", type: "AND", clear: 0 },
+  { content: "", select: "Description", type: "AND", clear: 0 },
 ]);
 list.value = articleList.value;
 function addRow(row) {
@@ -243,13 +269,13 @@ function addRow(row) {
     return;
   }
   if (searchType.value === 0) {
-    list.value.push({ content: "", select: "Title", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Title", type: "AND", clear: 0 });
   } else if (searchType.value === 1) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
   } else if (searchType.value === 2) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
   } else if (searchType.value === 3) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: "0" });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
   }
 }
 
@@ -284,15 +310,12 @@ const shortcuts = [
     },
   },
 ];
+const router = useRouter();
 function search() {
-  let flag = false;
-  for (var i = 0; i < list.value.length; i++) {
-    if (list.value[i].content != "") {
-      flag = true;
-    }
-  }
-  if (!flag) {
-    ElMessage.error("Please enter the keywords!");
+  // 先删除掉空的搜索条件
+  list.value = list.value.filter((item) => item.content !== "");
+  if (list.value.length == 0) {
+    ElMessage.error("Please enter at least one search constraint!");
     return;
   }
   var begin;
@@ -319,8 +342,8 @@ function search() {
       return rest;
     });
   if (timeSelect.value == "AllDates") {
-    begin = "0";
-    end = "0";
+    begin = "";
+    end = "";
   } else {
     begin = timePick.value[0];
     end = timePick.value[1];
@@ -334,25 +357,28 @@ function search() {
     end_time: end,
   };
   Store.commit("setAdvancedSearch", data);
+  router.push({
+    path: "/searchResult",
+  });
 }
 function clearInf() {
   searchType.value = 0;
   //还原成开始的列表
   articleList.value = [
-    { content: "", select: "Title", type: "AND", clear: "0" },
-    { content: "", select: "Abstract", type: "AND", clear: "0" },
+    { content: "", select: "Title", type: "AND", clear: 0 },
+    { content: "", select: "Abstract", type: "AND", clear: 0 },
   ];
   authorList.value = [
-    { content: "", select: "Name", type: "AND", clear: "0" },
-    { content: "", select: "Domain", type: "AND", clear: "0" },
+    { content: "", select: "Name", type: "AND", clear: 0 },
+    { content: "", select: "Domain", type: "AND", clear: 0 },
   ];
   institutionList.value = [
-    { content: "", select: "Name", type: "AND", clear: "0" },
-    { content: "", select: "Acronyms", type: "AND", clear: "0" },
+    { content: "", select: "Name", type: "AND", clear: 0 },
+    { content: "", select: "Acronyms", type: "AND", clear: 0 },
   ];
   subjectList.value = [
-    { content: "", select: "Name", type: "AND", clear: "0" },
-    { content: "", select: "Description", type: "AND", clear: "0" },
+    { content: "", select: "Name", type: "AND", clear: 0 },
+    { content: "", select: "Description", type: "AND", clear: 0 },
   ];
   list.value = articleList.value;
   timeSelect.value = "AllDates";

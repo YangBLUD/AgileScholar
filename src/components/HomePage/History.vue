@@ -10,18 +10,30 @@
       >
     </div>
     <el-table :data="history_list" max-height="500px">
-      <el-table-column width="100px">
+      <el-table-column width="40px">
         <template #default="{ row, $index }">
-          <span v-if="row.type == 0">Article</span>
-          <span v-if="row.type == 1">Author</span>
-          <span v-if="row.type == 2">Institution</span>
+          <span v-if="row.type == 0"
+            ><el-icon><Document /></el-icon
+          ></span>
+          <span v-if="row.type == 1"
+            ><el-icon><User /></el-icon
+          ></span>
+          <span v-if="row.type == 2"
+            ><el-icon><House /></el-icon
+          ></span>
         </template>
       </el-table-column>
       <el-table-column>
         <template #default="{ row, $index }">
-          <span v-if="row.type == 0">{{ row.data.title }}</span>
-          <span v-if="row.type == 1">{{ row.data.display_name }}</span>
-          <span v-if="row.type == 2">{{ row.data.display_name }}</span>
+          <span v-if="row.type == 0" @click="jump(row)">{{
+            row.data.title
+          }}</span>
+          <span v-if="row.type == 1" @click="jump(row)">{{
+            row.data.display_name
+          }}</span>
+          <span v-if="row.type == 2" @click="jump(row)">{{
+            row.data.display_name
+          }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -29,10 +41,13 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import { House, User, Document } from "@element-plus/icons-vue";
 import { defineEmits } from "vue";
 import axios from "axios";
 import { ElDialog, ElForm, ElInput, ElButton, ElMessage } from "element-plus";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const Store = useStore();
 const showDialog = ref();
 let listener;
@@ -101,13 +116,22 @@ function getHistory() {
       });
   }
 }
-function handleClose() {
-  emit("refresh");
+function jump(row) {
+  if (row.type == 0) {
+    router.push("");
+  } else if (row.type == 1) {
+    router.push("");
+  } else if (row.type == 2) {
+    router.push("");
+  }
 }
 </script>
 <style scoped lang="scss">
 .history-dialog {
   padding: 3px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: black 0px 0px 3px 0px;
   width: 300px;
   background-color: white;
   position: fixed;
@@ -118,15 +142,16 @@ function handleClose() {
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;
-  &:hover {
-    background-color: #b7cbff;
-  }
 }
 :deep(.el-table) {
-  background-color: #f0f4ff;
+  background-color: #ffffff;
   color: black;
-  &:hover {
-    background-color: #b7cbff;
-  }
+}
+:deep(.cell) {
+  max-width: 260px;
+  white-space: nowrap;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
