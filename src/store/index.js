@@ -16,13 +16,13 @@ const store = createStore({
     Search: SearchModule,
     LLM: LlmModule,
     Admin: AdminMoudle,
+    SearchResult: SearchResultModule,
+    Author: AuthorModule,
   },
   plugins: [
     createPersistedState({
       storage: window.sessionStorage,
       paths: ["User", "Search", "SearchResult", "LLM", "Author", "Admin"],
-      SearchResult: SearchResultModule,
-      Author: AuthorModule,
     }),
   ],
 });
