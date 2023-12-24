@@ -42,8 +42,8 @@ function getMessageList() {
   return store.getters.getList
 }
 const config = reactive({
-  peopleName: "me",
-  llmName: "sbzx",
+  peopleName: "我",
+  llmName: "智能助手",
   peopleAvatar: "",
   llmAvatar: "",
 })

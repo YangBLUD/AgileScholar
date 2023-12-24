@@ -2,28 +2,21 @@
   <div class="top-nav">
     <ul>
       <li style="padding-left: 30px">
-        <a
-          href="#"
-          style="
+        <a href="#" style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          "
-          >What Scholar</a
-        >
+          ">What Scholar</a>
       </li>
       <li style="width: 55%; margin-right: 0">
         <div style="float: right">
-          <el-input
-            v-model="input"
-            class="w-50 m-2"
-            size="large"
-            @keyup.enter="performSearch"
-          >
+          <el-input v-model="input" class="w-50 m-2" size="large" @keyup.enter="performSearch">
             <template #prefix>
-              <el-icon class="el-input__icon"><search /></el-icon>
+              <el-icon class="el-input__icon">
+                <search />
+              </el-icon>
             </template>
           </el-input>
         </div>
@@ -128,6 +121,7 @@ const performSearch = () => {
   display: flex;
   justify-content: space-between;
 }
+
 .top-nav li {
   margin-right: 20px;
 }

@@ -133,6 +133,7 @@ const router = useRouter();
 const have_user_info = ref(false);
 const is_scholar = ref(false);
 const is_admin = ref(false);
+const dialogVisible = ref(false)
 onMounted(() => {
   have_user_info.value = Store.getters.getLoginState;
   is_admin.value = Store.getters.getUserinfo.is_admin;
