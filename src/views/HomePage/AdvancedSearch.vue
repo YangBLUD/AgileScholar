@@ -18,7 +18,7 @@
           <el-radio-button :label="0">Articles</el-radio-button>
           <el-radio-button :label="1">Authors</el-radio-button>
           <el-radio-button :label="2">Institutions</el-radio-button>
-          <el-radio-button :label="3">Fields</el-radio-button>
+          <el-radio-button :label="3">Subjects</el-radio-button>
         </el-radio-group>
       </div>
       <div class="keywords-select">
@@ -246,22 +246,22 @@ function clearAndChange() {
   }
 }
 //过滤器选择
-const list = ref([{ content: "", select: "Title", type: "AND", clear: 0 }]);
+const list = ref([{ content: "", select: "Title", type: "AND", clear: 1 }]);
 const articleList = ref([
-  { content: "", select: "Title", type: "AND", clear: 0 },
-  { content: "", select: "Abstract", type: "AND", clear: 0 },
+  { content: "", select: "Title", type: "AND", clear: 1 },
+  { content: "", select: "Abstract", type: "AND", clear: 1 },
 ]);
 const authorList = ref([
-  { content: "", select: "Name", type: "AND", clear: 0 },
-  { content: "", select: "Domain", type: "AND", clear: 0 },
+  { content: "", select: "Name", type: "AND", clear: 1 },
+  { content: "", select: "Domain", type: "AND", clear: 1 },
 ]);
 const institutionList = ref([
-  { content: "", select: "Name", type: "AND", clear: 0 },
-  { content: "", select: "Acronyms", type: "AND", clear: 0 },
+  { content: "", select: "Name", type: "AND", clear: 1 },
+  { content: "", select: "Acronyms", type: "AND", clear: 1 },
 ]);
 const subjectList = ref([
-  { content: "", select: "Name", type: "AND", clear: 0 },
-  { content: "", select: "Description", type: "AND", clear: 0 },
+  { content: "", select: "Name", type: "AND", clear: 1 },
+  { content: "", select: "Description", type: "AND", clear: 1 },
 ]);
 list.value = articleList.value;
 function addRow(row) {
@@ -269,13 +269,13 @@ function addRow(row) {
     return;
   }
   if (searchType.value === 0) {
-    list.value.push({ content: "", select: "Title", type: "AND", clear: 0 });
+    list.value.push({ content: "", select: "Title", type: "AND", clear: 1 });
   } else if (searchType.value === 1) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 1 });
   } else if (searchType.value === 2) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 1 });
   } else if (searchType.value === 3) {
-    list.value.push({ content: "", select: "Name", type: "AND", clear: 0 });
+    list.value.push({ content: "", select: "Name", type: "AND", clear: 1 });
   }
 }
 
