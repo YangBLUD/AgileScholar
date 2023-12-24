@@ -15,7 +15,9 @@
         </div>
         <div class="right">
             <div class="title" >
+                <router-link :to="{name:'article-display', params:{id:props.info.id} }">
                     <span v-html="props.info.title"></span>
+                </router-link>
             </div>
             <div class="wri_list" >
                 <div class="writer" v-if="props.info.author_all" v-for="item in props.info.author_all.slice(0,2)">

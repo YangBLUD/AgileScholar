@@ -17,24 +17,19 @@ const routes = [
     path: "/article/:id",
     name: "article-display",
     component: ArticleDisplay,
-    props: true,
+    props: true
   },
   {
     path: "/institution",
     component: InstitutionDisplay
-  }
+  },
+  {
+    path: '/searchResult',
+    component: ()=>import('../components/searchResult/searchResult.vue'),
+  },
 ];
 const router = createRouter({
   history: createWebHashHistory(),
-  routes:[
-    {
-      path: '/searchResult',
-      component: ()=>import('../components/searchResult/searchResult.vue'),
-    },
-    { path: "/", redirect: "/home" },
-    { path: "/main", component: Main },
-    { path: "/home", component: HomePage },
-    { path: "/advanced", component: AdvancedSearch },
-  ],
+  routes: routes,
 });
 export default router;
