@@ -233,7 +233,6 @@ function getpaperlist(){
     })
       .then((res) => {
         let data = res.data.data;
-        console.log(data);
         paper_list.value = data.result;
         totalpage.value = data.total;
         // search_from.value = Math.max(1,papernum.value);
@@ -242,40 +241,19 @@ function getpaperlist(){
         if(search_type.value == 0){
             if(search_work_clustering.value == 0){
                 timeagg.value.data = dealagg(data.agg[0].data,"Publication Date");
-                writeragg.value.data = []
-                sourceagg.value.data = []
-                domainagg.value.data = []
-                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 1){
                 writeragg.value.data = dealagg(data.agg[0].data,"Main Author");
-                timeagg.value.data = []
-                sourceagg.value.data = []
-                domainagg.value.data = []
-                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 2){
                 sourceagg.value.data = dealagg(data.agg[0].data,"Source");
-                timeagg.value.data = []
-                writeragg.value.data = []
-                domainagg.value.data = []
-                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 3){
                 domainagg.value.data = dealagg(data.agg[0].data,"Main Domain");
-                timeagg.value.data = []
-                writeragg.value.data = []
-                sourceagg.value.data = []
-                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 4){
                 typeagg.value.data = dealagg(data.agg[0].data,"Type");
-                timeagg.value.data = []
-                writeragg.value.data = []
-                sourceagg.value.data = []
-                domainagg.value.data = []
             }
-            search_extend_list.value = []
         }
         else{
             agg.value = [];
@@ -286,7 +264,6 @@ function getpaperlist(){
                     data:dealagg(data.agg[i].data,data.agg[i].name)
                 })
             }
-            search_extend_list.value = []
         }
         importantProgress.value = false;
       })
@@ -407,11 +384,6 @@ const sourceagg = ref({'name': 'Source', 'text': 'source', 'data': []})
 const domainagg = ref({'name': 'Main Domain', 'text': 'domain_main', 'data': []})
 const typeagg = ref({'name': 'Type', 'text': 'type_num', 'data': []})
 function getaggagain(type){
-    if(Store.getters.getOutConditon === false){
-      Store.commit("setOutCondition", true)
-      return;
-    }
-    console.log("getaggagain");
     // if(type == 0 && timeagg.value.data.length != 0){
     //     timeagg.value.data = [];
     //     return;
@@ -479,15 +451,6 @@ function dealagg(datalist,type){
             })
         }
     }
-    else if(type == "Level"){
-        for(let i=0;i<datalist.length;i++){
-            results.push({
-                show:"level "+datalist[i].raw,
-                raw:datalist[i].raw,
-                value:datalist[i].value
-            })
-        }
-    }
     return results;
 }
 //下拉框排序
@@ -495,7 +458,6 @@ const sortlist = ref([])
 function dropsort(){
     sortlist.value = [];
     if(search_type.value == 0){
-        sortlist.value.push({id:-1,text:"Correlation"});
         sortlist.value.push({id:0,text:"Cited down"});
         sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Time down"});
@@ -504,7 +466,6 @@ function dropsort(){
         sortlist.value.push({id:5,text:"Title up"});
     }
     else if(search_type.value == 1 ||search_type.value == 2){
-        sortlist.value.push({id:-1,text:"Correlation"});
         sortlist.value.push({id:0,text:"Cited down"});
         sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Index down"});
@@ -517,7 +478,6 @@ function dropsort(){
         sortlist.value.push({id:9,text:"Name up"});
     }
     else if(search_type.value == 3){
-        sortlist.value.push({id:-1,text:"Correlation"});
         sortlist.value.push({id:0,text:"Index down"});
         sortlist.value.push({id:1,text:"Index up"});
         sortlist.value.push({id:2,text:"Results down"});
