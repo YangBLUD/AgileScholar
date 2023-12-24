@@ -313,7 +313,36 @@ const InstitutionModule ={
             if (state.institution.domain.length > 4)
                 have = true
             return have
+        },
+        getYears(state){
+            let years = []
+            for (let c of state.institution.counts_by_year){
+                years.push(c.year)
+            }
+            return years.reverse()
+        },
+        getCitedCount(state){
+            let cited_counts = []
+            for (let c of state.institution.counts_by_year){
+                cited_counts.push(c.cited_by_count)
+            }
+            return cited_counts.reverse()
+        },
+        getWorkCount(state){
+            let work_counts = []
+            for (let c of state.institution.counts_by_year){
+                work_counts.push(c.works_count)
+            }
+            return work_counts.reverse()
+        },
+        getOaWorkCount(state){
+            let oa_work_count = []
+            for (let c of state.institution.counts_by_year){
+                oa_work_count.push(c.oa_works_count)
+            }
+            return oa_work_count.reverse()
         }
+
     }
 }
 export default InstitutionModule
