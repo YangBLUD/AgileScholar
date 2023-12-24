@@ -134,7 +134,7 @@
   <!-- <div><Footer /></div> -->
   <!-- 学科详细信息dialog -->
   <el-dialog v-model="dialogVisible" width="70%" :before-close="handleClose" show-close="false" open-delay="500">
-    <div style="max-height: 600px; overflow-y: auto;">
+    <div style="max-height: 700px; overflow-y: auto;">
       <div class="subject-name">{{ subjectInfo.name }}</div>
       <img :src="subjectInfo.img_url" alt="" class="image"
         style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
@@ -1531,5 +1531,10 @@ function showInfo(item_id) {
   font-style: italic;
   font-size: 20px;
   color: rgb(90, 156, 248);
+}
+
+.el-dialog__wrapper {
+  max-height: calc(100vh - 120px);
+  /* 在这里设置最大高度 */
 }
 </style>
