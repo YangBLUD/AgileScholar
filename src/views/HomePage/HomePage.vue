@@ -79,10 +79,11 @@
           <el-button :icon="More" size="large" circle @click="showInfo(item.id)"
             style="position: absolute; right: 40px; top: 20px;" v-show="item.show" />
           <div v-show="item.show">
-            <div class="image-block">
+            <div class="image-block" @click="goSubject(item.value)">
               <img :src="item.image" class="image">
             </div>
-            <div class="subject-name">{{ item.value }}
+            <div class="subject-name">
+              <span @click="goSubject(item.value)">{{ item.value }}</span>
               <el-button :icon="Search" size="large" circle
                 style="float: right; position: absolute; top: 520px; right: 40px;" @click="change(item)" />
             </div>
@@ -90,7 +91,7 @@
           <div v-show="!item.show">
             <div class="nav-list">
               <div v-for="(item1, index1) in item.text" :key="index1" class="nav-item">
-                <div class="nav-item-left">
+                <div class="nav-item-left" @click="goSubject(item1.name)">
                   <el-button :icon="More" size="large" circle @click="showInfo(item1.id)" />
                   <div style="float: left; width: 70%; cursor: auto;">{{ item1.name }}</div>
                   <div class="arrow" style="float: right; width: 30%; font-size: 20px;">
@@ -141,7 +142,7 @@
   <el-dialog v-model="dialogVisible" width="70%" :before-close="handleClose" show-close="false" open-delay="500">
     <div style="max-height: 700px; overflow-y: auto;">
       <div class="subject-name">{{ subjectInfo.name }}</div>
-      <img :src="subjectInfo.img_url" alt="" class="image"
+      <img :src="subjectInfo.img_url" alt="cnm加载得出来" :onerror="display_vacant" class="image"
         style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
       <div class="subject-description">{{ subjectInfo.description }}</div>
       <div class="summary">Summary Statistics</div>
@@ -218,6 +219,9 @@ const subjectInfo = reactive({
   summary_stats: '',
   img_url: '',
 },);
+function display_vacant() {
+  subjectInfo.img_url = "src/assets/homepage/vacant.jpg"
+}
 var flag = ref(0);
 var xData = ref("");
 var yData1 = ref("");
@@ -999,7 +1003,20 @@ const classifications = ref([
     id: 95457728
   },
 ]);
-
+function goSubject(name) {
+  const data = {
+    searchType: 0,
+    and_list: [{ content: name, select: "Domain", type: "AND", clear: 1 }],
+    or_list: [],
+    not_list: [],
+    start_time: "",
+    end_time: "",
+  };
+  Store.commit("setAdvancedSearch", data);
+  router.push({
+    path: "/searchResult",
+  });
+}
 //机构排名
 const institutions = ref([
   {
