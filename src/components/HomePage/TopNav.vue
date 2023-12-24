@@ -3,17 +3,26 @@
   <div class="top-nav">
     <ul>
       <li style="padding-left: 30px">
-        <a href="#" style="
+        <a
+          href="#"
+          style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          ">What Scholar</a>
+          "
+          >What Scholar</a
+        >
       </li>
       <li style="width: 45%; margin-right: 0">
         <div style="float: right">
-          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px">
+          <el-input
+            v-model="searchText"
+            @keyup="userNameKeyup($event)"
+            size="large"
+            width="200px"
+          >
             <template #prefix>
               <el-icon class="el-input__icon">
                 <search />
@@ -23,20 +32,36 @@
           <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
-      <el-popover placement="bottom" :width="425" trigger="click" v-if="have_user_info">
+      <el-popover
+        placement="bottom"
+        :width="425"
+        trigger="click"
+        v-if="have_user_info"
+      >
         <template #default>
           <AI />
         </template>
         <template #reference>
-          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+          <el-avatar
+            src="https://avatars.githubusercontent.com/u/72015883?v=4"
+            style="cursor: pointer"
+          />
         </template>
       </el-popover>
-      <el-popover placement="bottom" :width="425" trigger="click" v-if="!have_user_info">
+      <el-popover
+        placement="bottom"
+        :width="425"
+        trigger="click"
+        v-if="!have_user_info"
+      >
         <template #default>
           <div>智能助手</div>
         </template>
         <template #reference>
-          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+          <el-avatar
+            src="https://avatars.githubusercontent.com/u/72015883?v=4"
+            style="cursor: pointer"
+          />
         </template>
       </el-popover>
       <li class="right">
@@ -70,10 +95,20 @@
           <label>E-mail</label>
         </div>
         <div class="user-box">
-          <input type="text" name="" required="" v-model="form.captcha" style="width: 60%; float: left" />
+          <input
+            type="text"
+            name=""
+            required=""
+            v-model="form.captcha"
+            style="width: 60%; float: left"
+          />
           <label>Captcha</label>
-          <el-button type="primary" @click="getCaptcha" style="float: right; margin-top: 7px">{{ captcha_time
-          }}</el-button>
+          <el-button
+            type="primary"
+            @click="getCaptcha"
+            style="float: right; margin-top: 7px"
+            >{{ captcha_time }}</el-button
+          >
         </div>
         <a href="#" @click="handleSubmit">
           <span></span>
@@ -93,7 +128,12 @@
           <label>Username</label>
         </div>
         <div class="user-box">
-          <input type="password" name="" required="" v-model="loginForm.password" />
+          <input
+            type="password"
+            name=""
+            required=""
+            v-model="loginForm.password"
+          />
           <label>Password</label>
         </div>
         <a href="#" @click="handleLoginSubmit">
@@ -111,7 +151,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted, onUnmounted } from "vue";
 import Login from "./Login.vue";
-import AI from "../Chat/chat.vue"
+import AI from "../Chat/chat.vue";
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
@@ -534,8 +574,8 @@ function getCaptcha() {
   transition: 0.5s;
 }
 
-.login-box .user-box input:focus~label,
-.login-box .user-box input:valid~label {
+.login-box .user-box input:focus ~ label,
+.login-box .user-box input:valid ~ label {
   top: -20px;
   left: 0;
   color: #03e9f4;
