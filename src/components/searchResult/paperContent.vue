@@ -196,7 +196,7 @@ const props = defineProps({
             left: 0px;
             display: flex;
             width: 24%;
-            border-right: 1px solid #e6e6e6;
+            /* border-right: 1px solid #e6e6e6; */
             font-size: 18px;
             .inference{
                 margin-top: 5px;
