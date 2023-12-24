@@ -20,12 +20,17 @@
 
 <script setup>
 
-import {reactive, ref} from "vue";
-import HomePage from "../../views/HomePage/HomePage.vue";
+import {reactive, ref, watch} from "vue";
 import store from "../../store/index.js";
 
 let institution = reactive(store.state.Institution.institution)
 let institution_area = ref(store.getters.getGeo)
+
+watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
+    institution = store.state.Institution.institution
+    institution_area = store.getters.getGeo
+})
+
 </script>
 
 
