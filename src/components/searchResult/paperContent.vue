@@ -1,5 +1,5 @@
 <template>
-    <div class="main" @click="console.log(info.title)">
+    <div class="main" @click="">
         <div class="left">
             <div class="timer">
                 <div class="state">
@@ -15,10 +15,12 @@
         </div>
         <div class="right">
             <div class="title" >
-                <span v-html="props.info.title"></span>
+                <router-link :to="{name:'article-display', params:{id:props.info.id} }">
+                    <span v-html="props.info.title"></span>
+                </router-link>
             </div>
             <div class="wri_list" >
-                <div class="writer" v-for="item in props.info.author_all.slice(0,2)">
+                <div class="writer" v-if="props.info.author_all" v-for="item in props.info.author_all.slice(0,2)">
                     <img src="../../assets/test.jpg" class="writer-pic"/>
                     <div class="name"><span v-html="item.name"></span></div>
                 </div>
@@ -47,7 +49,7 @@
                     </div>
                     <div class="introduce">
                         
-                        <stardialog :folderlist = "folderlist" :token = "props.token" :paper_id="paper_id" :type="type"></stardialog>
+                        <stardialog  :token = "props.token" :paper_id="paper_id" :type="type" :is_star="props.info.is_star"></stardialog>
                     </div>
                 </div>
             </div>
@@ -63,31 +65,11 @@ import stardialog from "./stardialog.vue";
 import { useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
-    //addstar();
-    getfold();
     paper_id.value = props.info.id;
 });
 //用于收藏
 const paper_id = ref("2106749358");
 const type = ref(0);
-const folder_id = ref(2);
-const folderlist = ref([{"folder_id": 1,"folder_name": "谢秉书没牛牛1","num": 2},{"folder_id": 2,"folder_name": "谢秉书没牛牛2","num": 2}]);
-function getfold(){
-    axios({
-      url: "http://122.9.5.156:8000/api/v1/home/get_folders",
-      method: "post",
-      data: JSON.stringify({    
-            token :props.token,
-      }),
-    })
-      .then((res) => {
-            console.log(res);
-            folderlist.value = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-}
 
 //用于链接的分享
 function gotolink(){
@@ -214,7 +196,7 @@ const props = defineProps({
             left: 0px;
             display: flex;
             width: 24%;
-            border-right: 1px solid #e6e6e6;
+            /* border-right: 1px solid #e6e6e6; */
             font-size: 18px;
             .inference{
                 margin-top: 5px;

@@ -1,13 +1,14 @@
 <template>
     <div class="main">
         <div class="pic">
-            <img src="../../assets/logo.png" class="scholar-pic"/>
+            <img v-if="props.info.image_url" :src=props.info.image_url class="scholar-pic"/>
+            <img v-else src="../../assets/buaa.jpg" class="scholar-pic"/>
         </div>
         <div class="name" style="text-align: center;">
             <span v-html="props.info.display_name" style="display: inline-block;"></span>
         </div>
-        <div class="jigou" v-if="props.info.institution && props.info.institution.length!=0" style="text-align: center;"> 
-            <span v-html="props.info.institution[0].name" style="display: inline-block;"></span>
+        <div class="jigou" v-if="props.info.domain && props.info.domain.length!=0 " style="text-align: center;"> 
+            <span v-html="props.info.domain[0].name" style="display: inline-block;"></span>
         </div>
         <div class="star">
             <stardialog :token = "props.token" :paper_id="props.info.id" :type="type" :is_star="props.info.is_star"></stardialog>
@@ -17,19 +18,16 @@
 </template>
 <script setup>
 import { defineProps } from 'vue';
-import { reactive, ref, onMounted, onUnmounted ,onBeforeMount} from "vue";
+import { reactive, ref, onMounted ,onBeforeMount} from "vue";
 import axios from "axios";
 import stardialog from "./stardialog.vue";
 import { useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
-    type.value = 1;    
+    type.value = 2;    
 });
 //用于收藏
-const paper_id = ref("2106749358");
 const type = ref(0);
-const folder_id = ref(2);
-const folderlist = ref([]);
 
 const props = defineProps({
     info:Object,

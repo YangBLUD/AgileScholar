@@ -13,8 +13,15 @@
         </div>
         <div class="middle">
             <div class="middle-left">
-                <div class="middle-left-people" :key="index" v-for="(item,index) in agg">
-                    <Droplist :agginfo="item"/>
+                <div v-if="search_type!=0" class="middle-left-people" :key="index" v-for="(item,index) in agg">
+                    <Droplist :agginfo="item" class="drop1"/>
+                </div>
+                <div v-else class="middle-left-people" >
+                    <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)"/>
+                    <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)"/>
+                    <Droplist :agginfo="sourceagg" class="drop1" @click="getaggagain(2)"/>
+                    <Droplist :agginfo="domainagg" class="drop1" @click="getaggagain(3)"/>
+                    <Droplist :agginfo="typeagg" class="drop1" @click="getaggagain(4)"/>
                 </div>
             </div>
             <div class="middle-right">
@@ -22,13 +29,14 @@
                 <div class="middle-right-sum">
                     <div class="first-line">
                         <div class="search-num">
-                            {{ totalpage }}
+                            <div v-if="totalpage==10000">{{ totalpage }}+</div>
+                            <div v-else>{{ totalpage }}</div>
                             <div style="font-weight: 300;">Results for: </div>
                             All: {{ search_title }}
                         </div>
                     </div>
                     <div class="sum-text">
-                        <div class="text-first">Searched The ACM Full-Text Collection ({{totalpage}} records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
+                        <div class="text-first">Searched The Full-Text Collection ({{totalpage}} records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
                     </div>
                 </div>
                 <div class="search-result-tabs">
@@ -46,9 +54,9 @@
                 </div>
                 <div class="search-result-checkbox">
                     <div class="shai-checkbox">
-                        <el-checkbox />
+                        <!-- <el-checkbox /> -->
                     </div>
-                    <div class="select-all">Select all</div>
+                    <div class="select-all" @click="withoutagg()">&lt;  Return Normal</div>
                     <div class="per-page">per page:
                         <div v-if="papernum == 10"  class="page-num-active" >10  </div>
                         <div v-else class="page-num-com"  @click="changeSize(10)">10  </div>
@@ -73,7 +81,7 @@
                     </div>
                 </div>
                 <div class="middle-right-list">
-                    <div class="paper-list" :key="index" v-for="(item,index) in paper_list">
+                    <div v-if="search_type==0" class="paper-list" :key="index" v-for="(item,index) in paper_list">
                         <div class="list-item">
                             <div class="checkbox">
                                 <el-checkbox />
@@ -81,6 +89,21 @@
                             <div class="context" >
                                 <Content :info="item" :token="token"/>
                             </div>
+                        </div>
+                    </div>
+                    <div v-if="search_type==1" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Scholars :info="item" :token="token"></Scholars>
+                        </div>
+                    </div>
+                    <div v-if="search_type==2" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Institutions :info="item" :token="token"></Institutions>
+                        </div>
+                    </div>
+                    <div v-if="search_type==3" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Subjects :info="item" :token="token"></Subjects>
                         </div>
                     </div>
                     <div class="bottom-page">
@@ -96,74 +119,81 @@
             </div>
         </div>   
     </div>
+    <el-dialog id="important_progress" v-model="importantProgress" style="width:20%;
+    right:0%;
+    height:0;
+    opacity: 100%;
+    top:10%;
+    background-color: #7e7e7f!important;
+    border: 1px solid #7e7e7f!important;"
+    :close-on-click-modal="false"
+    :show-close="false">
+    <div class="spinner-box">
+    <div class="blue-orbit leo">
+    </div>
+
+    <div class="green-orbit leo">
+    </div>
+    
+    <div class="red-orbit leo">
+    </div>
+    
+    <div class="white-orbit w1 leo">
+    </div><div class="white-orbit w2 leo">
+    </div><div class="white-orbit w3 leo">
+  </div>
+</div>
+  </el-dialog>
 </template>
 <script setup>
-import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} from "vue";
+import { reactive, ref, onMounted ,onBeforeMount,watch} from "vue";
 import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
 import Scholars from './scholars.vue'
-import { Search, Sort} from "@element-plus/icons-vue";
+import Institutions from './institution.vue'
+import Subjects from './subject.vue'
+import { Search,ArrowLeft} from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
-//搜索框
-const searchcontent = ref("AI");
-//搜索函数
-function keysearch(){
-    const data1 = {
-        searchType : search_type.value,
-        keyword : searchcontent.value,
-    }
-    Store.commit("setGeneralSearch", data1);
-    getpaperlist();
-    console.log(data1);   
-}
+import { useRouter } from "vue-router";
+const router = useRouter ();
+
 const token = ref("");
 const isadvance = ref(false);
-//初始化函数
-onBeforeMount(() => {
-    isadvance.value = Store.getters.getSearch.isAdvancedSearch;
-    searchcontent.value = Store.getters.getSearch.and_list[0].content;
-    token.value = Store.getters.getUserinfo.token;
-    getpaperlist();
-    totalpage.value =100; //获取总数
-    dropsort();
-});
 //额外的请求参数
-const search_first_search = ref(1)
 const search_type = ref(0)
+const search_first_search = ref(1)
 const search_work_clustering = ref(0)
-const search_author_clustering = ref(1)
-
+const search_author_clustering = ref(0)
 const search_sort = ref(0)
 const search_extend_list = ref([])
-
 //用于论文列表的渲染
 const paper_list = ref([])
-//用于第一行的渲染
-const search_title = ref("ai")
-
-//下一行的滑动
-const activeName = ref('RESULTS');
-const handleClick = (tab, event) => {
-    if(tab.props.name == "RESULTS"){
-        search_type.value = 0;
+const search_title = ref("")
+//搜索框
+const searchcontent = ref("AI");
+const importantProgress = ref(false)
+function start(){
+    if(!isadvance.value){
+        Store.commit("settype", search_type);
     }
-    else if(tab.props.name == "SCHOLARS"){
-        search_type.value = 1;
-    }
-    else if(tab.props.name == "INSTITUTIONS"){
-        search_type.value = 2;
-    }
-    else if(tab.props.name == "SUBJECTS"){
-        search_type.value = 3;
-    }
+    isadvance.value = Store.getters.getSearch.isAdvancedSearch;
+    search_type.value = Store.getters.getSearch.searchType;
+    searchcontent.value = Store.getters.getSearch.and_list[0].content;
+    search_title.value = Store.getters.getSearch.and_list[0].content;
+    token.value = Store.getters.getUserinfo.token;
+}
+//初始化函数
+onBeforeMount(() => {
+    start();
     getpaperlist();
-    resetpage();
-};
-const totalye = ref(0);
+    dropsort();
+});
+
+//核心函数
 function getpaperlist(){
-    console.log("uuuuuuuuu")
+    console.log("iiiiiiiiiiii")
     console.log({
             token :Store.getters.getUserinfo.token,
             search_type : Store.getters.getSearch.searchType,
@@ -180,12 +210,13 @@ function getpaperlist(){
             sort : search_sort.value,
             extend_list : search_extend_list.value,
       })
+    importantProgress.value = true;
     axios({
       url: "http://122.9.5.156:8000/api/v1/search_result/search",
       method: "post",
       data: JSON.stringify({
             token :Store.getters.getUserinfo.token,
-            search_type : search_type.value,
+            search_type : Store.getters.getSearch.searchType,
             and_list : Store.getters.getSearch.and_list,
             or_list : Store.getters.getSearch.or_list,
             not_list : Store.getters.getSearch.not_list,
@@ -204,15 +235,81 @@ function getpaperlist(){
         let data = res.data.data;
         paper_list.value = data.result;
         totalpage.value = data.total;
-        agg.value = data.agg;
+        // search_from.value = Math.max(1,papernum.value);
         search_to.value = Math.min(data.total,papernum.value);
         totalye.value = parseInt(totalpage.value / papernum.value) +1;
-        console.log(data.agg[0]);
+        if(search_type.value == 0){
+            if(search_work_clustering.value == 0){
+                timeagg.value.data = dealagg(data.agg[0].data,"Publication Date");
+            }
+            else if(search_work_clustering.value == 1){
+                writeragg.value.data = dealagg(data.agg[0].data,"Main Author");
+            }
+            else if(search_work_clustering.value == 2){
+                sourceagg.value.data = dealagg(data.agg[0].data,"Source");
+            }
+            else if(search_work_clustering.value == 3){
+                domainagg.value.data = dealagg(data.agg[0].data,"Main Domain");
+            }
+            else if(search_work_clustering.value == 4){
+                typeagg.value.data = dealagg(data.agg[0].data,"Type");
+            }
+        }
+        else{
+            agg.value = [];
+            for(let i = 0;i<data.agg.length;i++){
+                agg.value.push({
+                    name:data.agg[i].name,
+                    text:data.agg[i].text,
+                    data:dealagg(data.agg[i].data,data.agg[i].name)
+                })
+            }
+        }
+        importantProgress.value = false;
       })
       .catch((err) => {
         console.log(err);
       });
 }
+//搜索函数
+function keysearch(){
+    if(isadvance.value){
+        router.push({ path: "home"});
+    }
+    const data1 = {
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    }
+    Store.commit("setGeneralSearch", data1);
+    getpaperlist();
+}
+
+
+//下一行的滑动
+const activeName = ref('RESULTS');
+const handleClick = (tab, event) => {
+    if(tab.props.name == "RESULTS"){
+        search_type.value = 0;
+    }
+    else if(tab.props.name == "SCHOLARS"){
+        search_type.value = 1;
+    }
+    else if(tab.props.name == "INSTITUTIONS"){
+        search_type.value = 2;
+    }
+    else if(tab.props.name == "SUBJECTS"){
+        search_type.value = 3;
+    }
+    Store.commit("setGeneralSearch",{
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    });
+    search_extend_list.value = [];
+    getpaperlist();
+    resetpage();
+};
+const totalye = ref(0);
+
 //选择显示论文的条数
 const papernum = ref(20)
 const search_to = ref(20)
@@ -220,31 +317,13 @@ const search_from  = ref(1)
 
 function changeSize(size){
     papernum.value = size;
+    resetpage();
     getpaperlist();
     search_to.value = search_from.value + (papernum.value - 1);
 }
 function resetpage(){
     search_from.value = 1;
     search_to.value = search_from.value + papernum.value;
-}
-//左侧的聚类
-const agg = ref([]);
-function getCluster(){
-	//返回的是ref对象
-	return Store.getters.getCluster;
-}
-watch(getCluster, (newVal, oldVal) => {
-	console.log('newVal, oldVal', newVal, oldVal);
-    getnewagg();
-}, {deep:true});
-function getnewagg(){
-    // search_work_clustering.value = getCluster();
-    search_extend_list.value.push({
-        text:getCluster().text,
-        raw:getCluster().raw
-    })
-    getpaperlist();
-    resetpage();
 }
 //翻页功能的实现
 const currentPage = ref(1);
@@ -271,21 +350,124 @@ const nextClick = () => {
     getpaperlist();
 };
 
+
+//左侧的聚类
+const agg = ref([]);
+function getCluster(){
+	return Store.getters.getCluster;
+}
+watch(getCluster, (newVal, oldVal) => {
+	console.log('newVal, oldVal', newVal, oldVal);
+    getnewagg();
+}, {deep:true});
+function getnewagg(){
+    let pp = getCluster();
+    search_extend_list.value = [];
+    search_extend_list.value.push({
+        text:pp.agg_text,
+        value:pp.agg_raw
+    })
+    getpaperlist();
+    resetpage();
+}
+//取消聚类的搜索
+function withoutagg(){
+    search_extend_list.value = [];
+    getpaperlist();
+    resetpage();
+}
+
+//关于聚类的更改
+const timeagg = ref({'name': 'Publication Date', 'text': 'publication_date', 'data': []})
+const writeragg = ref({'name': 'Main Author', 'text': 'author_main', 'data': []})
+const sourceagg = ref({'name': 'Source', 'text': 'source', 'data': []})
+const domainagg = ref({'name': 'Main Domain', 'text': 'domain_main', 'data': []})
+const typeagg = ref({'name': 'Type', 'text': 'type_num', 'data': []})
+function getaggagain(type){
+    // if(type == 0 && timeagg.value.data.length != 0){
+    //     timeagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 1 && writeragg.value.data.length != 0){
+    //     writeragg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 2 && sourceagg.value.data.length != 0){
+    //     sourceagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 3 && domainagg.value.data.length != 0){
+    //     domainagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 4 && typeagg.value.data.length != 0){
+    //     typeagg.value.data = [];
+    //     return;
+    // }
+    
+    
+    
+    search_work_clustering.value = type;
+    getpaperlist();
+}
+function dealagg(datalist,type){
+    let results = [];
+    if(type == "Main Author" || type == "Source" || type == "Main Domain" ||type == "Institution"){
+        for(let i=0;i<datalist.length;i++){
+            let pp = datalist[i].raw.indexOf("&");
+            let tmp = datalist[i].raw.substring(0,pp);
+            results.push({
+                show:tmp,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    else if(type == "Publication Date" || type == "Name" ||type == "Country Code" || type == "Institution Type"){
+        for(let i=0;i<datalist.length;i++){
+            results.push({
+                show:datalist[i].raw,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    else if(type == "Type"){
+        for(let i=0;i<datalist.length;i++){
+            let pp = parseInt(datalist[i].raw);
+            let abs,sou,land,pdf,tmp="";
+            abs = (parseInt(pp/1000));pp%=1000;
+            sou = (parseInt(pp/100));pp%=100;
+            land = (parseInt(pp/10));pp%=10;
+            pdf = pp;
+            if(abs == 1) tmp += "abstract ";
+            if(sou == 1) tmp += "source ";
+            if(land == 1) tmp += "landing_page_url ";
+            if(pdf == 1) tmp += "pdf_url ";
+            results.push({
+                show:tmp,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    return results;
+}
 //下拉框排序
 const sortlist = ref([])
 function dropsort(){
     sortlist.value = [];
     if(search_type.value == 0){
-        sortlist.value.push({id:0,text:"Cited least"});
-        sortlist.value.push({id:1,text:"Cited most"});
-        sortlist.value.push({id:2,text:"Latest"});
-        sortlist.value.push({id:3,text:"Earliest"});
+        sortlist.value.push({id:0,text:"Cited down"});
+        sortlist.value.push({id:1,text:"Cited up"});
+        sortlist.value.push({id:2,text:"Time down"});
+        sortlist.value.push({id:3,text:"Time up"});
         sortlist.value.push({id:4,text:"Title down"});
         sortlist.value.push({id:5,text:"Title up"});
     }
     else if(search_type.value == 1 ||search_type.value == 2){
-        sortlist.value.push({id:0,text:"Cited least"});
-        sortlist.value.push({id:1,text:"Cited most"});
+        sortlist.value.push({id:0,text:"Cited down"});
+        sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Index down"});
         sortlist.value.push({id:3,text:"Index up"});
         sortlist.value.push({id:4,text:"More than 10 in 2"});
@@ -293,10 +475,10 @@ function dropsort(){
         sortlist.value.push({id:6,text:"Results down"});
         sortlist.value.push({id:7,text:"Results up"});
         sortlist.value.push({id:8,text:"Name down"});
-        sortlist.value.push({id:9,text:"Name down"});
+        sortlist.value.push({id:9,text:"Name up"});
     }
     else if(search_type.value == 3){
-        sortlist.value.push({id:0,text:"Cited least"});
+        sortlist.value.push({id:0,text:"Index down"});
         sortlist.value.push({id:1,text:"Index up"});
         sortlist.value.push({id:2,text:"Results down"});
         sortlist.value.push({id:3,text:"Results up"});
@@ -309,11 +491,318 @@ function dropsort(){
 function changesort(item){
     search_sort.value = item.id;
     getpaperlist();
-    console.log(paper_list.value);
 }
 </script>
 
 <style scoped>
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to{
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes spin3D {
+  from {
+    transform: rotate3d(.5,.5,.5, 360deg);
+  }
+  to{
+    transform: rotate3d(0deg);
+  }
+}
+
+@keyframes configure-clockwise {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes configure-xclockwise {
+  0% {
+    transform: rotate(45deg);
+  }
+  25% {
+    transform: rotate(-45deg);
+  }
+  50% {
+    transform: rotate(-135deg);
+  }
+  75% {
+    transform: rotate(-225deg);
+  }
+  100% {
+    transform: rotate(-315deg);
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: .25;
+    transform: scale(.75);
+  }
+}
+.spinner-box {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+/* SPINNING CIRCLE */
+
+.leo-border-1 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(63,249,220);
+  background: linear-gradient(0deg, rgba(63,249,220,0.1) 33%, rgba(63,249,220,1) 100%);
+  animation: spin3D 1.8s linear 0s infinite;
+}
+
+.leo-core-1 {
+  width: 100%;
+  height: 100%;
+  background-color: #37474faa;
+  border-radius: 50%;
+}
+
+.leo-border-2 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(251, 91, 83);
+  background: linear-gradient(0deg, rgba(251, 91, 83, 0.1) 33%, rgba(251, 91, 83, 1) 100%);
+  animation: spin3D 2.2s linear 0s infinite;
+}
+
+.leo-core-2 {
+  width: 100%;
+  height: 100%;
+  background-color: #1d2630aa;
+  border-radius: 50%;
+}
+
+/* ALTERNATING ORBITS */
+
+.circle-border {
+  width: 150px;
+  height: 150px;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgb(63,249,220);
+  background: linear-gradient(0deg, rgba(63,249,220,0.1) 33%, rgba(63,249,220,1) 100%);
+  animation: spin .8s linear 0s infinite;
+}
+
+.circle-core {
+  width: 100%;
+  height: 100%;
+  background-color: #1d2630;
+  border-radius: 50%;
+}
+
+/* X-ROTATING BOXES */
+
+.configure-border-1 {
+  width: 115px;
+  height: 115px;
+  padding: 3px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fb5b53;
+  animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
+}
+
+.configure-border-2 {
+  width: 115px;
+  height: 115px;
+  padding: 3px;
+  left: -115px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(63,249,220);
+  transform: rotate(45deg);
+  animation: configure-xclockwise 3s ease-in-out 0s infinite alternate;
+}
+
+.configure-core {
+  width: 100%;
+  height: 100%;
+  background-color: #1d2630;
+}
+
+/* PULSE BUBBLES */
+
+.pulse-container {
+  width: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pulse-bubble {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #3ff9dc;
+}
+
+.pulse-bubble-1 {
+    animation: pulse .4s ease 0s infinite alternate;
+}
+.pulse-bubble-2 {
+    animation: pulse .4s ease .2s infinite alternate;
+}
+.pulse-bubble-3 {
+    animation: pulse .4s ease .4s infinite alternate;
+}
+
+/* SOLAR SYSTEM */
+
+.solar-system {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orbit {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid #fafbfC;
+	border-radius: 50%;
+} 
+
+.earth-orbit {
+	width: 165px;
+	height: 165px;
+  -webkit-animation: spin 12s linear 0s infinite;
+}
+
+.venus-orbit {
+	width: 120px;
+	height: 120px;
+  -webkit-animation: spin 7.4s linear 0s infinite;
+}
+
+.mercury-orbit {
+	width: 90px;
+	height: 90px;
+  -webkit-animation: spin 3s linear 0s infinite;
+}
+
+.planet {
+	position: absolute;
+	top: -5px;
+  width: 10px;
+  height: 10px;
+	border-radius: 50%;
+  background-color: #3ff9dc;
+}
+
+.sun {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	background-color: #ffab91;
+}
+
+.leo {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+}
+
+.blue-orbit {
+	width: 165px;
+	height: 165px;
+  border: 1px solid #91daffa5;
+  -webkit-animation: spin3D 3s linear .2s infinite;
+}
+
+.green-orbit {
+	width: 120px;
+	height: 120px;
+  border: 1px solid #91ffbfa5;
+  -webkit-animation: spin3D 2s linear 0s infinite;
+}
+
+.red-orbit {
+	width: 90px;
+	height: 90px;
+  border: 1px solid #ffca91a5;
+  -webkit-animation: spin3D 1s linear 0s infinite;
+}
+
+.white-orbit {
+	width: 60px;
+	height: 60px;
+  border: 2px solid #ffffff;
+  -webkit-animation: spin3D 10s linear 0s infinite;
+}
+
+.w1 {
+  transform: rotate3D(1, 1, 1, 90deg);
+}
+
+.w2 {
+  transform: rotate3D(1, 2, .5, 90deg);
+}
+
+.w3 {
+  transform: rotate3D(.5, 1, 2, 90deg);
+}
+
+.three-quarter-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #fb5b53;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin .5s linear 0s infinite;
+}
+
 ul{
     list-style: none;
 }
@@ -372,6 +861,9 @@ ul{
     display: flex;
     .middle-left{
         width: 25%;
+        .drop1{
+            margin-bottom: 5px;
+        }
     }
     .middle-right{
         width: 75%;
@@ -447,11 +939,15 @@ ul{
                 left: 5px;
             }
             .select-all{
-                margin: 25px 20px;
+                margin: 18px 20px;
                 font-size: 15px;
                 color: #e6e6e6;
                 font-weight: 500;
                 width: 160px;
+                cursor: pointer;
+            }
+            .select-all:hover{
+                color: black;
             }
             .per-page{
                 margin-top: 25px;
@@ -487,7 +983,20 @@ ul{
         }
         .middle-right-list{
             height: 180px;
-            /* background-color: blanchedalmond; */
+            .people-list{
+                margin-left: 30px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                .people-item{
+                    width: 250px;
+                    height: 250px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    box-shadow: 0 0.3125rem 0.5rem rgba(0,0,0,.1);
+                }
+            }
             .paper-list{
                 .list-item{
                     margin: 20px 0px;

@@ -6,8 +6,8 @@
         <div class="name" style="text-align: center;">
             <span v-html="props.info.display_name" style="display: inline-block;"></span>
         </div>
-        <div class="jigou" v-if="props.info.institution && props.info.institution.length!=0" style="text-align: center;"> 
-            <span v-html="props.info.institution[0].name" style="display: inline-block;"></span>
+        <div class="jigou" v-if="props.info.description " style="text-align: center;"> 
+            <span v-html="props.info.description" style="display: inline-block;"></span>
         </div>
         <div class="star">
             <stardialog :token = "props.token" :paper_id="props.info.id" :type="type" :is_star="props.info.is_star"></stardialog>
