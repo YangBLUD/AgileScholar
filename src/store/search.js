@@ -20,6 +20,9 @@ const SearchModule = {
       state.start_time = toRaw(data.start_time);
       state.end_time = toRaw(data.end_time);
     },
+    settype(state,data){
+      state.searchType = toRaw(data);
+    },
     setGeneralSearch(state, data) {
       state.isAdvancedSearch = false;
       state.searchType = toRaw(data.searchType);

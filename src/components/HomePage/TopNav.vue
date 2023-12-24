@@ -3,33 +3,42 @@
   <div class="top-nav">
     <ul>
       <li style="padding-left: 30px">
-        <a
-          href="#"
-          style="
+        <a href="#" style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          "
-          >What Scholar</a
-        >
+          ">What Scholar</a>
       </li>
       <li style="width: 45%; margin-right: 0">
         <div style="float: right">
-          <el-input
-            v-model="searchText"
-            @keyup="userNameKeyup($event)"
-            size="large"
-            width="200px"
-          >
+          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px">
             <template #prefix>
-              <el-icon class="el-input__icon"><search /></el-icon>
+              <el-icon class="el-input__icon">
+                <search />
+              </el-icon>
             </template>
           </el-input>
           <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="have_user_info">
+        <template #default>
+          <AI />
+        </template>
+        <template #reference>
+          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+        </template>
+      </el-popover>
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="!have_user_info">
+        <template #default>
+          <div>智能助手</div>
+        </template>
+        <template #reference>
+          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+        </template>
+      </el-popover>
       <li class="right">
         <button v-if="have_user_info" @click="history">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
@@ -61,20 +70,10 @@
           <label>E-mail</label>
         </div>
         <div class="user-box">
-          <input
-            type="text"
-            name=""
-            required=""
-            v-model="form.captcha"
-            style="width: 60%; float: left"
-          />
+          <input type="text" name="" required="" v-model="form.captcha" style="width: 60%; float: left" />
           <label>Captcha</label>
-          <el-button
-            type="primary"
-            @click="getCaptcha"
-            style="float: right; margin-top: 7px"
-            >{{ captcha_time }}</el-button
-          >
+          <el-button type="primary" @click="getCaptcha" style="float: right; margin-top: 7px">{{ captcha_time
+          }}</el-button>
         </div>
         <a href="#" @click="handleSubmit">
           <span></span>
@@ -94,12 +93,7 @@
           <label>Username</label>
         </div>
         <div class="user-box">
-          <input
-            type="password"
-            name=""
-            required=""
-            v-model="loginForm.password"
-          />
+          <input type="password" name="" required="" v-model="loginForm.password" />
           <label>Password</label>
         </div>
         <a href="#" @click="handleLoginSubmit">
@@ -117,6 +111,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted, onUnmounted } from "vue";
 import Login from "./Login.vue";
+import AI from "../Chat/chat.vue"
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
@@ -442,6 +437,7 @@ function getCaptcha() {
   left: 0;
   background: rgba(0, 0, 0, 0.61);
 }
+
 .close {
   font-size: 20px;
   position: absolute;
@@ -450,6 +446,7 @@ function getCaptcha() {
   color: aliceblue;
   cursor: pointer;
 }
+
 .top-nav {
   z-index: 999;
   position: fixed;
@@ -470,6 +467,7 @@ function getCaptcha() {
   display: flex;
   justify-content: space-between;
 }
+
 .top-nav li {
   margin-right: 20px;
 }
@@ -524,6 +522,7 @@ function getCaptcha() {
   outline: none;
   background: transparent;
 }
+
 .login-box .user-box label {
   position: absolute;
   top: 0;
@@ -535,16 +534,18 @@ function getCaptcha() {
   transition: 0.5s;
 }
 
-.login-box .user-box input:focus ~ label,
-.login-box .user-box input:valid ~ label {
+.login-box .user-box input:focus~label,
+.login-box .user-box input:valid~label {
   top: -20px;
   left: 0;
   color: #03e9f4;
   font-size: 12px;
 }
+
 .login-box form {
   text-align: center;
 }
+
 .login-box form a {
   position: relative;
   display: inline-block;
@@ -585,6 +586,7 @@ function getCaptcha() {
   0% {
     left: -100%;
   }
+
   50%,
   100% {
     left: 100%;
@@ -605,6 +607,7 @@ function getCaptcha() {
   0% {
     top: -100%;
   }
+
   50%,
   100% {
     top: 100%;
@@ -625,6 +628,7 @@ function getCaptcha() {
   0% {
     right: -100%;
   }
+
   50%,
   100% {
     right: 100%;
@@ -645,21 +649,26 @@ function getCaptcha() {
   0% {
     bottom: -100%;
   }
+
   50%,
   100% {
     bottom: 100%;
   }
 }
+
 :deep(.el-button) {
   background-color: #000000;
   color: rgb(255, 255, 255);
+
   &:hover {
     color: #03e9f4;
   }
 }
+
 :deep(.el-button--primary) {
   --el-button-border-color: white;
 }
+
 :deep(.el-button:hover) {
   border-color: #03e9f4;
 }

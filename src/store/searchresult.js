@@ -6,8 +6,10 @@ const SearchModule = {
     agg_raw:"",
   },
   mutations: {
-    setCluster(state,text,raw){
+    setaggtext(state,text){
         state.agg_text = text;
+    },
+    setaggraw(state,raw){
         state.agg_raw = raw;
     }
   },
