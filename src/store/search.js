@@ -11,17 +11,30 @@ const SearchModule = {
     end_time: "", //截止时间
   },
   mutations: {
-    SetAdvancedSearch(state, data) {
-      state.and_list = data.and_list;
-      state.or_list = data.or_list;
-      state.not_list = data.not_list;
-      state.start_time = data.start_time;
-      state.end_time = data.end_time;
+    setAdvancedSearch(state, data) {
+      state.isAdvancedSearch = true;
+      state.searchType = toRaw(data.searchType);
+      state.and_list = toRaw(data.and_list);
+      state.or_list = toRaw(data.or_list);
+      state.not_list = toRaw(data.not_list);
+      state.start_time = toRaw(data.start_time);
+      state.end_time = toRaw(data.end_time);
     },
-    SetSearch(state, data) {
-      state.and_list.push(data);
+    settype(state,data){
+      state.searchType = toRaw(data);
+    },
+    setGeneralSearch(state, data) {
+      state.isAdvancedSearch = false;
+      state.searchType = toRaw(data.searchType);
+      state.and_list = [{ content: data.keyword, select: "", clear: 1 }];
+      state.or_list = [];
+      state.not_list = [];
+      state.start_time = ""; //不知道是不是这样的0
+      state.end_time = "";
     },
     clearSearch() {
+      state.isAdvancedSearch = false;
+      state.searchType = "";
       state.and_list = [];
       state.or_list = [];
       state.not_list = [];

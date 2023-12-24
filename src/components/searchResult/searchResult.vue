@@ -13,8 +13,15 @@
         </div>
         <div class="middle">
             <div class="middle-left">
-                <div class="middle-left-people" :key="index" v-for="(item,index) in agg">
-                    <Droplist :agginfo="item"/>
+                <div v-if="search_type!=0" class="middle-left-people" :key="index" v-for="(item,index) in agg">
+                    <Droplist :agginfo="item" class="drop1"/>
+                </div>
+                <div v-else class="middle-left-people" >
+                    <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)"/>
+                    <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)"/>
+                    <Droplist :agginfo="sourceagg" class="drop1" @click="getaggagain(2)"/>
+                    <Droplist :agginfo="domainagg" class="drop1" @click="getaggagain(3)"/>
+                    <Droplist :agginfo="typeagg" class="drop1" @click="getaggagain(4)"/>
                 </div>
             </div>
             <div class="middle-right">
@@ -22,18 +29,19 @@
                 <div class="middle-right-sum">
                     <div class="first-line">
                         <div class="search-num">
-                            {{ totalpage }} 
+                            <div v-if="totalpage==10000">{{ totalpage }}+</div>
+                            <div v-else>{{ totalpage }}</div>
                             <div style="font-weight: 300;">Results for: </div>
                             All: {{ search_title }}
                         </div>
                     </div>
                     <div class="sum-text">
-                        <div class="text-first">Searched The ACM Full-Text Collection (718,901 records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
+                        <div class="text-first">Searched The Full-Text Collection ({{totalpage}} records)|</div><div class="text-second">Expand to The ACM Guide to Computing Literature (3,605,660 records) </div>
                     </div>
                 </div>
                 <div class="search-result-tabs">
-                    <div class="nav-container">
-                        <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                    <div  class="nav-container">
+                        <el-tabs v-if="!isadvance" v-model="activeName" class="demo-tabs" @tab-click="handleClick">
                             <el-tab-pane label="RESULTS" name="RESULTS"></el-tab-pane>
                             <el-tab-pane label="SCHOLARS" name="SCHOLARS"></el-tab-pane>
                             <el-tab-pane label="INSTITUTIONS" name="INSTITUTIONS"></el-tab-pane>
@@ -46,9 +54,9 @@
                 </div>
                 <div class="search-result-checkbox">
                     <div class="shai-checkbox">
-                        <el-checkbox />
+                        <!-- <el-checkbox /> -->
                     </div>
-                    <div class="select-all">Select all</div>
+                    <div class="select-all" @click="withoutagg()">&lt;  Normal</div>
                     <div class="per-page">per page:
                         <div v-if="papernum == 10"  class="page-num-active" >10  </div>
                         <div v-else class="page-num-com"  @click="changeSize(10)">10  </div>
@@ -73,19 +81,34 @@
                     </div>
                 </div>
                 <div class="middle-right-list">
-                    <div class="paper-list" :key="index" v-for="(item,index) in paper_list">
+                    <div v-if="search_type==0" class="paper-list" :key="index" v-for="(item,index) in paper_list">
                         <div class="list-item">
                             <div class="checkbox">
                                 <el-checkbox />
                             </div>
                             <div class="context" >
-                                <Content :info="item"/>
+                                <Content :info="item" :token="token"/>
                             </div>
+                        </div>
+                    </div>
+                    <div v-if="search_type==1" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Scholars :info="item" :token="token"></Scholars>
+                        </div>
+                    </div>
+                    <div v-if="search_type==2" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Institutions :info="item" :token="token"></Institutions>
+                        </div>
+                    </div>
+                    <div v-if="search_type==3" class="people-list"  >
+                        <div class="people-item" :key="index" v-for="(item,index) in paper_list">
+                            <Subjects :info="item" :token="token"></Subjects>
                         </div>
                     </div>
                     <div class="bottom-page">
                         <div class="example-pagination-block">
-                        <el-pagination layout="prev, pager, next" :total="totalpage" v-model:current-page="currentPage"
+                        <el-pagination layout="prev, pager, next" :page-count="totalye" v-model:current-page="currentPage"
                         @current-change="currentChange"
                         @prev-click="prevClick"
                         @next-click="nextClick"
@@ -98,42 +121,143 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} from "vue";
+import { reactive, ref, onMounted ,onBeforeMount,watch} from "vue";
 import axios from "axios";
 import Content from './paperContent.vue'
 import Droplist from './droplist.vue'
-import { Search} from "@element-plus/icons-vue";
+import Scholars from './scholars.vue'
+import Institutions from './institution.vue'
+import Subjects from './subject.vue'
+import { Search,ArrowLeft} from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
+import { useRouter } from "vue-router";
+const router = useRouter ();
+
+const token = ref("");
+const isadvance = ref(false);
+//额外的请求参数
+const search_type = ref(0)
+const search_first_search = ref(1)
+const search_work_clustering = ref(0)
+const search_author_clustering = ref(0)
+const search_sort = ref(0)
+const search_extend_list = ref([])
+//用于论文列表的渲染
+const paper_list = ref([])
+const search_title = ref("")
 //搜索框
 const searchcontent = ref("AI");
-//搜索函数
-function keysearch(){
-    console.log(searchcontent.value);
-    return;
-    getpaperlist();
+
+function start(){
+    if(!isadvance.value){
+        Store.commit("settype", search_type);
+    }
+    isadvance.value = Store.getters.getSearch.isAdvancedSearch;
+    search_type.value = Store.getters.getSearch.searchType;
+    searchcontent.value = Store.getters.getSearch.and_list[0].content;
+    search_title.value = Store.getters.getSearch.and_list[0].content;
+    token.value = Store.getters.getUserinfo.token;
 }
 //初始化函数
 onBeforeMount(() => {
-  //搜索框
-  tst();
-  totalpage.value =100; //获取总数
-  dropsort();
-  console.log(sortlist.value);
+    start();
+    getpaperlist();
+    dropsort();
 });
-//额外的请求参数
-const search_first_search = ref(1)
-const search_type = ref(0)
-const search_work_clustering = ref("")
-const search_author_clustering = ref(1)
 
-const search_sort = ref(-1)
-const search_extend_list = ref([])
+//核心函数
+function getpaperlist(){
+    console.log("iiiiiiiiiiii")
+    console.log({
+            token :Store.getters.getUserinfo.token,
+            search_type : Store.getters.getSearch.searchType,
+            and_list : Store.getters.getSearch.and_list,
+            or_list : Store.getters.getSearch.or_list,
+            not_list : Store.getters.getSearch.not_list,
+            start_time : Store.getters.getSearch.start_time,
+            end_time : Store.getters.getSearch.end_time,
+            first_search : search_first_search.value,
+            work_clustering : search_work_clustering.value,
+            author_clustering : search_author_clustering.value,
+            size : papernum.value,
+            from : search_from.value - 1,
+            sort : search_sort.value,
+            extend_list : search_extend_list.value,
+      })
+    axios({
+      url: "http://122.9.5.156:8000/api/v1/search_result/search",
+      method: "post",
+      data: JSON.stringify({
+            token :Store.getters.getUserinfo.token,
+            search_type : Store.getters.getSearch.searchType,
+            and_list : Store.getters.getSearch.and_list,
+            or_list : Store.getters.getSearch.or_list,
+            not_list : Store.getters.getSearch.not_list,
+            start_time : Store.getters.getSearch.start_time,
+            end_time : Store.getters.getSearch.end_time,
+            first_search : search_first_search.value,
+            work_clustering : search_work_clustering.value,
+            author_clustering : search_author_clustering.value,
+            size : papernum.value,
+            from : search_from.value - 1,
+            sort : search_sort.value,
+            extend_list : search_extend_list.value,
+      }),
+    })
+      .then((res) => {
+        let data = res.data.data;
+        paper_list.value = data.result;
+        totalpage.value = data.total;
+        // search_from.value = Math.max(1,papernum.value);
+        search_to.value = Math.min(data.total,papernum.value);
+        totalye.value = parseInt(totalpage.value / papernum.value) +1;
+        if(search_type.value == 0){
+            if(search_work_clustering.value == 0){
+                timeagg.value.data = dealagg(data.agg[0].data,"Publication Date");
+            }
+            else if(search_work_clustering.value == 1){
+                writeragg.value.data = dealagg(data.agg[0].data,"Main Author");
+            }
+            else if(search_work_clustering.value == 2){
+                sourceagg.value.data = dealagg(data.agg[0].data,"Source");
+            }
+            else if(search_work_clustering.value == 3){
+                domainagg.value.data = dealagg(data.agg[0].data,"Main Domain");
+            }
+            else if(search_work_clustering.value == 4){
+                typeagg.value.data = dealagg(data.agg[0].data,"Type");
+            }
+        }
+        else{
+            agg.value = [];
+            for(let i = 0;i<data.agg.length;i++){
+                agg.value.push({
+                    name:data.agg[i].name,
+                    text:data.agg[i].text,
+                    data:dealagg(data.agg[i].data,data.agg[i].name)
+                })
+            }
+        }
+        
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+}
+//搜索函数
+function keysearch(){
+    if(isadvance.value){
+        router.push({ path: "home"});
+    }
+    const data1 = {
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    }
+    Store.commit("setGeneralSearch", data1);
+    getpaperlist();
+}
 
-//用于论文列表的渲染
-const paper_list = ref([])
-//用于第一行的渲染
-const search_title = ref("ai")
 
 //下一行的滑动
 const activeName = ref('RESULTS');
@@ -150,71 +274,30 @@ const handleClick = (tab, event) => {
     else if(tab.props.name == "SUBJECTS"){
         search_type.value = 3;
     }
-    console.log(search_type.value);
+    Store.commit("setGeneralSearch",{
+        searchType : search_type.value,
+        keyword : searchcontent.value,
+    });
+    search_extend_list.value = [];
     getpaperlist();
     resetpage();
 };
+const totalye = ref(0);
 
-function getpaperlist(){
-    tst();
-    console.log(paper_list.value);
-    return;
-    axios({
-      url: "http://122.9.5.156:8000/api/v1/search_result/search",
-      method: "post",
-      data: JSON.stringify({
-            token :Store.getters.getUserinfo.token,
-            search_type : search_type,
-            and_list : Store.getters.getSearch.and_list,
-            or_list : Store.getters.getSearch.or_list,
-            not_list : Store.getters.getSearch.not_list,
-            start_time : Store.getters.getSearch.start_time,
-            end_time : Store.getters.getSearch.end_time,
-
-            first_search : search_first_search,
-            work_clustering : search_work_clustering,
-            author_clustering : search_author_clustering,
-            size : search_size,
-            from : search_from,
-            sort : search_sort,
-            extend_list : search_extend_list,
-      }),
-    })
-      .then((res) => {
-        paper_list = res.data.message.data.result;
-
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-}
 //选择显示论文的条数
 const papernum = ref(20)
-const search_from  = ref(1)
 const search_to = ref(20)
+const search_from  = ref(1)
 
 function changeSize(size){
     papernum.value = size;
+    resetpage();
     getpaperlist();
     search_to.value = search_from.value + (papernum.value - 1);
 }
 function resetpage(){
     search_from.value = 1;
     search_to.value = search_from.value + papernum.value;
-}
-//左侧的聚类
-const getCluster = computed(()=>{
-	//返回的是ref对象
-	return Store.getters.getCluster;
-})
-watch(getCluster, (newVal, oldVal) => {
-	console.log('newVal, oldVal', newVal, oldVal);
-    getnewagg();
-}, {immediate:true,deep:true});
-function getnewagg(){
-    search_work_clustering.value = getCluster;
-    // getpaperlist();
-    resetpage();
 }
 //翻页功能的实现
 const currentPage = ref(1);
@@ -241,22 +324,124 @@ const nextClick = () => {
     getpaperlist();
 };
 
+
+//左侧的聚类
+const agg = ref([]);
+function getCluster(){
+	return Store.getters.getCluster;
+}
+watch(getCluster, (newVal, oldVal) => {
+	console.log('newVal, oldVal', newVal, oldVal);
+    getnewagg();
+}, {deep:true});
+function getnewagg(){
+    let pp = getCluster();
+    search_extend_list.value = [];
+    search_extend_list.value.push({
+        text:pp.agg_text,
+        value:pp.agg_raw
+    })
+    getpaperlist();
+    resetpage();
+}
+//取消聚类的搜索
+function withoutagg(){
+    search_extend_list.value = [];
+    getpaperlist();
+    resetpage();
+}
+
+//关于聚类的更改
+const timeagg = ref({'name': 'Publication Date', 'text': 'publication_date', 'data': []})
+const writeragg = ref({'name': 'Main Author', 'text': 'author_main', 'data': []})
+const sourceagg = ref({'name': 'Source', 'text': 'source', 'data': []})
+const domainagg = ref({'name': 'Main Domain', 'text': 'domain_main', 'data': []})
+const typeagg = ref({'name': 'Type', 'text': 'type_num', 'data': []})
+function getaggagain(type){
+    // if(type == 0 && timeagg.value.data.length != 0){
+    //     timeagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 1 && writeragg.value.data.length != 0){
+    //     writeragg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 2 && sourceagg.value.data.length != 0){
+    //     sourceagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 3 && domainagg.value.data.length != 0){
+    //     domainagg.value.data = [];
+    //     return;
+    // }
+    // else if(type == 4 && typeagg.value.data.length != 0){
+    //     typeagg.value.data = [];
+    //     return;
+    // }
+    
+    
+    
+    search_work_clustering.value = type;
+    getpaperlist();
+}
+function dealagg(datalist,type){
+    let results = [];
+    if(type == "Main Author" || type == "Source" || type == "Main Domain" ||type == "Institution"){
+        for(let i=0;i<datalist.length;i++){
+            let pp = datalist[i].raw.indexOf("&");
+            let tmp = datalist[i].raw.substring(0,pp);
+            results.push({
+                show:tmp,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    else if(type == "Publication Date" || type == "Name" ||type == "Country Code" || type == "Institution Type"){
+        for(let i=0;i<datalist.length;i++){
+            results.push({
+                show:datalist[i].raw,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    else if(type == "Type"){
+        for(let i=0;i<datalist.length;i++){
+            let pp = parseInt(datalist[i].raw);
+            let abs,sou,land,pdf,tmp="";
+            abs = (parseInt(pp/1000));pp%=1000;
+            sou = (parseInt(pp/100));pp%=100;
+            land = (parseInt(pp/10));pp%=10;
+            pdf = pp;
+            if(abs == 1) tmp += "abstract ";
+            if(sou == 1) tmp += "source ";
+            if(land == 1) tmp += "landing_page_url ";
+            if(pdf == 1) tmp += "pdf_url ";
+            results.push({
+                show:tmp,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
+    return results;
+}
 //下拉框排序
 const sortlist = ref([])
 function dropsort(){
     sortlist.value = [];
-    console.log(search_type.value)
     if(search_type.value == 0){
-        sortlist.value.push({id:0,text:"Cited least"});
-        sortlist.value.push({id:1,text:"Cited most"});
-        sortlist.value.push({id:2,text:"Latest"});
-        sortlist.value.push({id:3,text:"Earliest"});
+        sortlist.value.push({id:0,text:"Cited down"});
+        sortlist.value.push({id:1,text:"Cited up"});
+        sortlist.value.push({id:2,text:"Time down"});
+        sortlist.value.push({id:3,text:"Time up"});
         sortlist.value.push({id:4,text:"Title down"});
         sortlist.value.push({id:5,text:"Title up"});
     }
     else if(search_type.value == 1 ||search_type.value == 2){
-        sortlist.value.push({id:0,text:"Cited least"});
-        sortlist.value.push({id:1,text:"Cited most"});
+        sortlist.value.push({id:0,text:"Cited down"});
+        sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Index down"});
         sortlist.value.push({id:3,text:"Index up"});
         sortlist.value.push({id:4,text:"More than 10 in 2"});
@@ -264,10 +449,10 @@ function dropsort(){
         sortlist.value.push({id:6,text:"Results down"});
         sortlist.value.push({id:7,text:"Results up"});
         sortlist.value.push({id:8,text:"Name down"});
-        sortlist.value.push({id:9,text:"Name down"});
+        sortlist.value.push({id:9,text:"Name up"});
     }
     else if(search_type.value == 3){
-        sortlist.value.push({id:0,text:"Cited least"});
+        sortlist.value.push({id:0,text:"Index down"});
         sortlist.value.push({id:1,text:"Index up"});
         sortlist.value.push({id:2,text:"Results down"});
         sortlist.value.push({id:3,text:"Results up"});
@@ -281,108 +466,6 @@ function changesort(item){
     search_sort.value = item.id;
     getpaperlist();
 }
-//用于测试
-function tst(){
-    paper_list.value = [];
-    for(let i = 0;i<papernum.value;i++){
-        paper_list.value.push(test);
-    }
-}
-const test = {
-    title: "AI4TV '19: Proceedings of the 1st International Workshop on AI for Smart TV Content Production, Access and Delivery",
-    id: "4254080329",
-    abstract: "It is our great pleasure to welcome you to the  Production, Access and Delivery - AI4TV 2019. New scientific breakthroughs in video understanding through the d as dasdasd a sda sda sdasd asd adas ad sdas d sd a d as d a d a sd a s d a d as da sdasd a sd a sdapplication of AI techniques along with ...",
-    cited_count: 0,
-    domain: [
-        {
-            "name": "Psychology",
-            "id": "15744967",
-            "level": "0",
-            "activity_level": "0.2911021"
-        }
-    ],
-    author_all: ["aaa","bbb","ccc","ddd"],
-    pdf_url: null,
-    landing_page_url: "https://doi.org/10.1007/978-3-319-15347-6_300037",
-    source: [
-        {
-            "name": "Springer eBooks",
-            "type": "ebook platform",
-            "id": "4310319965"
-        }
-    ],
-    publication_date: "2020-01-01",
-    type_num: 110,
-    is_star: false
-}
-const agg = [
-    {
-        name:"source",
-        source:"source",
-        data:[
-            {
-                "raw": "arXiv (Cornell University) & repository & None | ",
-                "value": 2719
-            },
-            {
-                "raw": "Social Science Research Network & repository & None | ",
-                "value": 1157
-            },
-            {
-                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
-                "value": 504
-            },
-            {
-                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
-                "value": 499
-            }
-        ]
-    },
-    {
-        name:"source",
-        source:"source",
-        data:[
-            {
-                "raw": "arXiv (Cornell University) & repository & None | ",
-                "value": 2719
-            },
-            {
-                "raw": "Social Science Research Network & repository & None | ",
-                "value": 1157
-            },
-            {
-                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
-                "value": 504
-            },
-            {
-                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
-                "value": 499
-            }
-        ]
-    },
-    {
-        name:"source",
-        source:"source",
-        data:[
-            {
-                "raw": "arXiv (Cornell University) & repository & None | ",
-                "value": 2719
-            },
-            {
-                "raw": "Social Science Research Network & repository & None | ",
-                "value": 1157
-            },
-            {
-                "raw": "Lecture Notes in Computer Science & book series & 4310319900 | ",
-                "value": 504
-            },
-            {
-                "raw": "Springer eBooks & ebook platform & 4310319965 | ",
-                "value": 499
-            }
-        ]
-    }
-]
 </script>
 
 <style scoped>
@@ -444,6 +527,9 @@ ul{
     display: flex;
     .middle-left{
         width: 25%;
+        .drop1{
+            margin-bottom: 5px;
+        }
     }
     .middle-right{
         width: 75%;
@@ -519,11 +605,15 @@ ul{
                 left: 5px;
             }
             .select-all{
-                margin: 25px 20px;
+                margin: 18px 20px;
                 font-size: 15px;
                 color: #e6e6e6;
                 font-weight: 500;
                 width: 160px;
+                cursor: pointer;
+            }
+            .select-all:hover{
+                color: black;
             }
             .per-page{
                 margin-top: 25px;
@@ -559,7 +649,20 @@ ul{
         }
         .middle-right-list{
             height: 180px;
-            /* background-color: blanchedalmond; */
+            .people-list{
+                margin-left: 30px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                .people-item{
+                    width: 250px;
+                    height: 250px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    box-shadow: 0 0.3125rem 0.5rem rgba(0,0,0,.1);
+                }
+            }
             .paper-list{
                 .list-item{
                     margin: 20px 0px;

@@ -1,21 +1,46 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+const HomePage = () => import("../views/HomePage/HomePage.vue");
+const AdvancedSearch = () => import("../views/HomePage/AdvancedSearch.vue");
 const Main = () => import("../components/HelloWorld.vue");
 const Scholar = () => import("../components/Scholar/scholar.vue");
+const ArticleDisplay = () => import("../components/ArticleDisplay/ArticleDisplay.vue");
+const InstitutionDisplay = () => import("../components/InstitutionDisplay/InstitutionDisplay.vue");
+const routes = [
+  { path: "/", redirect: "/home" },
+  { path: "/main", component: Main },
+  { path: "/home", component: HomePage },
+  { path: "/advanced", component: AdvancedSearch },
+  {
+    path: "/main",
+    component: Main
+  },
+  {
+    path: "/article/:id",
+    name: "article-display",
+    component: ArticleDisplay,
+    props: true
+  },
+  {
+    path: "/institution/:id",
+    name: "institution-display",
+    component: InstitutionDisplay,
+    props: true,
+  },
+  {
+    path: '/searchResult',
+    component: ()=>import('../components/searchResult/searchResult.vue'),
+  },
+  {
+    path: '/topnav',
+    component: ()=>import('../components/TopNav.vue'),
+  },
+  { path: "/scholar", component: Scholar },
+  { path: "/main", component: Main }
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes:[
-    {
-      path: '/searchResult',
-      component: ()=>import('../components/searchResult/searchResult.vue'),
-    },
-    {
-      path: '/topnav',
-      component: ()=>import('../components/TopNav.vue'),
-    },
-    { path: "/scholar", component: Scholar },
-    { path: "/main", component: Main },
-  ],
+  routes: routes,
 });
 
 export default router;

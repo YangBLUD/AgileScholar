@@ -4,13 +4,13 @@
             <div class="label-content">{{ props.agginfo.name }}</div>
         </div>
         <div class="list">
-            <el-collapse v-model="activeNames" @change="handleChange" >
-                <el-collapse-item :title=item.raw :name=index v-for="(item,index) in props.agginfo.data" :key="index" >
+            <el-collapse v-model="activeNames" @change="handleChange" v-if="props.agginfo.data && props.agginfo.data.length!=0">
+                <el-collapse-item :title=item.show :name=index v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" >
                     <template #title>
-                        <div class="el-collapse-item-title">{{ item.raw }}</div>
+                        <div class="el-collapse-item-title">{{ item.show }}</div>
                     </template>
                     <div class="item-item" @click="aggchange(item)">
-                    {{ item.raw }}&nbsp;({{ item.value }})
+                    {{ item.show }}&nbsp;({{ item.value }})
                     </div>
                 </el-collapse-item>
             </el-collapse>
@@ -18,11 +18,13 @@
     </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted, onUnmounted ,onBeforeMount,watch,computed} from "vue";
+import { ref, onMounted ,onBeforeMount} from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 const Store = useStore();
-
+onMounted(() => {
+    console.log(props.agginfo)
+});
 const props = defineProps({
     agginfo:Object,
 })
@@ -30,13 +32,10 @@ const activeNames = ref(['1'])
 const handleChange = (val) => {
   console.log(val);
 };
-//用于item的渲染
-const titlearr = ref([]);
 //点击进行聚类
 function aggchange(item){
-    console.log(item.raw);
-    Store.commit("setCluster", item.raw);
-    console.log(Store.getters.getCluster);
+    Store.commit("setaggtext", props.agginfo.text);
+    Store.commit("setaggraw",item.raw);
 }
 </script>
 <style scoped>
@@ -59,6 +58,9 @@ function aggchange(item){
             left: 10px;
         }
 
+    }
+    .label:hover{
+        background-color: #c8c7c7;
     }
     .list{
         position: relative;

@@ -1,5 +1,5 @@
 <template>
-    <div class="main" @click="console.log(info.title)">
+    <div class="main" @click="">
         <div class="left">
             <div class="timer">
                 <div class="state">
@@ -10,21 +10,23 @@
                 </div>
             </div>
             <div class="pic" >
-                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;">
+                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;" >
             </div>
         </div>
         <div class="right">
-            <div class="title">
-                {{ props.info.title }}
+            <div class="title" >
+                <router-link :to="{name:'article-display', params:{id:props.info.id} }">
+                    <span v-html="props.info.title"></span>
+                </router-link>
             </div>
             <div class="wri_list" >
-                <div class="writer" v-for="item in props.info.author_all.slice(0,3)">
+                <div class="writer" v-if="props.info.author_all" v-for="item in props.info.author_all.slice(0,2)">
                     <img src="../../assets/test.jpg" class="writer-pic"/>
-                    <div class="name">{{ item }}</div>
+                    <div class="name"><span v-html="item.name"></span></div>
                 </div>
             </div>
             <div class="abstract">
-                <div v-if="props.info.abstract" class="ab-text">{{ props.info.abstract }}</div>
+                <div v-if="props.info.abstract" class="ab-text"><span v-html="props.info.abstract"></span></div>
                 <div v-else>without abstract</div>
             </div>
             <div class="bottom">
@@ -47,7 +49,7 @@
                     </div>
                     <div class="introduce">
                         
-                        <stardialog :folderlist = "folderlist" :token = "user_token" :paper_id="paper_id" :type="type"></stardialog>
+                        <stardialog  :token = "props.token" :paper_id="paper_id" :type="type" :is_star="props.info.is_star"></stardialog>
                     </div>
                 </div>
             </div>
@@ -63,49 +65,12 @@ import stardialog from "./stardialog.vue";
 import { useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
-    //addstar();
+    paper_id.value = props.info.id;
 });
-const user_token = ref("eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjEwNzEzNy44MDk2MDc3fQ.rVGoTbaiH3XLZudPCxShFXnWg72Yiykuyi0Jn-XPrIE");
 //用于收藏
 const paper_id = ref("2106749358");
 const type = ref(0);
-const folder_id = ref(2);
-const folderlist = ref([{"folder_id": 1,"folder_name": "谢秉书没牛牛1","num": 2},{"folder_id": 2,"folder_name": "谢秉书没牛牛2","num": 2}]);
-function getfold(){
-    return;
-    axios({
-      url: "http://122.9.5.156:8000/api/v1/home/get_folders",
-      method: "post",
-      data: JSON.stringify({    
-            token :user_token,
-      }),
-    })
-      .then((res) => {
-            console.log(res);
-            folderlist = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-}
-function addstar(){
-    axios({
-      url: "http://122.9.5.156:8000/api/v1/home/star",
-      method: "post",
-      data: JSON.stringify({    
-            token :user_token,
-            "paper_id": paper_id,
-            "type": type,
-            "folder_id": folder_id,
-      }),
-    })
-      .then((res) => {
-            console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-}
+
 //用于链接的分享
 function gotolink(){
     window.open(props.info.landing_page_url);
@@ -116,6 +81,7 @@ function gotopdf(){
 }
 const props = defineProps({
     info:Object,
+    token:String,
 })
 </script>
 <style scoped>
@@ -143,6 +109,7 @@ const props = defineProps({
         margin: 15px;
         width: 30px;
         height: 30px;
+        
     }
 }
 .right{
@@ -152,11 +119,20 @@ const props = defineProps({
     height: 100%;
     /* width: 95%; */
     .title{
-        color: #5f99cc;
         font-size: 18px;
-        font-weight: 400;
         width: 87%;
+        height: 59px;
         cursor: pointer;
+        white-space: pre-wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: Merriweather,serif;
+        color: #0077c2;
+        font-weight: 600;
+        >>> em {
+        background-color: yellow;
+
+        }
     }
     .wri_list{
         display: flex   ;
@@ -171,22 +147,41 @@ const props = defineProps({
             height: 30px;
             border-radius: 50%;
             border: 1px solid;
+            /* -webkit-filter: grayscale(100%);
+            -moz-filter: grayscale(100%);
+            -ms-filter: grayscale(100%);
+            -o-filter: grayscale(100%);
+            filter: grayscale(100%);
+            filter: gray; */
         }
         .name{
             margin: 15px 0;
-            color: #806f5d;
+            color: #616374;
             text-decoration: underline;
+            font-family: Merriweather,serif;
+            >>> em {
+        background-color: yellow;
+
+        }
         }
     }
     }
     
     .abstract{
-        font-size: 15px;
+        font-size: 16px;
         width: 87%;
-        height: 78px;
+        height: 65px;
+        overflow: hidden;
         white-space: pre-wrap;
         text-overflow:ellipsis ;
-        overflow: hidden;
+        font-family: Merriweather Sans,sans-serif;
+        >>> em {
+        background-color: yellow;
+
+        }
+    }
+    .ab-text{
+        font-family: Merriweather Sans,sans-serif;
         
     }
     .bottom{
@@ -200,7 +195,7 @@ const props = defineProps({
             position: relative;
             left: 0px;
             display: flex;
-            width: 22%;
+            width: 24%;
             border-right: 1px solid #e6e6e6;
             font-size: 18px;
             .inference{
@@ -213,6 +208,7 @@ const props = defineProps({
                     margin-top:3px;
                     font-size: 17px;
                     margin-left: 5px;
+                    font-family: icomoon!important;
                 }
             }
             .inference:hover{
@@ -238,7 +234,7 @@ const props = defineProps({
         }
         .choice{
             position: relative;
-            left:45%;
+            left:35%;
             display: flex;
             .introduce{
                 background-color: rgb(231, 229, 229);

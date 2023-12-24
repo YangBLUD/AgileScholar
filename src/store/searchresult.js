@@ -2,17 +2,21 @@ import { createStore } from "vuex";
 import { toRaw } from "vue";
 const SearchModule = {
   state: {
-    cluster:"da"
+    agg_text:"da",
+    agg_raw:"",
   },
   mutations: {
-    setCluster(state,cluster){
-        state.cluster = cluster;
+    setaggtext(state,text){
+        state.agg_text = text;
+    },
+    setaggraw(state,raw){
+        state.agg_raw = raw;
     }
   },
   actions: {},
   getters: {
     getCluster(state) {
-      return state.cluster;
+      return state;
     },
   },
 };
