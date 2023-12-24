@@ -52,8 +52,11 @@ onMounted(() => {
 const router = useRouter();
 const handleCommand = (command) => {
 	if (command == 'logout') {
-		store.dispatch('AdminLogout');
-		router.push('/login');
+		store.commit('AdminLogout')
+		console.log("退出admin")
+		store.commit('logOut')
+		console.log("退出admin")
+		router.push('/home');
 	} else if (command == 'user') {
 		router.push('/admin/info');
 	}
