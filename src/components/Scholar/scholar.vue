@@ -39,7 +39,7 @@
 
 
 <script setup>
-import { onMounted ,defineAsyncComponent, computed, ref, reactive } from 'vue';
+import { onMounted ,defineAsyncComponent, computed, ref, reactive, onBeforeMount} from 'vue';
 import {useStore} from "vuex";
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElTabs, ElTabPane } from 'element-plus';
 import axios from 'axios';
@@ -48,6 +48,7 @@ import axios from 'axios';
 const activeTab = ref('influence');
 const Message = ref('father-messages')
 const authorInformation = ref(null)
+const authorId = ref(5053369574)
 const store = useStore()
 const tabComponents = {
   papers: defineAsyncComponent(() => import('./components/PapersTab.vue')),
@@ -86,7 +87,7 @@ const fetchAuthorNetwork = () =>{
     url: "http://122.9.5.156:8000/api/v1/author/author_network",
     method: "post",
     data: JSON.stringify({
-      author_id: 5046279102
+      author_id: authorId
     }),
   })
       .then((res) => {
@@ -100,14 +101,15 @@ const fetchAuthorNetwork = () =>{
 function getAuthorStates(){
   return store.getters.getAuthorState
 }
+onBeforeMount(()=>{
+  authorInformation.value = getAuthorStates().authorInformation
+  authorId.value = authorInformation.value.authorId
+})
 // 在页面加载时触发请求
 onMounted(async () => {
   fetchAuthorNetwork();
   fetchAuthorInformation();
-  authorInformation.value = getAuthorStates().authorInformation
 });
-
-
 </script>
 
 <style scoped>

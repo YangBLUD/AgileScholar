@@ -29,8 +29,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
+import { onMounted ,defineAsyncComponent, computed, ref, reactive } from 'vue';
+import {useStore} from "vuex";
+import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElTabs, ElTabPane } from 'element-plus';
+import axios from 'axios';
+const store = useStore()
 // 初始论文数据
 const papers = ref([
   { title: '论文1', authors: '作者1', journal: '期刊1', year: '2023', type: '期刊', download: '100', quote: '20' },
@@ -59,7 +62,6 @@ const papers = ref([
 
 // 筛选后的论文数据
 const filteredPapers = ref([...papers.value]);
-
 // 筛选函数
 function filterBy(field, value) {
   if (value === '全部') {
@@ -68,6 +70,12 @@ function filterBy(field, value) {
     filteredPapers.value = papers.value.filter(paper => paper[field] === value);
   }
 }
+function fetchPaperList(){
+
+}
+onMounted
+
+
 </script>
 
 <style>
