@@ -233,6 +233,7 @@ function getpaperlist(){
     })
       .then((res) => {
         let data = res.data.data;
+        console.log(data);
         paper_list.value = data.result;
         totalpage.value = data.total;
         // search_from.value = Math.max(1,papernum.value);
@@ -451,6 +452,15 @@ function dealagg(datalist,type){
             })
         }
     }
+    else if(type == "Level"){
+        for(let i=0;i<datalist.length;i++){
+            results.push({
+                show:"level "+datalist[i].raw,
+                raw:datalist[i].raw,
+                value:datalist[i].value
+            })
+        }
+    }
     return results;
 }
 //下拉框排序
@@ -458,6 +468,7 @@ const sortlist = ref([])
 function dropsort(){
     sortlist.value = [];
     if(search_type.value == 0){
+        sortlist.value.push({id:-1,text:"Correlation"});
         sortlist.value.push({id:0,text:"Cited down"});
         sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Time down"});
@@ -466,6 +477,7 @@ function dropsort(){
         sortlist.value.push({id:5,text:"Title up"});
     }
     else if(search_type.value == 1 ||search_type.value == 2){
+        sortlist.value.push({id:-1,text:"Correlation"});
         sortlist.value.push({id:0,text:"Cited down"});
         sortlist.value.push({id:1,text:"Cited up"});
         sortlist.value.push({id:2,text:"Index down"});
@@ -478,6 +490,7 @@ function dropsort(){
         sortlist.value.push({id:9,text:"Name up"});
     }
     else if(search_type.value == 3){
+        sortlist.value.push({id:-1,text:"Correlation"});
         sortlist.value.push({id:0,text:"Index down"});
         sortlist.value.push({id:1,text:"Index up"});
         sortlist.value.push({id:2,text:"Results down"});

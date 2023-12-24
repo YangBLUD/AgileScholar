@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="pic" >
-                <img src="../../assets/test.jpg" alt="" style="width: 100px;height: 120px;" >
+                <img src="../../assets/result.png" alt="" style="width: 100px;height: 120px;" >
             </div>
         </div>
         <div class="right">
@@ -21,8 +21,11 @@
             </div>
             <div class="wri_list" >
                 <div class="writer" v-if="props.info.author_all" v-for="item in props.info.author_all.slice(0,2)">
-                    <img src="../../assets/test.jpg" class="writer-pic"/>
-                    <div class="name"><span v-html="item.name"></span></div>
+                    <img src="../../assets/logo.png" class="writer-pic"/>
+                    <router-link :to="{name:'scholar-display', params:{id:item.id} }">
+                        <div class="name"><span v-html="item.name"></span></div>
+                    </router-link>
+                    
                 </div>
             </div>
             <div class="abstract">
