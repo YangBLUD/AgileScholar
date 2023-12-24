@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import UserModule from "./user";
 import SearchModule from "./search";
-import LlmModule from './llm.js'
+import LlmModule from "./llm.js";
 import SearchResultModule from "./searchresult";
 import AuthorModule from "./author";
 import createPersistedState from "vuex-persistedstate";
@@ -14,14 +14,9 @@ const store = createStore({
   plugins: [
     createPersistedState({
       storage: window.sessionStorage,
-      paths: ["User", "Search", "SearchResult", "LLM"],
-    SearchResult: SearchResultModule,
-    Author: AuthorModule,
-  },
-  plugins: [
-    createPersistedState({
-    storage: window.sessionStorage,
-     paths: ["User", "Search", "SearchResult","Author"],
+      paths: ["User", "Search", "SearchResult", "LLM", "Author"],
+      SearchResult: SearchResultModule,
+      Author: AuthorModule,
     }),
   ],
 });

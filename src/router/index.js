@@ -6,17 +6,16 @@ const routes = [
   { path: "/", redirect: "/home" },
   { path: "/home", component: HomePage },
   { path: "/advanced", component: AdvancedSearch },
-  { path: "/chatDemo", component: chatDemo},
+  { path: "/chatDemo", component: chatDemo },
 ];
 const router = createRouter({
   history: createWebHashHistory(),
-  routes:[
+  routes: [
     {
-      path: '/searchResult',
-      component: ()=>import('../components/searchResult/searchResult.vue'),
+      path: "/searchResult",
+      component: () => import("../components/searchResult/searchResult.vue"),
     },
     { path: "/", redirect: "/home" },
-    { path: "/main", component: Main },
     { path: "/home", component: HomePage },
     { path: "/advanced", component: AdvancedSearch },
   ],
