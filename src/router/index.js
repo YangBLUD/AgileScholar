@@ -21,6 +21,10 @@ const routes = [
     props: true
   },
   {
+    path: '/searchResult',
+    component: ()=>import('../components/searchResult/searchResult.vue'),
+  },
+  {
     path: "/institution/:id",
     name: "institution-display",
     component: InstitutionDisplay,
