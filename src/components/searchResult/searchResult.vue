@@ -242,19 +242,40 @@ function getpaperlist(){
         if(search_type.value == 0){
             if(search_work_clustering.value == 0){
                 timeagg.value.data = dealagg(data.agg[0].data,"Publication Date");
+                writeragg.value.data = []
+                sourceagg.value.data = []
+                domainagg.value.data = []
+                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 1){
                 writeragg.value.data = dealagg(data.agg[0].data,"Main Author");
+                timeagg.value.data = []
+                sourceagg.value.data = []
+                domainagg.value.data = []
+                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 2){
                 sourceagg.value.data = dealagg(data.agg[0].data,"Source");
+                timeagg.value.data = []
+                writeragg.value.data = []
+                domainagg.value.data = []
+                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 3){
                 domainagg.value.data = dealagg(data.agg[0].data,"Main Domain");
+                timeagg.value.data = []
+                writeragg.value.data = []
+                sourceagg.value.data = []
+                typeagg.value.data = []
             }
             else if(search_work_clustering.value == 4){
                 typeagg.value.data = dealagg(data.agg[0].data,"Type");
+                timeagg.value.data = []
+                writeragg.value.data = []
+                sourceagg.value.data = []
+                domainagg.value.data = []
             }
+            search_extend_list.value = []
         }
         else{
             agg.value = [];
@@ -265,6 +286,7 @@ function getpaperlist(){
                     data:dealagg(data.agg[i].data,data.agg[i].name)
                 })
             }
+            search_extend_list.value = []
         }
         importantProgress.value = false;
       })
@@ -385,6 +407,11 @@ const sourceagg = ref({'name': 'Source', 'text': 'source', 'data': []})
 const domainagg = ref({'name': 'Main Domain', 'text': 'domain_main', 'data': []})
 const typeagg = ref({'name': 'Type', 'text': 'type_num', 'data': []})
 function getaggagain(type){
+    if(Store.getters.getOutConditon === false){
+      Store.commit("setOutCondition", true)
+      return;
+    }
+    console.log("getaggagain");
     // if(type == 0 && timeagg.value.data.length != 0){
     //     timeagg.value.data = [];
     //     return;
@@ -405,9 +432,9 @@ function getaggagain(type){
     //     typeagg.value.data = [];
     //     return;
     // }
-    
-    
-    
+
+
+
     search_work_clustering.value = type;
     getpaperlist();
 }

@@ -39,6 +39,7 @@ const handleChange = (val) => {
 };
 //点击进行聚类
 function aggchange(item){
+    Store.commit("setOutCondition", false);
     Store.commit("setaggtext", props.agginfo.text);
     Store.commit("setaggraw",item.raw);
 }

@@ -9,6 +9,7 @@ const SearchModule = {
     not_list: [],
     start_time: "", // 起始时间
     end_time: "", //截止时间
+    out: true,
   },
   mutations: {
     setAdvancedSearch(state, data) {
@@ -41,12 +42,18 @@ const SearchModule = {
       state.start_time = "";
       state.end_time = "";
     },
+    setOutCondition(state, raw){
+      state.out = raw;
+    }
   },
   actions: {},
   getters: {
     getSearch(state) {
       return state;
     },
+    getOutConditon(state){
+      return state.out;
+    }
   },
 };
 export default SearchModule;
