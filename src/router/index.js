@@ -20,8 +20,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/institution",
-    component: InstitutionDisplay
+    path: "/institution/:id",
+    name: "institution-display",
+    component: InstitutionDisplay,
+    props: true,
   }
 ];
 const router = createRouter({

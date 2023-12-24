@@ -444,11 +444,92 @@ const ArticleModule ={
             }
         ],
         is_star: false,
-
+        comments: [
+            {
+                "id": 1,
+                "user": "谢秉书没牛牛2",
+                "user_id": 3,
+                "comment_time": "2023-12-11 01:08:51",
+                "reply_to": "",
+                "content": "11121",
+                "is_scholar": false,
+                "author_id": "",
+                "reply_list": []
+            },
+            {
+                "id": 2,
+                "user": "谢秉书没牛牛2",
+                "user_id": 3,
+                "comment_time": "2023-12-11 01:08:53",
+                "reply_to": "",
+                "content": "11121",
+                "is_scholar": false,
+                "author_id": "",
+                "reply_list": []
+            },
+            {
+                "id": 4,
+                "user": "谢秉书没牛牛",
+                "user_id": 1,
+                "comment_time": "2023-12-12 20:25:55",
+                "reply_to": "",
+                "content": "你知道谢秉书吗？",
+                "is_scholar": true,
+                "author_id": "5087082349",
+                "reply_list": [
+                    {
+                        "id": 11,
+                        "user": "谢秉书没牛牛1",
+                        "user_id": 1,
+                        "comment_time": "2023-12-12 20:29:49",
+                        "reply_to": "谢秉书没牛牛",
+                        "content": "知道知道，就那个谢秉书没牛牛吗",
+                        "is_scholar": false,
+                        "author_id": "5087082349"
+                    },
+                    {
+                        "id": 12,
+                        "user": "谢秉书没牛牛",
+                        "user_id": 1,
+                        "comment_time": "2023-12-12 20:29:50",
+                        "reply_to": "谢秉书没牛牛1",
+                        "content": "这你都知道？",
+                        "is_scholar": true,
+                        "author_id": "5087082349"
+                    }
+                ]
+            },
+            {
+                "id": 5,
+                "user": "谢秉书没牛牛",
+                "user_id": 1,
+                "comment_time": "2023-12-12 20:26:31",
+                "reply_to": "",
+                "content": "11121",
+                "is_scholar": true,
+                "author_id": "5087082349",
+                "reply_list": []
+            },
+            {
+                "id": 6,
+                "user": "谢秉书没牛牛",
+                "user_id": 1,
+                "comment_time": "2023-12-12 20:26:35",
+                "reply_to": "",
+                "content": "11121",
+                "is_scholar": true,
+                "author_id": "5087082349",
+                "reply_list": []
+            }
+        ],
+        comment_add_num: 0
     },
     mutations: {
         changeCurrentArticle(state, articleId){
             state.id = articleId
+        },
+        updateCommentNum(state){
+            state.comment_add_num++
         },
         updateCurrent(state, data){
             state.Authors = data.author_all
@@ -467,11 +548,27 @@ const ArticleModule ={
             state.references = data.referenced_works
             state.related_works = data.related_works
             state.is_star = data.is_star
-            console.log("nnn")
-            console.log(state.title)
             state.id = data.id
+        },
+        updateComment(state, data){
+            state.comments = data
+        },
+        addComment(state, new_create){
+            let comments = state.comments
+            if(new_create.first_id === -1){
+                state.comments.push(JSON.parse(JSON.stringify(new_create.new_comment)))
+                state.comment_add_num++
+            } else {
+                let i = 0
+                for(let com of comments) {
+                    if (com.id === new_create.first_id) {
+                        state.comments[i].reply_list.push(JSON.parse(JSON.stringify(new_create.new_comment)))
+                        state.comment_add_num++
+                    }
+                    i++
+                }
+            }
         }
-
     },
     actions: {
 

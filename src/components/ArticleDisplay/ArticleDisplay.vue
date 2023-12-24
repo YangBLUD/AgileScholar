@@ -2,13 +2,11 @@
   <div>
       <TopNav></TopNav>
   </div>
-  <div class="header-padding">
-    HEADER
-  </div>
+<!--  <div class="header-padding">-->
+<!--    HEADER-->
+<!--  </div>-->
   <div class="article-show-header">
-    <div class="article-show-path">
-      <div class="article-show-path-way">Home > Conference > ICGDA > Proceeding > Yuan Shen > Yang Ding Hao de six-life Water God</div>
-    </div>
+
   </div>
   <div class="article-show-body">
     <div class="article-show-row">
@@ -45,13 +43,13 @@
             {{ source }}
           </p>
           <ul>
-              <li>{{ landing_page_url }}</li>
+              <li><a :href="landing_page_url">{{ landing_page_url }}</a> </li>
           </ul>
         </div>
         <div class="article-show-content-line"></div>
         <div class="article-show-content-publish">
             <strong>Published: </strong><span class="text-gray"> {{ publish_date }} </span>
-            <span class="text-underline">Publication History</span>
+<!--            <span class="text-underline">Publication History</span>-->
         </div>
         <div class="article-show-content-line"></div>
 
@@ -141,6 +139,7 @@ import Reference from "./Reference.vue";
 import Abstract from "./Abstract.vue";
 import CitedBy from "./CitedBy.vue";
 import store from "../../store/index.js";
+import router from "../../router/index.js";
 
 let clickNum = ref(120);
 let article_title = ref(store.state.Article.title)
@@ -158,8 +157,8 @@ watch(()=>store.state.Article.id, (newVal, oldVal)=>{
     landing_page_url.value = store.state.Article.landing_page_url
     publish_date.value = store.state.Article.publication_date
     source.value = store.getters.get_source
+    window.scrollTo(0,0)
 })
-
 </script>
 
 <style scoped>
@@ -173,7 +172,7 @@ watch(()=>store.state.Article.id, (newVal, oldVal)=>{
 
 
 .article-show-header{
-    height: 50px;
+    height: 75px;
     /*width: 100vw;*/
     display: flex;
     flex-direction: column;
