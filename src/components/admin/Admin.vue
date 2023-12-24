@@ -15,9 +15,6 @@
 <script setup>
 import AdminHeader from './AdminHeader.vue'
 import AdminAside from './AdminAside.vue'
-import AdminHome from './AdminHome.vue';
-import AdminTable from './AdminTable.vue';
-import AdminInfo from './AdminInfo.vue';
 
 import axios from 'axios';
 import {onBeforeMount} from 'vue'
@@ -45,11 +42,13 @@ onBeforeMount( () =>{
             url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
             method: 'post',
             data: JSON.stringify({
-                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDMyNDQwMzYuMzIyNDAwNn0.4TLKpJcX3V9YIM4Ht287xFzcJTrjoAYKb04PFZVgt5k"
+                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDM0ODc0OTQuMjQ1NDE0NX0.a-2GAFHhNTtp5LzDklqhZzvbAwHeF_kYjbzMnka4HPY",
             })
     }).then(res =>{
         console.log(res.data)
-        
+        store.commit('initAffairList', res.data.data.appeal, res.data.data.claim, res.data.data.report)
+        let affairList = store.getters.getAffairList
+        console.log(store.getters.getAppealList)
     }).catch(err => {
         console.log(err)
     })

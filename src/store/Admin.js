@@ -67,8 +67,11 @@ const AdminMoudle = {
             state.todoList.splice(index, num)
         },
 
-        initAffairList(state, affairList){
-            store.affairList = affairList
+        initAffairList(state, appealList, cliamList, reportList){
+            state.appealList = appealList
+            state.cliamList = cliamList
+            state.reportList = reportList
+
         },
     },
 
@@ -103,6 +106,22 @@ const AdminMoudle = {
 
         getTodoList(state){
             return state.todoList
+        },
+
+        getAffairList(state){
+            return state.affairList
+        },
+
+        getAppealList(state){
+            return state.appealList
+        },
+
+        getClaimList(state){
+            return state.cliamList
+        },
+
+        getReportList(state){
+            return state.reportList
         }
     },
 
