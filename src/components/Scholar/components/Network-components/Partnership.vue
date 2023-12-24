@@ -24,7 +24,6 @@ nodes.push(mainAuthor)
 getLinks()
 function getLinks(){
   if  (referdata.co_work_list.length!=0){
-    console.log("不等于")
     referdata.co_work_list.slice(0,10).forEach(function (author) {
       nodes.push({
         name: author.name,

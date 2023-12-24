@@ -104,14 +104,18 @@ function getAuthorStates(){
 }
 onBeforeMount(async ()=>{
   authorId.value = 5053369573;
+  authorInformation.value = getAuthorStates().authorInformation
   fetchAuthorNetwork();
   fetchAuthorInformation();
-
 })
 // 在页面加载时触发请求
 onMounted( () => {
+  authorInformation.value = getAuthorStates().authorInformation
 });
-
+authorId.value = 5053369573;
+authorInformation.value = getAuthorStates().authorInformation
+fetchAuthorNetwork();
+fetchAuthorInformation();
 </script>
 
 <style scoped>

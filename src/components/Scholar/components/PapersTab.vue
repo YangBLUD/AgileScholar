@@ -1,32 +1,53 @@
-
 <template>
-  <el-row>
-    <el-col :span="6">
+  <el-container class="influ-container">
+    <el-aside width="300px">
+      <!-- 搜索框 -->
+      <el-input
+          placeholder="搜索论文..."
+          v-model="searchQuery"
+          @input="handleSearch"
+          class="filter-search">
+        <template #append>
+          <el-button icon="el-icon-search" @click="handleSearch"></el-button>
+        </template>
+      </el-input>
+
+      <!-- 筛选栏 -->
       <el-menu default-active="1" class="filter-menu" accordion>
-          <el-menu-item-group>
-            <el-menu-item index="1-1" @click="filterBy('type', '全部')">全部</el-menu-item>
-            <el-menu-item index="1-1" @click="filterBy('type', '期刊')">期刊</el-menu-item>
-            <el-menu-item index="1-2" @click="filterBy('type', '学位')">学位</el-menu-item>
-            <el-menu-item index="1-3" @click="filterBy('type', '会议')">会议</el-menu-item>
-            <el-menu-item index="1-4" @click="filterBy('type', '成果')">成果</el-menu-item>
-            <el-menu-item index="1-5" @click="filterBy('type', '专利')">专利</el-menu-item>
-            <el-menu-item index="1-6" @click="filterBy('type', '报纸')">报纸</el-menu-item>
-            <el-menu-item index="1-6" @click="filterBy('type', '图书')">图书</el-menu-item>
-          </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item index="1-1" @click="filterBy('type', '全部')">全部</el-menu-item>
+          <el-menu-item index="1-1" @click="filterBy('type', '期刊')">期刊</el-menu-item>
+          <el-menu-item index="1-2" @click="filterBy('type', '学位')">学位</el-menu-item>
+          <el-menu-item index="1-3" @click="filterBy('type', '会议')">会议</el-menu-item>
+          <el-menu-item index="1-4" @click="filterBy('type', '成果')">成果</el-menu-item>
+          <el-menu-item index="1-5" @click="filterBy('type', '专利')">专利</el-menu-item>
+          <el-menu-item index="1-6" @click="filterBy('type', '报纸')">报纸</el-menu-item>
+          <el-menu-item index="1-6" @click="filterBy('type', '图书')">图书</el-menu-item>
+        </el-menu-item-group>
       </el-menu>
-    </el-col>
-    <el-col :span="18">
-      <el-table :data="filteredPapers" style="width: 100%">
-        <el-table-column prop="title" label="论文标题"></el-table-column>
-        <el-table-column prop="authors" label="作者"></el-table-column>
-        <el-table-column prop="journal" label="期刊"></el-table-column>
-        <el-table-column prop="year" label="年份"></el-table-column>
-        <el-table-column prop="download" label="下载量"></el-table-column>-->
-        <el-table-column prop="quote" label="引用"></el-table-column>
-      </el-table>
-    </el-col>
-  </el-row>
+    </el-aside>
+    <el-main>
+      <el-col :span="24" v-for="paper in paper_list.slice(startnum,endnum)" :key="paper.id">
+        <el-card class="paper-card">
+          <h3 class="paper-title">{{ paper.title }}</h3>
+          <div class="paper-info">
+            <p class="paper-field">领域：{{ paper.domain.slice(0,3).map(d => d.name).join(', ') }}</p>
+            <p class="paper-authors">作者：{{ paper.author_all.map(a => a.name).join(', ') }}</p>
+            <p class="paper-date">发表时间：{{ paper.publication_date }}</p>
+          </div>
+        </el-card>
+      </el-col>
+      <el-pagination
+          :current-page="currentPage"
+          :page-size="10"
+          :total="totalpage"
+          @current-change="handlePageChange">
+      </el-pagination>
+    </el-main>
+  </el-container>
 </template>
+
+
 
 <script setup>
 import { onMounted ,defineAsyncComponent, computed, ref, reactive } from 'vue';
@@ -34,38 +55,10 @@ import {useStore} from "vuex";
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElTabs, ElTabPane } from 'element-plus';
 import axios from 'axios';
 const store = useStore()
+
 function getAuthorStates(){
   return store.getters.getAuthorState
 }
-// 初始论文数据
-const papers = ref([
-  { title: '论文1', authors: '作者1', journal: '期刊1', year: '2023', type: '期刊', download: '100', quote: '20' },
-  { title: '论文2', authors: '作者2', journal: '期刊2', year: '2022', type: '学位', download: '200', quote: '10' },
-  { title: '论文3', authors: '作者3', journal: '期刊3', year: '2021', type: '会议', download: '300', quote: '30' },
-  { title: '论文4', authors: '作者4', journal: '期刊4', year: '2020', type: '成果', download: '150', quote: '25' },
-  { title: '论文5', authors: '作者5', journal: '期刊5', year: '2019', type: '专利', download: '350', quote: '15' },
-  { title: '论文6', authors: '作者6', journal: '期刊6', year: '2018', type: '报纸', download: '250', quote: '35' },
-  { title: '论文7', authors: '作者7', journal: '期刊7', year: '2017', type: '图书', download: '400', quote: '40' },
-  { title: '论文8', authors: '作者8', journal: '期刊8', year: '2023', type: '期刊', download: '120', quote: '50' },
-  { title: '论文9', authors: '作者9', journal: '期刊9', year: '2022', type: '学位', download: '220', quote: '60' },
-  { title: '论文10', authors: '作者10', journal: '期刊10', year: '2021', type: '会议', download: '320', quote: '70' },
-  { title: '论文11', authors: '作者1', journal: '期刊1', year: '2023', type: '期刊', download: '100', quote: '20' },
-  { title: '论文12', authors: '作者2', journal: '期刊2', year: '2022', type: '学位', download: '200', quote: '10' },
-  { title: '论文13', authors: '作者3', journal: '期刊3', year: '2021', type: '会议', download: '300', quote: '30' },
-  { title: '论文14', authors: '作者4', journal: '期刊4', year: '2020', type: '成果', download: '150', quote: '25' },
-  { title: '论文15', authors: '作者5', journal: '期刊5', year: '2019', type: '专利', download: '350', quote: '15' },
-  { title: '论文16', authors: '作者6', journal: '期刊6', year: '2018', type: '报纸', download: '250', quote: '35' },
-  { title: '论文17', authors: '作者7', journal: '期刊7', year: '2017', type: '图书', download: '400', quote: '40' },
-  { title: '论文18', authors: '作者8', journal: '期刊8', year: '2023', type: '期刊', download: '120', quote: '50' },
-  { title: '论文19', authors: '作者9', journal: '期刊9', year: '2022', type: '学位', download: '220', quote: '60' },
-  { title: '论文20', authors: '作者10', journal: '期刊10', year: '2021', type: '会议', download: '320', quote: '70' },
-  // 更多论文数据...
-]);
-
-
-// 筛选后的论文数据
-const filteredPapers = ref([...papers.value]);
-// 筛选函数
 function filterBy(field, value) {
   if (value === '全部') {
     filteredPapers.value = papers.value;
@@ -73,36 +66,124 @@ function filterBy(field, value) {
     filteredPapers.value = papers.value.filter(paper => paper[field] === value);
   }
 }
-function fetchPaperList(){
+
+// 筛选后的论文数据
+const papernum = ref(10)
+const paper_list = ref([])
+const currentPage = ref(1);
+const totalpage = ref(0);
+const search_to = ref(20)
+const search_from  = ref(1)
+const searchQuery = ref('');
+const selectedDomain = ref(null);
+const domains = ref([{ value: 'domain1', label: '领域1' }, { value: 'domain2', label: '领域2' }]); // 示例数据
+
+
+function handleSearch() {
+  // 实现搜索逻辑
+}
+// 筛选函数
+function fetchPaperList(page){
   axios({
     url: "http://122.9.5.156:8000/api/v1/search_result/search",
     method: "post",
     data: JSON.stringify({
-      search_type: 0,
-      add_list: [{
-        content: getAuthorStates().authorInformation.id,
-        select:  "Author",
-        clear:1,
-      }],
-      or_list: [],
-      not_list: [],
-      start_time:null,
-      end_time:null,
-      sort : -1,
-      first_search:-1,
-      work_clustering:0,
-
+      "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
+      "search_type" : 0,
+      "and_list": [
+        {
+          "content":getAuthorStates().authorInformation.id,
+          "select":"Author",
+          "clear":1
+        }
+      ],
+      "or_list": [],
+      "not_list": [],
+      "start_time": "1990-12",
+      "end_time": "2023-10",
+      "first_search": 1,
+      "work_clustering": 0,
+      "author_clustering": 0,
+      "size": papernum.value,
+      "from": (page - 1) * papernum.value,
+      "sort": -1,
+      "extend_list": [
+      ]
     })
-  })
+    })
+      .then((res) => {
+        console.log(res.data)
+        paper_list.value = res.data.data.result
+        console.log(paper_list)
+        totalpage.value = res.data.data.total;
+        search_to.value = Math.min(res.data.data.total,papernum.value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 }
-onMounted
+function handlePageChange(newPage) {
+  currentPage.value = newPage;
+  fetchPaperList(newPage);
+}
+onMounted(()=>{
+  fetchPaperList(1);
+})
 
 
 </script>
-
 <style>
-.filter-menu {
-  width: 100%;
-  border-right: 1px solid #ebeef5;
+.influ-container {
+  /* 页面整体布局样式 */
 }
+
+.paper-card {
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 15px;
+  transition: box-shadow 0.3s;
+}
+
+.paper-card:hover {
+  box-shadow: 0 4px 14px 0 rgba(0,0,0,0.2);
+}
+
+.paper-title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.paper-field, .paper-date {
+  color: #666;
+  font-size: 14px;
+}
+
+.paper-info {
+  background-color: #f9f9f9; /* 浅灰色背景 */
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.paper-authors {
+  color: #666;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.paper-card:hover {
+  border: 1px solid #d3dce6; /* 悬停时改变边框颜色 */
+}
+.filter-aside {
+  padding: 20px;
+}
+
+.filter-search {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
 </style>
+
