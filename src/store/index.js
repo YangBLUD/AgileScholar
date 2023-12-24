@@ -1,17 +1,30 @@
-import {createStore} from "vuex"
-import createPersistedState from 'vuex-persistedstate'
-import AdminMoudle from "./Admin.js"
-
+import AdminMoudle from "./Admin.js";
+import { createStore } from "vuex";
+import ArticleModule from "./article.js";
+import InstitutionModule from "./institution.js";
+import UserModule from "./user";
+import SearchModule from "./search";
+import LlmModule from "./llm.js";
+import SearchResultModule from "./searchresult";
+import AuthorModule from "./author";
+import createPersistedState from "vuex-persistedstate";
 const store = createStore({
-    modules: {
-        Admin : AdminMoudle,
-    },
-    plugins: [
-        createPersistedState({
-            storage: window.sessionStorage,
-            paths: ["Admin"],
-        }),
-    ],
+  modules: {
+    Article: ArticleModule,
+    Institution: InstitutionModule,
+    User: UserModule,
+    Search: SearchModule,
+    LLM: LlmModule,
+    Admin: AdminMoudle,
+  },
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage,
+      paths: ["User", "Search", "SearchResult", "LLM", "Author", "Admin"],
+      SearchResult: SearchResultModule,
+      Author: AuthorModule,
+    }),
+  ],
 });
 
-export default store
+export default store;
