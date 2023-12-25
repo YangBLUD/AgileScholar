@@ -35,15 +35,14 @@
           <el-avatar :src="Avatar" style="cursor: pointer; margin-top: 3px;"></el-avatar>
         </template>
       </el-popover>
-      <el-popover placement="bottom" :width="225" trigger="click" v-if="!have_user_info" effect="dark">
+      <el-popover placement="bottom" :width="325" trigger="click" v-if="!have_user_info" effect="dark">
         <template #default>
-          <div class="ai-text-title">智能助手</div>
-          <div class="ai-text">只需一个指令</div>
-          <div class="ai-text">懂你所言，</div>
-          <div class="ai-text">答你所问，</div>
-          <div class="ai-text">创你所需，</div>
-          <div class="ai-text">解你所难，</div>
-          <div class="ai-text">学你所教。</div>
+          <div class="ai-text-title">AI Assistant</div>
+          <div class="ai-text">Understand your words</div>
+          <div class="ai-text">Answer your questions</div>
+          <div class="ai-text">Create your needs</div>
+          <div class="ai-text">Solve your difficulties</div>
+          <div class="ai-text">Learn your teachings</div>
           <el-button type="primary" class="ai-button" @click="login">登录</el-button>
         </template>
         <template #reference>
@@ -716,7 +715,7 @@ function getCaptcha() {
 .ai-button {
   font-size: 16px;
   margin-top: 20px;
-  margin-left: 65px;
+  margin-left: 120px;
   background: linear-gradient(to right, #ff00ff, #00ffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

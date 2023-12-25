@@ -106,16 +106,59 @@
             </div>
         </div>
     </div>
+    <el-dialog title="" v-model="reportDialog" width="40%" :before-close="handleClose">
+        <el-form ref="updateInfo" label-width="150px">
+            <div class="update-content">
+                <div class="left">
+                    <el-form-item label="举报说明" prop="description">
+                        <el-input v-model="description" :rows="4" type="textarea" placeholder="请输入举报理由" />
+                    </el-form-item>
+                    <el-form-item class="dialog-form-item" label="详细材料" prop="details">
+                        <el-upload
+                            ref="upLoads"
+                            class="upload-demo"
+                            drag
+                            :limit="1"
+                            :auto-upload="false"
+                            :on-change="handleChange"
+                            :show-file-list="true"
+                        >
+                            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                            <div class="el-upload__text">
+                                Drop file here or <em>click to upload</em>
+                            </div>
+                        </el-upload>
+                    </el-form-item>
+                </div>
+            </div>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+              <el-button class="dialog-btn" @click="handleClose()">取消</el-button>
+              <el-button class="dialog-btn" type="primary" @click="editP()">
+                保存
+              </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup>
 
 import {defineComponent, reactive, ref, watch} from "vue";
-import {CloseBold, Comment, Delete, DeleteFilled, Promotion, WarningFilled} from "@element-plus/icons-vue";
+import {
+    CloseBold,
+    Comment,
+    Delete,
+    DeleteFilled,
+    Promotion,
+    UploadFilled,
+    WarningFilled
+} from "@element-plus/icons-vue";
 import store from "../../store/index.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-
+import Report from "./Report.vue";
 let user = ref(store.getters.getUserinfo)
 let comments = ref(store.state.Article.comments)
 watch(()=>store.state.Article.id, (newVal, oldVal)=>{
@@ -206,7 +249,7 @@ function sendComment(){
         console.log(err)
     })
 }
-function initCommentForm(){
+function initCommentForm() {
     input_placeholder.value = "请输入评论内容……"
     input_content.value = ""
     new_create.new_comment = {}
@@ -223,9 +266,7 @@ function initCommentForm(){
     new_comment.author_id = ""
     new_comment.reply_list = []
 }
-function reportComment(comment_id){
 
-}
 function deleteComment(comment_id){
     axios({
         // 接口网址：包含协议名，域名，端口和路由
@@ -274,6 +315,59 @@ function getComment(){
     }).catch(err=>{
         console.log(err)
     })
+}
+
+
+let description = ref("")
+const reportDialog = ref(false)
+
+let comment_id = ref(-1)
+function reportComment(com_id){
+    comment_id.value = com_id
+    reportDialog.value = true
+}
+const upFile = ref(null)
+const reportUrl = ref("http://122.9.5.156:8000/api/v1/paper/report_comment_or_paper")
+const handleChange = (file) => {
+    upFile.value = file.raw
+    console.log(upFile.value)
+};
+function handleClose() {
+    reportDialog.value = false
+    description.value = ""
+    upFile.value = null
+}
+const handleUploadSuccess = (response) => {
+    ElMessage.success("Report successful, please wait for the administrator to process！")
+};
+
+const handleUploadError = (err) => {
+    // 上传失败的回调函数
+    console.log(err);
+};
+
+function editP() {
+    // console.log(userInfo)
+    // uploadFile(userImage)
+    const formData = new FormData();
+    formData.append("token", store.state.User.token);
+    formData.append("paper_id", store.state.Article.id);
+    formData.append("report_text", description.value)
+    formData.append("report_file", upFile.value);
+    console.log(upFile.value)
+    formData.append("comment_id", comment_id.value);
+    // 发送上传请求
+    axios.post(reportUrl.value, formData)
+        .then(response => {
+            console.log(response)
+            handleUploadSuccess(response.data);
+        })
+        .catch(error => {
+            handleUploadError(error);
+        });
+    reportDialog.value = false
+    description.value = ""
+    upFile.value = null
 }
 </script>
 
@@ -605,5 +699,24 @@ function getComment(){
 }
 .comment-global{
     margin-top: 25px;
+}
+
+.update-content {
+    max-height: 680px;
+    overflow: auto;
+}
+
+.left {
+    width: 80%;
+}
+
+.upload-demo{
+    width: 660px;
+}
+.dialog-btn{
+    padding: 5px 15px 5px 15px;
+}
+.dialog-form-item{
+    margin-top: 20px;
 }
 </style>

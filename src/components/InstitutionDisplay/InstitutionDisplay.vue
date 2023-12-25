@@ -30,7 +30,7 @@
                     <div class="holder"></div>
                     <Domain/>
                 </div>
-                <div class="institution-more-inform">
+                <div class="institution-more-inform" style="margin-bottom: 50px">
                     <Articles/>
                     <div class="holder"></div>
                     <Authors/>
@@ -88,6 +88,28 @@ function jump(institution_id){
     }).catch(err=>{
         console.log(err)
     })
+//     axios({
+//         // 接口网址：包含协议名，域名，端口和路由
+//         url: 'http://122.9.5.156:8000/api/v1/home/add_history',
+//         // 请求方式，默认为get，可以不写
+//         method: 'post',
+//         // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+//         data: JSON.stringify({
+//             token: store.getters.getUserinfo.token.value,
+//             paper_id: institution_id,
+//             type: 2,
+//         }),
+// // 成功请求回数据后，进入then，并用console.log打印结果
+//     }).then(res => {
+//         if(res.data.errno === 0){
+//             // console.log(res.data.data)
+//         }
+//         else{
+//             ElMessage.error('出错啦，找周霄')
+//         }
+//     }).catch(err=>{
+//         console.log(err)
+//     })
 }
 </script>
 
