@@ -10,13 +10,7 @@
         </div>
         <div class="second-search-form">
           <div class="content-search">
-            <input
-              type=""
-              name=""
-              placeholder="Search"
-              class="content-search-input"
-              v-model="searchcontent"
-            />
+            <input type="" name="" placeholder="Search" class="content-search-input" v-model="searchcontent" />
             <el-icon :size="22" color="#808080" @click="keysearch()">
               <search />
             </el-icon>
@@ -25,40 +19,15 @@
       </div>
       <div class="middle">
         <div class="middle-left">
-          <div
-            v-if="search_type != 0"
-            class="middle-left-people"
-            :key="index"
-            v-for="(item, index) in agg"
-          >
+          <div v-if="search_type != 0" class="middle-left-people" :key="index" v-for="(item, index) in agg">
             <Droplist :agginfo="item" class="drop1" />
           </div>
           <div v-else class="middle-left-people">
-            <Droplist
-              :agginfo="timeagg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
-            <Droplist
-              :agginfo="writeragg"
-              class="drop1"
-              @click="getaggagain(1)"
-            />
-            <Droplist
-              :agginfo="sourceagg"
-              class="drop1"
-              @click="getaggagain(2)"
-            />
-            <Droplist
-              :agginfo="domainagg"
-              class="drop1"
-              @click="getaggagain(3)"
-            />
-            <Droplist
-              :agginfo="typeagg"
-              class="drop1"
-              @click="getaggagain(4)"
-            />
+            <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)" />
+            <Droplist :agginfo="sourceagg" class="drop1" @click="getaggagain(2)" />
+            <Droplist :agginfo="domainagg" class="drop1" @click="getaggagain(3)" />
+            <Droplist :agginfo="typeagg" class="drop1" @click="getaggagain(4)" />
           </div>
         </div>
         <div class="middle-right">
@@ -84,18 +53,10 @@
           </div>
           <div class="search-result-tabs">
             <div class="nav-container">
-              <el-tabs
-                v-if="!isadvance"
-                v-model="activeName"
-                class="demo-tabs"
-                @tab-click="handleClick"
-              >
+              <el-tabs v-if="!isadvance" v-model="activeName" class="demo-tabs" @tab-click="handleClick">
                 <el-tab-pane label="RESULTS" name="RESULTS"></el-tab-pane>
                 <el-tab-pane label="SCHOLARS" name="SCHOLARS"></el-tab-pane>
-                <el-tab-pane
-                  label="INSTITUTIONS"
-                  name="INSTITUTIONS"
-                ></el-tab-pane>
+                <el-tab-pane label="INSTITUTIONS" name="INSTITUTIONS"></el-tab-pane>
                 <el-tab-pane label="SUBJECTS" name="SUBJECTS"></el-tab-pane>
               </el-tabs>
             </div>
@@ -125,17 +86,11 @@
             <div class="drop-choice">
               <el-col :span="8">
                 <el-dropdown trigger="click">
-                  <span class="el-dropdown-link" @click="dropsort()"
-                    >Relevance</span
-                  >
+                  <span class="el-dropdown-link" @click="dropsort()">Relevance</span>
                   <template #dropdown>
                     <el-dropdown-menu>
-                      <el-dropdown-item
-                        :key="index"
-                        v-for="(item, index) in sortlist"
-                        @click="changesort(item)"
-                        >{{ item.text }}</el-dropdown-item
-                      >
+                      <el-dropdown-item :key="index" v-for="(item, index) in sortlist" @click="changesort(item)">{{
+                        item.text }}</el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
@@ -143,12 +98,7 @@
             </div>
           </div>
           <div class="middle-right-list">
-            <div
-              v-if="search_type == 0"
-              class="paper-list"
-              :key="index"
-              v-for="(item, index) in paper_list"
-            >
+            <div v-if="search_type == 0" class="paper-list" :key="index" v-for="(item, index) in paper_list">
               <div class="list-item">
                 <div class="checkbox">
                   <el-checkbox />
@@ -159,42 +109,24 @@
               </div>
             </div>
             <div v-if="search_type == 1" class="people-list">
-              <div
-                class="people-item"
-                :key="index"
-                v-for="(item, index) in paper_list"
-              >
+              <div class="people-item" :key="index" v-for="(item, index) in paper_list">
                 <Scholars :info="item" :token="token"></Scholars>
               </div>
             </div>
             <div v-if="search_type == 2" class="people-list">
-              <div
-                class="people-item"
-                :key="index"
-                v-for="(item, index) in paper_list"
-              >
+              <div class="people-item" :key="index" v-for="(item, index) in paper_list">
                 <Institutions :info="item" :token="token"></Institutions>
               </div>
             </div>
             <div v-if="search_type == 3" class="people-list">
-              <div
-                class="people-item"
-                :key="index"
-                v-for="(item, index) in paper_list"
-              >
+              <div class="people-item" :key="index" v-for="(item, index) in paper_list">
                 <Subjects :info="item" :token="token"></Subjects>
               </div>
             </div>
             <div class="bottom-page">
               <div class="example-pagination-block">
-                <el-pagination
-                  layout="prev, pager, next"
-                  :page-count="totalye"
-                  v-model:current-page="currentPage"
-                  @current-change="currentChange"
-                  @prev-click="prevClick"
-                  @next-click="nextClick"
-                />
+                <el-pagination layout="prev, pager, next" :page-count="totalye" v-model:current-page="currentPage"
+                  @current-change="currentChange" @prev-click="prevClick" @next-click="nextClick" />
               </div>
             </div>
           </div>
@@ -202,10 +134,7 @@
       </div>
     </div>
   </div>
-  <el-dialog
-    id="important_progress"
-    v-model="importantProgress"
-    style="
+  <el-dialog id="important_progress" v-model="importantProgress" style="
       width: 20%;
       right: 0%;
       height: 0;
@@ -213,10 +142,7 @@
       top: 10%;
       background-color: #7e7e7f !important;
       border: 1px solid #7e7e7f !important;
-    "
-    :close-on-click-modal="false"
-    :show-close="false"
-  >
+    " :close-on-click-modal="false" :show-close="false">
     <div class="spinner-box">
       <div class="blue-orbit leo"></div>
 
@@ -726,11 +652,9 @@ function changesort(item) {
   align-items: center;
   border-radius: 50%;
   background: rgb(63, 249, 220);
-  background: linear-gradient(
-    0deg,
-    rgba(63, 249, 220, 0.1) 33%,
-    rgba(63, 249, 220, 1) 100%
-  );
+  background: linear-gradient(0deg,
+      rgba(63, 249, 220, 0.1) 33%,
+      rgba(63, 249, 220, 1) 100%);
   animation: spin3D 1.8s linear 0s infinite;
 }
 
@@ -751,11 +675,9 @@ function changesort(item) {
   align-items: center;
   border-radius: 50%;
   background: rgb(251, 91, 83);
-  background: linear-gradient(
-    0deg,
-    rgba(251, 91, 83, 0.1) 33%,
-    rgba(251, 91, 83, 1) 100%
-  );
+  background: linear-gradient(0deg,
+      rgba(251, 91, 83, 0.1) 33%,
+      rgba(251, 91, 83, 1) 100%);
   animation: spin3D 2.2s linear 0s infinite;
 }
 
@@ -777,11 +699,9 @@ function changesort(item) {
   align-items: center;
   border-radius: 50%;
   background: rgb(63, 249, 220);
-  background: linear-gradient(
-    0deg,
-    rgba(63, 249, 220, 0.1) 33%,
-    rgba(63, 249, 220, 1) 100%
-  );
+  background: linear-gradient(0deg,
+      rgba(63, 249, 220, 0.1) 33%,
+      rgba(63, 249, 220, 1) 100%);
   animation: spin 0.8s linear 0s infinite;
 }
 
@@ -1216,7 +1136,7 @@ ul {
       .bottom-page {
         margin-left: 300px;
 
-        .example-pagination-block + .example-pagination-block {
+        .example-pagination-block+.example-pagination-block {
           margin-top: 10px;
         }
       }

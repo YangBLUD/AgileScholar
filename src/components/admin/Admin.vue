@@ -2,26 +2,31 @@
     <AdminHeader></AdminHeader>
     <AdminAside></AdminAside>
     <div :class="[store.getters.getCollapse ? 'content-box' : 'content-collapse']">
-		<div class="content">
-			<router-view v-slot="{ Component }">
-				<keep-alive :include="['AdminHome', 'AdminTable', 'AdminInfo']">
-					<component :is="Component"></component>
-				</keep-alive>
-			</router-view>
-		</div>
-	</div>
+        <div class="content">
+            <router-view v-slot="{ Component }">
+                <keep-alive :include="['AdminHome', 'AdminTable', 'AdminInfo']">
+                    <component :is="Component"></component>
+                </keep-alive>
+            </router-view>
+        </div>
+    </div>
 </template>
 
 <script setup>
 import AdminHeader from './AdminHeader.vue'
 import AdminAside from './AdminAside.vue'
+import AdminHome from './AdminHome.vue';
+import AdminTable from './AdminTable.vue';
+import AdminInfo from './AdminInfo.vue';
 
 import axios from 'axios';
-import {onBeforeMount} from 'vue'
+import { onBeforeMount } from 'vue'
 
 import store from '../../store';
+import { useStore } from 'vuex';
 
-onBeforeMount( () =>{
+const Store = useStore();
+onBeforeMount(() => {
     // axios({
     //     url: 'http://122.9.5.156:8000/api/v1/home/user/login',
     //     method: 'post',
@@ -39,16 +44,14 @@ onBeforeMount( () =>{
 
     console.log("begin get the data")
     axios({
-            url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
-            method: 'post',
-            data: JSON.stringify({
-                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDM0ODc0OTQuMjQ1NDE0NX0.a-2GAFHhNTtp5LzDklqhZzvbAwHeF_kYjbzMnka4HPY",
-            })
-    }).then(res =>{
+        url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
+        method: 'post',
+        data: JSON.stringify({
+            "token": Store.getters.getUserinfo.token
+        })
+    }).then(res => {
         console.log(res.data)
-        store.commit('initAffairList', res.data.data.appeal, res.data.data.claim, res.data.data.report)
-        let affairList = store.getters.getAffairList
-        console.log(store.getters.getAppealList)
+
     }).catch(err => {
         console.log(err)
     })
@@ -69,6 +72,7 @@ onBeforeMount( () =>{
     background: #f0f0f0;
     box-sizing: border-box;
 }
+
 .content-box {
     position: absolute;
     left: 250px;
@@ -81,6 +85,7 @@ onBeforeMount( () =>{
     background: #f0f0f0;
     box-sizing: border-box;
 }
+
 .content {
     width: auto;
     height: 100%;
