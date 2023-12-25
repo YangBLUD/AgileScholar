@@ -6,7 +6,7 @@
   <el-container class="main-container">
     <!-- 上方板块 -->
     <el-header class="main-header">
-      <div class="header-content">
+      <div class="header-content-scholar">
         <!-- 作者头像 -->
         <div class="author-avatar">
           <el-avatar :size="130" :src="circleUrl" />
@@ -32,11 +32,10 @@
             </p>
           </template>
         </div>
-        <div class="author-opt" style="display: flex; flex-direction: column;">
+        <div class="author-opt">
           <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
           <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
         </div>
-
       </div>
     </el-header>
     <el-dialog v-model="showAppealDialog" :lock-scroll="false">
@@ -147,7 +146,7 @@
           >Show the scholar's influence through charts and graphs</el-tab-pane
         >
         <!-- 发表的论文 -->
-        <el-tab-pane label="published papers" name="papers" class="pane"
+        <el-tab-pane label="Published Papers" name="papers" class="pane"
           >Display all papers published by scholars, supporting retrieval and sorting</el-tab-pane
         >
         <!-- 学术关系网络 -->
@@ -695,7 +694,7 @@ watch(
   width: 100%;
 }
 
-.header-content {
+.header-content-scholar {
   display: flex;
   align-items: center;
   width: 100%;
@@ -719,10 +718,13 @@ watch(
   justify-content: center;
 }
 .author-opt {
+  margin-left: 150px;
+  background: #e1e8ef;
+  height: 160px;
+  width: 200px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  margin-left: 200px;
+  align-items: center;
 }
 .author-info h2 {
   margin-bottom: 30px;
@@ -741,7 +743,7 @@ watch(
   font-size: 15px;
   color: #666;
 }
-.author-info .author-certificate {
+ .author-certificate {
   margin-bottom: 15px;
   font-size: 17px;
   color: #0773df;

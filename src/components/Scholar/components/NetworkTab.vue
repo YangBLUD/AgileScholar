@@ -2,9 +2,9 @@
   <el-container class="network-container">
     <el-aside width="200px">
       <el-menu>
-        <el-menu-item index="1" @click="currentView = 'cited'">Cited relationship</el-menu-item>
-        <el-menu-item index="2" @click="currentView = 'partnership'">cooperative relationship</el-menu-item>
-        <el-menu-item index="3" @click="currentView = 'reference'">reference relationship</el-menu-item>
+        <el-menu-item index="1" @click="currentView = 'cited'">Cited Relationship</el-menu-item>
+        <el-menu-item index="2" @click="currentView = 'partnership'">Cooperative Relationship</el-menu-item>
+        <el-menu-item index="3" @click="currentView = 'reference'">Reference Relationship</el-menu-item>
       </el-menu>
     </el-aside>
     <el-main>
