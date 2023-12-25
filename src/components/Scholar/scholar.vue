@@ -15,10 +15,21 @@
         <div class="author-info">
           <template v-if="authorInformation != null">
             <h2>{{ authorInformation.display_name }}</h2>
-            <p class="author-attr">{{ authorInformation.institution[0].name }}</p>
-            <p class="author-attr">{{ authorInformation.author_email}}</p>
-            <p v-if="authorInformation.claimed" class="author-certificate">Scholar certified<el-button class="checkbutton" type="success" :icon="Check" circle /></p>
-            <p v-if="!authorInformation.claimed" class="author-certificate">Scholar not certified</p>
+            <p class="author-attr">
+              {{ authorInformation.institution[0].name }}
+            </p>
+            <p class="author-attr">{{ authorInformation.author_email }}</p>
+            <p v-if="authorInformation.claimed" class="author-certificate">
+              Scholar certified<el-button
+                class="checkbutton"
+                type="success"
+                :icon="Check"
+                circle
+              />
+            </p>
+            <p v-if="!authorInformation.claimed" class="author-certificate">
+              Scholar not certified
+            </p>
           </template>
         </div>
         <div class="author-opt" v-if="is_Login">
@@ -54,6 +65,24 @@
             >
           </div>
         </el-form-item>
+        <el-form-item label="Appeal Material" label-width="140px">
+          <el-upload
+            class="upload-demo"
+            drag
+            action=""
+            multiple
+            :on-remove="handleAppealRemove"
+            :file-list="fileList"
+            :limit="1"
+            :on-change="handleAppealFile"
+            :auto-upload="false"
+          >
+            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <div class="el-upload__text">
+              Drop file here or <em>click to upload</em>
+            </div>
+          </el-upload>
+        </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -85,6 +114,24 @@
               >{{ claim_captcha_time }}</el-button
             >
           </div>
+        </el-form-item>
+        <el-form-item label="Application Material" label-width="140px">
+          <el-upload
+            class="upload-demo"
+            drag
+            action=""
+            multiple
+            :on-remove="handleClaimRemove"
+            :file-list="fileList"
+            :limit="1"
+            :on-change="handleClaimFile"
+            :auto-upload="false"
+          >
+            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <div class="el-upload__text">
+              Drop file here or <em>click to upload</em>
+            </div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -136,6 +183,7 @@ import {
 import { Base64 } from "js-base64";
 import { encodeUtf8 } from "node-forge/lib/util.js";
 import { Store, useStore } from "vuex";
+import { UploadFilled } from "@element-plus/icons-vue";
 import {
   ElRow,
   ElCol,
@@ -146,12 +194,11 @@ import {
   ElTabPane,
   ElDialog,
   ElMessage,
+  ElUpload,
 } from "element-plus";
 import axios from "axios";
 import TopNav from "../HomePage/TopNav.vue";
-import {
-  Check,Delete,Edit
-} from '@element-plus/icons-vue'
+import { Check, Delete, Edit } from "@element-plus/icons-vue";
 
 // 标签页状态
 const is_Login = ref(false);
@@ -335,6 +382,8 @@ fetchAuthorInformation();
 //申诉和认领
 const showAppealDialog = ref(false);
 const showClaimDialog = ref(false);
+const claimHasFile = ref(false);
+const appealHasFile = ref(false);
 const appeal_captcha_time = ref("Get Captcha");
 const claim_captcha_time = ref("Get Captcha");
 const showAppeal = () => {
@@ -349,6 +398,7 @@ const appealForm = reactive({
   captcha: "",
   captcha_get: "",
   email_change: false,
+  file: "",
 });
 const claimForm = reactive({
   email: "",
@@ -356,6 +406,7 @@ const claimForm = reactive({
   captcha: "",
   captcha_get: "",
   email_change: false,
+  file: "",
 });
 function getClaimCaptcha() {
   if (claimForm.email === "") {
@@ -397,6 +448,36 @@ function getClaimCaptcha() {
       });
   }
 }
+function handleClaimFile(file, fileList) {
+  if (fileList.length >= 2) {
+    return;
+  }
+  if (fileList.length === 1) {
+    claimHasFile.value = true;
+  }
+  claimForm.file = file;
+}
+function handleClaimRemove(file, fileList) {
+  if (!fileList.length) {
+    claimHasFile.value = false;
+  }
+  claimForm.file = null;
+}
+function handleAppealFile(file, fileList) {
+  if (fileList.length >= 2) {
+    return;
+  }
+  if (fileList.length === 1) {
+    appealHasFile.value = true;
+  }
+  appealForm.file = file;
+}
+function handleAppealRemove(file, fileList) {
+  if (!fileList.length) {
+    appealHasFile.value = false;
+  }
+  appealForm.file = null;
+}
 function handleClaimSubmit() {
   if (store.getters.getLoginState != true) {
     ElMessage.error("Please Login");
@@ -422,6 +503,10 @@ function handleClaimSubmit() {
     ElMessage.error("Please state the reasons and evidence for your claim");
     return;
   }
+  if (!claimHasFile.value) {
+    ElMessage.error("Please upload the Appeal material");
+    return;
+  }
   if (
     claimForm.captcha == claimForm.captcha_get &&
     claimForm.captcha_get != ""
@@ -430,6 +515,7 @@ function handleClaimSubmit() {
     formData.append("token", store.getters.getUserinfo.token);
     formData.append("claim_email", claimForm.email);
     formData.append("claim_text", claimForm.reason);
+    formData.append("claim_file", claimForm.file.raw);
     formData.append("author_id", authorInformation.value.id);
     axios({
       url: "http://122.9.5.156:8000/api/v1/author/other_claim",
@@ -446,23 +532,23 @@ function handleClaimSubmit() {
       });
   }
 }
-onBeforeMount(async ()=>{
+onBeforeMount(async () => {
   authorId.value = 5053369573;
-  authorInformation.value = getAuthorStates().authorInformation
+  authorInformation.value = getAuthorStates().authorInformation;
   fetchAuthorNetwork();
   fetchAuthorInformation();
-})
+});
 // 在页面加载时触发请求
-onMounted( () => {
-  authorInformation.value = getAuthorStates().authorInformation
+onMounted(() => {
+  authorInformation.value = getAuthorStates().authorInformation;
 });
 authorId.value = 5053369573;
-authorInformation.value = getAuthorStates().authorInformation
+authorInformation.value = getAuthorStates().authorInformation;
 fetchAuthorNetwork();
 fetchAuthorInformation();
-console.log(authorInformation.value.claimed)
-console.log(authorInformation.value)
-console.log(authorInformation.value.display_name)
+console.log(authorInformation.value.claimed);
+console.log(authorInformation.value);
+console.log(authorInformation.value.display_name);
 function handleClaimClose() {
   showClaimDialog.value = false;
   claimForm.email = "";
@@ -470,6 +556,7 @@ function handleClaimClose() {
   claimForm.email_change = false;
   claimForm.reason = "";
   claimForm.captcha = "";
+  claimForm.file = "";
 }
 watch(
   () => claimForm.email,
@@ -546,6 +633,10 @@ function handleAppealSubmit() {
     ElMessage.error("Please state the reasons and evidence for your appeal");
     return;
   }
+  if (!appealHasFile.value) {
+    ElMessage.error("Please upload the application material");
+    return;
+  }
   if (
     appealForm.captcha == appealForm.captcha_get &&
     appealForm.captcha_get != ""
@@ -555,6 +646,7 @@ function handleAppealSubmit() {
     formData.append("appeal_email", appealForm.email);
     formData.append("appeal_text", appealForm.reason);
     formData.append("author_id", authorInformation.value.id);
+    formData.append("appeal_file", appealForm.file.raw);
     formData.append("appeal_type", 0);
     axios({
       url: "http://122.9.5.156:8000/api/v1/author/appeal_author",
@@ -578,6 +670,7 @@ function handleAppealClose() {
   appealForm.email_change = false;
   appealForm.reason = "";
   appealForm.captcha = "";
+  appealForm.file = "";
 }
 watch(
   () => appealForm.email,
@@ -592,16 +685,15 @@ watch(
 </script>
 
 <style scoped>
-
-.checkbutton{
+.checkbutton {
   font-size: 16px;
   margin-left: 5px;
   width: 10px; /* 设置按钮宽度 */
   height: 10px; /* 设置按钮高度 */
 }
 
-.certified-text{
-  color: 'red';
+.certified-text {
+  color: "red";
   font-size: 24px;
 }
 
