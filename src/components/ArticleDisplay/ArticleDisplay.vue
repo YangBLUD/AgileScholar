@@ -190,7 +190,6 @@ let pdfUrl = ref(store.state.Article.pdf_url)
 
 watch(()=>store.state.Article.id, (newVal, oldVal)=>{
     article_title.value = store.state.Article.title
-    console.log(store.state.Article.title)
     authors.value = store.state.Article.Authors
     cited_count.value = store.state.Article.cited_count
     landing_page_url.value = store.state.Article.landing_page_url
@@ -252,13 +251,7 @@ function editP() {
 }
 
 function downloadPdf(){
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.target = '_blank'; // 打开新窗口
-    link.download = 'document.pdf'; // 下载时的文件名
-
-    // 模拟点击链接以触发下载
-    link.click();
+    window.open(pdfUrl.value, '_blank');
 }
 </script>
 

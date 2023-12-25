@@ -121,7 +121,7 @@ function jump(article_id) {
             method: 'post',
             // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
             data: JSON.stringify({
-                token: store.getters.getUserinfo.token.value,
+                token: store.getters.getUserinfo.token,
                 paper_id: article_id,
                 type: 0,
             }),
