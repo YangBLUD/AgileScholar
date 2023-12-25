@@ -43,7 +43,7 @@
           <div class="ai-text">Create your needs</div>
           <div class="ai-text">Solve your difficulties</div>
           <div class="ai-text">Learn your teachings</div>
-          <el-button type="primary" class="ai-button" @click="login">登录</el-button>
+          <el-button type="primary" class="ai-button" @click="login">Login</el-button>
         </template>
         <template #reference>
           <el-avatar :src="Avatar" style="cursor: pointer; margin-top: 3px;"></el-avatar>

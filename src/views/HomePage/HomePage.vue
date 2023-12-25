@@ -1250,7 +1250,7 @@ function showInfo(item_id) {
   width: fit-content;
   font-size: 25px;
   color: rgb(232, 239, 247);
-  margin-top: 120px;
+  margin-top: 180px;
   z-index: 10;
 }
 
@@ -1258,7 +1258,7 @@ function showInfo(item_id) {
   margin: auto;
   height: fit-content;
   width: 60%;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 
 :deep(.el-input-group__append) {
@@ -1289,7 +1289,7 @@ function showInfo(item_id) {
 
 .carousel {
   margin: auto;
-  margin-top: 70px;
+  margin-top: 170px;
   width: 60%;
   background-color: #65656566;
   border-radius: 10px;

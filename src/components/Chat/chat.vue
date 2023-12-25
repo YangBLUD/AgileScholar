@@ -1,6 +1,7 @@
 <template>
   <div class="title">
-    智能助手<el-button :icon="Refresh" circle style="position:absolute; margin-left: 120px;" @click="resetList" />
+    AI Assistant<el-button :icon="Refresh" circle style="position:absolute; margin-left: 70px; margin-top: 20px;"
+      @click="resetList" />
   </div>
   <div style="width: 400px;">
     <el-scrollbar style=" max-height:100%; height:700px; min-height:200px; border-bottom: 1.5px solid rgb(220, 220, 220);"
@@ -41,8 +42,8 @@ function getMessageList() {
   return store.getters.getList
 }
 const config = reactive({
-  peopleName: "我",
-  llmName: "智能助手",
+  peopleName: "Me",
+  llmName: "AI",
   peopleAvatar: "",
   llmAvatar: "",
 })
