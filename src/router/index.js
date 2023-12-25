@@ -88,10 +88,6 @@ const routes = [
     name: "scholar-display",
     component: () => import("../components/Scholar/Scholar.vue"),
     props: true,
-  },
-  {
-    path: "/scholar",
-    component: () => import("../components/Scholar/Scholar.vue"),
   }
 ];
 

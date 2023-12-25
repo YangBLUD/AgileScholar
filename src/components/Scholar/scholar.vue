@@ -32,12 +32,11 @@
             </p>
           </template>
         </div>
-        <div class="author-opt" v-if="is_Login">
-          <el-button v-if="authorInformation.claimed" @click="showAppeal"
-            >Appeal</el-button
-          >
-          <el-button v-else @click="showClaim">Claim</el-button>
+        <div class="author-opt" style="display: flex; flex-direction: column;">
+          <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
+          <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
         </div>
+
       </div>
     </el-header>
     <el-dialog v-model="showAppealDialog" :lock-scroll="false">
@@ -184,6 +183,7 @@ import { Base64 } from "js-base64";
 import { encodeUtf8 } from "node-forge/lib/util.js";
 import { Store, useStore } from "vuex";
 import { UploadFilled } from "@element-plus/icons-vue";
+import { useRoute } from "vue-router"
 import {
   ElRow,
   ElCol,
@@ -205,8 +205,9 @@ const is_Login = ref(false);
 const activeTab = ref("influence");
 const Message = ref("father-messages");
 const authorInformation = ref(null);
-const authorId = ref(5053369574);
+const authorId = ref();
 const store = useStore();
+const route = useRoute();
 const tabComponents = {
   papers: defineAsyncComponent(() => import("./components/PapersTab.vue")),
   influence: defineAsyncComponent(() =>
@@ -333,7 +334,7 @@ const fetchAuthorInformation = () => {
     url: "http://122.9.5.156:8000/api/v1/author/get_author_information",
     method: "post",
     data: JSON.stringify({
-      author_id: 5053369574,
+      author_id: authorId.value,
     }),
   })
     .then((res) => {
@@ -349,7 +350,7 @@ const fetchAuthorNetwork = () => {
     url: "http://122.9.5.156:8000/api/v1/author/author_network",
     method: "post",
     data: JSON.stringify({
-      author_id: 5053369573,
+      author_id: authorId.value,
     }),
   })
     .then((res) => {
@@ -365,19 +366,20 @@ function getAuthorStates() {
 }
 onBeforeMount(async () => {
   is_Login.value = store.getters.getLoginState;
-  authorId.value = 5053369573;
-  authorInformation.value = getAuthorStates().authorInformation;
+  authorId.value = route.params.id;
   fetchAuthorNetwork();
   fetchAuthorInformation();
+  authorInformation.value = getAuthorStates().authorInformation;
+  console.log(authorId)
 });
 // 在页面加载时触发请求
 onMounted(() => {
   authorInformation.value = getAuthorStates().authorInformation;
 });
-authorId.value = 5053369573;
-authorInformation.value = getAuthorStates().authorInformation;
+authorId.value = route.params.id;
 fetchAuthorNetwork();
 fetchAuthorInformation();
+authorInformation.value = getAuthorStates().authorInformation;
 
 //申诉和认领
 const showAppealDialog = ref(false);
@@ -532,23 +534,6 @@ function handleClaimSubmit() {
       });
   }
 }
-onBeforeMount(async () => {
-  authorId.value = 5053369573;
-  authorInformation.value = getAuthorStates().authorInformation;
-  fetchAuthorNetwork();
-  fetchAuthorInformation();
-});
-// 在页面加载时触发请求
-onMounted(() => {
-  authorInformation.value = getAuthorStates().authorInformation;
-});
-authorId.value = 5053369573;
-authorInformation.value = getAuthorStates().authorInformation;
-fetchAuthorNetwork();
-fetchAuthorInformation();
-console.log(authorInformation.value.claimed);
-console.log(authorInformation.value);
-console.log(authorInformation.value.display_name);
 function handleClaimClose() {
   showClaimDialog.value = false;
   claimForm.email = "";
@@ -740,12 +725,18 @@ watch(
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 20px;
+  margin-left: 200px;
 }
 .author-info h2 {
   margin-bottom: 30px;
   font-size: 20px;
   font-weight: 600;
+}
+
+.AttrButton{
+  height: auto;
+  width: 70px;
+
 }
 
 .author-info .author-attr {
