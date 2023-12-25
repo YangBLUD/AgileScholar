@@ -46,7 +46,6 @@ const routes = [
       keepAlive: true,
     },
     component: Admin,
-
     beforeEnter: (to, from, next) => {
       if (store.getters.getIsAdmin) {
         next();
@@ -84,10 +83,17 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/scholar/:id",
+    name: "scholar-display",
+    component: () => import("../components/Scholar/Scholar.vue"),
+    props: true,
+  }
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: routes,
 });
+
 export default router;

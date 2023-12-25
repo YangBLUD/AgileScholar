@@ -297,11 +297,11 @@ function jump(data) {
     return;
   }
   if (data.type == 0) {
-    router.push("");
+    router.push(`/article/${data.id}`);
   } else if (data.type == 1) {
     router.push("");
   } else if (data.type == 2) {
-    router.push("");
+    router.push(`/institution/${data.id}`);
   }
 }
 </script>

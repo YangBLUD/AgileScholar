@@ -12,6 +12,7 @@ const AuthorModule = {
        },
        setAuthorInformation(state, authorInformation){
             state.authorInformation = authorInformation
+            state.authorId = authorInformation.id
        },
        setAuthorNetwork(state, network){
            state.authorNetwork = network

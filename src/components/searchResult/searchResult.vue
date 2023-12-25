@@ -167,6 +167,9 @@ import Institutions from "./institution.vue";
 import Subjects from "./subject.vue";
 import { Search, ArrowLeft } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
+
+
+
 const Store = useStore();
 import { useRouter } from "vue-router";
 const router = useRouter();
