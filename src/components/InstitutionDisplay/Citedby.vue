@@ -19,11 +19,9 @@ import {onMounted, reactive, ref, watch} from "vue";
 import * as echarts from "echarts"
 import store from "../../store/index.js";
 onMounted(()=> {
-    initChart()
     console.log(11)
     console.log(cited_count)
     console.log(work_count)
-    window.addEventListener('resize', handleResize);
 })
 watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
     years = store.getters.getYears
@@ -31,6 +29,7 @@ watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
     work_count = store.getters.getWorkCount
     oa_work_count = store.getters.getOaWorkCount
     initChart()
+    window.addEventListener('resize', handleResize);
 })
 
 let years = ref(store.getters.getYears)

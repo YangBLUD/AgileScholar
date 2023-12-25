@@ -78,7 +78,9 @@
                     content="Add to favorites"
                     placement="bottom"
             >
-              <el-icon class="article-show-content-cite-btn-icon"><Folder /></el-icon>
+<!--              <el-icon class="article-show-content-cite-btn-icon"><Folder /></el-icon>-->
+
+              <StarDialog class="article-show-content-cite-btn-icon" />
             </el-tooltip>
 <!--            <el-tooltip-->
 <!--                    effect="dark"-->
@@ -92,7 +94,7 @@
                     content="PDF file"
                     placement="bottom"
             >
-              <el-icon class="article-show-content-cite-btn-icon article-pdf"><Document /> PDF</el-icon>
+              <el-icon v-if="pdfUrl!==null" class="article-show-content-cite-btn-icon article-pdf" @click="downloadPdf()"><Document /> PDF</el-icon>
             </el-tooltip>
           </div>
         </div>
@@ -178,6 +180,7 @@ import store from "../../store/index.js";
 import router from "../../router/index.js";
 import {ElMessage} from "element-plus";
 import axios from "axios";
+import StarDialog from "./StarDialog.vue";
 
 let clickNum = ref(120);
 let article_title = ref(store.state.Article.title)
@@ -186,6 +189,7 @@ let cited_count = ref(store.state.Article.cited_count)
 let landing_page_url = ref(store.state.Article.landing_page_url)
 let publish_date = ref(store.state.Article.publication_date)
 let source = ref(store.getters.get_source)
+let pdfUrl = ref(store.state.Article.pdf_url)
 
 watch(()=>store.state.Article.id, (newVal, oldVal)=>{
     article_title.value = store.state.Article.title
@@ -195,6 +199,7 @@ watch(()=>store.state.Article.id, (newVal, oldVal)=>{
     landing_page_url.value = store.state.Article.landing_page_url
     publish_date.value = store.state.Article.publication_date
     source.value = store.getters.get_source
+    pdfUrl.value = store.state.Article.pdf_url
     window.scrollTo(0,0)
 })
 
@@ -247,6 +252,16 @@ function editP() {
         });
     reportDialog.value = false
     description.value = ""
+}
+
+function downloadPdf(){
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.target = '_blank'; // 打开新窗口
+    link.download = 'document.pdf'; // 下载时的文件名
+
+    // 模拟点击链接以触发下载
+    link.click();
 }
 </script>
 
