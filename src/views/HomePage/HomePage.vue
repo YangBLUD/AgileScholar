@@ -11,7 +11,7 @@
   <div class="article-search" id="section1">
     <div style="z-index: 5">
       <div class="headline">
-        <h1>What Scholar</h1>
+        <h1 style="font-size: 70px;">AgileScholar</h1>
       </div>
       <div class="search_box">
         <el-input v-model="searchText" placeholder="Search" class="input-with-select" @keyup.enter="performSearch"
@@ -26,7 +26,8 @@
             margin-right: 5px;
             margin-top: 10px;
             color: aliceblue;
-          " @click="$router.push({ path: '/advanced' })">
+
+          " @click="$router.push({ path: '/advanced' })" class="Advance">
           <h5>Advanced Search</h5>
         </div>
       </div>
@@ -140,10 +141,10 @@
   </div>
   <!-- <div><Footer /></div> -->
   <!-- 学科详细信息dialog -->
-  <el-dialog v-model="dialogVisible" width="70%" :show-close="false" open-delay="500">
-    <div style="max-height: 700px; overflow-y: auto;">
+  <el-dialog v-model="dialogVisible" width="70%" :show-close="false" open-delay="500" top="4vh">
+    <div style="max-height: 690px; overflow-y: auto;">
       <div class="subject-name">{{ subjectInfo.name }}</div>
-      <img :src="subjectInfo.img_url" alt="cnm加载得出来" :onerror="display_vacant" class="image"
+      <img :src="subjectInfo.img_url" alt="" :onerror="display_vacant" class="image"
         style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
       <div class="subject-description">{{ subjectInfo.description }}</div>
       <div class="summary">Summary Statistics</div>
@@ -221,7 +222,7 @@ const subjectInfo = reactive({
   img_url: '',
 },);
 function display_vacant() {
-  subjectInfo.img_url = "src/assets/homepage/vacant.jpg"
+  subjectInfo.img_url = "src/assets/homepage/vacant.png"
 }
 var flag = ref(0);
 var xData = ref("");
@@ -1589,5 +1590,50 @@ function showInfo(item_id) {
 .el-dialog__wrapper {
   max-height: calc(100vh - 120px);
   /* 在这里设置最大高度 */
+}
+
+.Advance {
+  float: right;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-top: 10px;
+  color: aliceblue;
+  transition: ease 0.3s;
+}
+
+.Advance:hover {
+  transform: scale(1.1);
+  transition: ease 0.3s;
+}
+
+/* 细的滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 鼠标按下时的样式 */
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 滚动条轨道样式 */
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+/* 鼠标悬停在滚动条轨道上时的样式 */
+::-webkit-scrollbar-track:hover {
+  background-color: rgba(0, 0, 0, 0.15);
 }
 </style>

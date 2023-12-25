@@ -2,14 +2,18 @@
   <div class="mask" v-if="showLogin || showRegister"></div>
   <div class="top-nav">
     <ul>
-      <li style="padding-left: 30px">
-        <a href="#" style="
+      <li style="padding-left: 18px"><a href="#">
+          <img src="../../assets/7b5cd0fb87aa1c3e2b77df08f6161fa.png" alt=""
+            style="width: 245px; position: relative; top: -7px;">
+        </a>
+
+        <!-- <a href="#" style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          ">What Scholar</a>
+          ">What Scholar</a> -->
       </li>
       <li style="width: 45%; margin-right: 0">
         <div style="float: right">
@@ -28,15 +32,22 @@
           <AI />
         </template>
         <template #reference>
-          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+          <el-avatar :src="Avatar" style="cursor: pointer;"></el-avatar>
         </template>
       </el-popover>
-      <el-popover placement="bottom" :width="425" trigger="click" v-if="!have_user_info">
+      <el-popover placement="bottom" :width="225" trigger="click" v-if="!have_user_info" effect="dark">
         <template #default>
-          <div>智能助手</div>
+          <div class="ai-text-title">智能助手</div>
+          <div class="ai-text">只需一个指令</div>
+          <div class="ai-text">懂你所言，</div>
+          <div class="ai-text">答你所问，</div>
+          <div class="ai-text">创你所需，</div>
+          <div class="ai-text">解你所难，</div>
+          <div class="ai-text">学你所教。</div>
+          <el-button type="primary" class="ai-button" @click="login">登录</el-button>
         </template>
         <template #reference>
-          <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" style="cursor: pointer;" />
+          <el-avatar :src="Avatar" style="cursor: pointer;"></el-avatar>
         </template>
       </el-popover>
       <li class="right">
@@ -112,6 +123,7 @@
 import { ref, reactive, watch, onMounted, onUnmounted } from "vue";
 import Login from "./Login.vue";
 import AI from "../Chat/chat.vue";
+import Avatar from "../../assets/icon.png"
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
@@ -667,5 +679,50 @@ function getCaptcha() {
 
 :deep(.el-button:hover) {
   border-color: #03e9f4;
+}
+
+.ai-text-title {
+  background: linear-gradient(to right, #ff00ff, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  height: 70px;
+  line-height: 70px;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+.ai-text {
+  background: linear-gradient(to right, #48c6ef, #6f86d6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Arial Black", sans-serif;
+}
+
+.ai-button {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-left: 65px;
+  background: linear-gradient(to right, #ff00ff, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-color 0.3s ease;
+  /* 添加过渡效果 */
+}
+
+.ai-button:hover {
+  background-color: #cccccc;
+  /* 鼠标悬停时背景颜色变为灰色 */
+}
+
+.ai-button:not(:hover) {
+  animation: none !important;
+  /* 鼠标离开后取消动画效果 */
 }
 </style>
