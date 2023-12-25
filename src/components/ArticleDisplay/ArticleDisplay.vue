@@ -71,8 +71,8 @@
                     <div class="article-show-content-cite-block">
                         <img class="article-show-content-cite-show-icon" src="../../assets/ArticleDisplay/cite.png"
                             alt="Cites"><span class="article-show-content-cite-show-text text-blue">{{ cited_count }}</span>
-                        <img class="article-show-content-cite-show-icon" src="../../assets/ArticleDisplay/click.png"
-                            alt="Clicks"><span class="article-show-content-cite-show-text text-blue">{{ clickNum }}</span>
+                        <img class="article-show-content-cite-show-icon" src="../../assets/icon-trend.png"
+                            alt="Clicks"><span class="article-show-content-cite-show-text text-purple">{{ clickNum }}</span>
                     </div>
                     <div class="article-show-content-cite-btn-block">
                         <el-tooltip effect="dark" content="Report" placement="bottom">
@@ -338,6 +338,7 @@ function downloadPdf() {
 }
 
 .article-show-content-title {
+    font-family: Merriweather Sans, sans-serif;
     line-height: 40px;
     font-size: 28px;
     font-weight: bold;
@@ -457,6 +458,10 @@ function downloadPdf() {
 
 .text-blue {
     color: #0077c2;
+}
+
+.text-purple {
+    color: #974dff;
 }
 
 .article-pdf {

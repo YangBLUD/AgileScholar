@@ -188,6 +188,8 @@ onMounted(() => {
 .paper-title {
   color: #0077c2;
   font-size: 20px;
+  height: 35px;
+  line-height: 35px;
   font-weight: bold;
   margin-bottom: 15px;
 }
