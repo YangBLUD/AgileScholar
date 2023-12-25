@@ -91,10 +91,11 @@
           <div v-show="!item.show">
             <div class="nav-list">
               <div v-for="(item1, index1) in item.text" :key="index1" class="nav-item">
-                <div class="nav-item-left" @click="goSubject(item1.name)">
+                <div class="nav-item-left">
                   <el-button :icon="More" size="large" circle @click="showInfo(item1.id)" />
-                  <div style="float: left; width: 70%; cursor: auto;">{{ item1.name }}</div>
-                  <div class="arrow" style="float: right; width: 30%; font-size: 20px;">
+                  <div style="float: left; width: 70%; cursor: auto;" @click="goSubject(item1.name)">{{ item1.name }}
+                  </div>
+                  <div class="arrow" style="float: right; width: 30%; font-size: 20px;" @click="goSubject(item1.name)">
                     <el-icon>
                       <Right />
                     </el-icon>
@@ -139,7 +140,7 @@
   </div>
   <!-- <div><Footer /></div> -->
   <!-- 学科详细信息dialog -->
-  <el-dialog v-model="dialogVisible" width="70%" :before-close="handleClose" show-close="false" open-delay="500">
+  <el-dialog v-model="dialogVisible" width="70%" :show-close="false" open-delay="500">
     <div style="max-height: 700px; overflow-y: auto;">
       <div class="subject-name">{{ subjectInfo.name }}</div>
       <img :src="subjectInfo.img_url" alt="cnm加载得出来" :onerror="display_vacant" class="image"
@@ -242,8 +243,6 @@ onMounted(() => {
   initArticles();
   initInstitutions();
 });
-const handleClose = (done: () => void) => {
-}
 function getUserInfo() {
   return Store.getters.getUserinfo
 }

@@ -1,7 +1,8 @@
 <template>
     <div class="main">
         <div class="pic">
-            <img src="../../assets/logo.png" class="scholar-pic"/>
+            <img v-if="props.info.image_url" :src=props.info.image_url class="scholar-pic"/>
+            <img v-else src="../../assets/logo.jpg" class="scholar-pic"/>
         </div>
         <div class="name" style="text-align: center;">
             <span v-html="props.info.display_name" style="display: inline-block;"></span>

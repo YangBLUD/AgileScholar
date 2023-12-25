@@ -4,10 +4,14 @@
             <img src="../../assets/logo.png" class="scholar-pic"/>
         </div>
         <div class="name" style="text-align: center;">
-            <span v-html="props.info.display_name" style="display: inline-block;"></span>
+<!--            <router-link :to="{name:'scholar-display', params:{id:props.info.id} }">-->
+<!--                <span v-html="props.info.display_name" style="display: inline-block;"></span>-->
+<!--            </router-link>-->
         </div>
         <div class="jigou" v-if="props.info.institution && props.info.institution.length!=0" style="text-align: center;"> 
-            <span v-html="props.info.institution[0].name" style="display: inline-block;"></span>
+            <router-link :to="{name:'institution-display', params:{id:props.info.institution[0].id} }">
+                <span v-html="props.info.institution[0].name" style="display: inline-block;"></span>
+            </router-link>
         </div>
         <div class="star">
             <stardialog :token = "props.token" :paper_id="props.info.id" :type="type" :is_star="props.info.is_star"></stardialog>

@@ -5,7 +5,10 @@
             <img v-else src="../../assets/buaa.jpg" class="scholar-pic"/>
         </div>
         <div class="name" style="text-align: center;">
-            <span v-html="props.info.display_name" style="display: inline-block;"></span>
+            <router-link :to="{name:'institution-display', params:{id:props.info.id} }">
+                <span v-html="props.info.display_name" style="display: inline-block;"></span>
+            </router-link>
+            
         </div>
         <div class="jigou" v-if="props.info.domain && props.info.domain.length!=0 " style="text-align: center;"> 
             <span v-html="props.info.domain[0].name" style="display: inline-block;"></span>

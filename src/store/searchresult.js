@@ -11,7 +11,7 @@ const SearchModule = {
     },
     setaggraw(state,raw){
         state.agg_raw = raw;
-    }
+    },
   },
   actions: {},
   getters: {
