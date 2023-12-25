@@ -719,7 +719,6 @@ watch(
 }
 .author-opt {
   margin-left: 150px;
-  background: #e1e8ef;
   height: 160px;
   width: 200px;
   display: flex;
