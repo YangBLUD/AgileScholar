@@ -48,8 +48,8 @@ onBeforeMount(() => {
     }).then(res => {
         console.log(res.data)
         store.commit('initAffairList', res.data.data)
-        console.log(store.getters.getAppealList)
-        console.log(store.getters.getAffairList)
+        //console.log(store.getters.getAppealList)
+        //console.log(store.getters.getAffairList)
     }).catch(err => {
         console.log(err)
     })

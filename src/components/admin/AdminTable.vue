@@ -72,17 +72,37 @@
 				<el-form-item label="用户名">
 					<span> {{ form.name }}</span>
 				</el-form-item>
-				<el-form-item label="申诉者邮箱">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="邮箱">
+					<span>{{ form.email }}</span>
 				</el-form-item>
-				<el-form-item label="邮箱状态">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="邮箱是否为机构邮箱">
+					<span> {{ form.email_commom }}</span>
 				</el-form-item>
-				<el-form-item label="具体诉求">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="申诉内容">
+					<span> {{ form.text }}</span>
 				</el-form-item>
-				<el-form-item label="举报类型">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="申诉文件">
+					<el-link :underline="false" :href="form.file">点此下载</el-link>
+				</el-form-item>
+				<el-form-item label="被申诉学者名称">
+					<span> {{ form.be_name }}</span>
+				</el-form-item>
+				<el-form-item label="处理理由">
+      				<el-input v-model="handle_reason" type="textarea" />
+    			</el-form-item>
+				<el-form-item label="处理结果">
+					<el-radio-group v-model="descion">
+        				<el-radio label="0" size="small">不处理</el-radio>
+      					<el-radio label="1" size="small">取消被申诉者身份</el-radio>
+						<el-radio label="2" size="small">取消并允许替换被申诉者身份</el-radio>
+      				</el-radio-group>
+				</el-form-item>
+				<el-form-item label="申请邮箱状态">
+					<el-radio-group v-model="appeal_email_special">
+        				<el-radio label="0" size="small">不评判</el-radio>
+      					<el-radio label="1" size="small">普通邮箱</el-radio>
+						<el-radio label="2" size="small">机构专属邮箱</el-radio>
+      				</el-radio-group>
 				</el-form-item>
 			</el-form>
 			<template #footer>
@@ -99,16 +119,35 @@
 					<span> {{ form.name }}</span>
 				</el-form-item>
 				<el-form-item label="邮箱">
-					<el-input v-model="form.id"></el-input>
+					<span>{{ form.email }}</span>
 				</el-form-item>
-				<el-form-item label="邮箱状态">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="邮箱是否为机构邮箱">
+					<span> {{ form.email_commom }}</span>
 				</el-form-item>
-				<el-form-item label="具体诉求">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="申请内容">
+					<span> {{ form.text }}</span>
 				</el-form-item>
-				<el-form-item label="举报类型">
-					<el-input v-model="form.id"></el-input>
+				<el-form-item label="申请文件">
+					<el-link :underline="false" :href="form.file">点此下载</el-link>
+				</el-form-item>
+				<el-form-item label="申请认证的学者名称">
+					<span> {{ form.be_name }}</span>
+				</el-form-item>
+				<el-form-item label="处理理由">
+      				<el-input v-model="handle_reason" type="textarea" />
+    			</el-form-item>
+				<el-form-item label="处理结果">
+					<el-radio-group v-model="descion">
+        				<el-radio label="0" size="small">不通过</el-radio>
+      					<el-radio label="1" size="small">通过</el-radio>
+      				</el-radio-group>
+				</el-form-item>
+				<el-form-item label="申请邮箱状态">
+					<el-radio-group v-model="appeal_email_special">
+        				<el-radio label="0" size="small">不评判</el-radio>
+      					<el-radio label="1" size="small">普通邮箱</el-radio>
+						<el-radio label="2" size="small">机构专属邮箱</el-radio>
+      				</el-radio-group>
 				</el-form-item>
 			</el-form>
 			<template #footer>
@@ -146,7 +185,7 @@
 					<span> {{ form.type }}</span>
 				</el-form-item>
 				<el-form-item label="处理理由">
-      				<el-input v-model="handle_reason" type="textarea" />
+      				<el-input v-model="handle_reason" type="textarea"> </el-input>
     			</el-form-item>
 				<el-form-item label="处理结果">
 					<el-radio-group v-model="descion">
@@ -170,20 +209,21 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { Edit, Search } from '@element-plus/icons-vue';
+import axios from 'axios';
 
 import store from '../../store';
 
-let str = "111";
 
-let handle_reason = "";
-let affair_id = -10;
+let handle_reason = ref('');
 let descion = ref(0);
-let appeal_email_special = -10;
+let appeal_email_special = ref(0);
 
 let comment = ref(false)
 let itemKey = ref()
+let state = "";
+let affair_id = -10;
 
-const dataList = store.getters.getAffairList
+let dataList = store.getters.getAffairList
 let tableDataList = reactive(store.getters.getAffairList)
 
 let query = reactive({
@@ -234,6 +274,7 @@ let form = reactive({
 	comment_text: '',
 	comment_user: '',
 	comment_time: '',
+	be_name: '',
 });
 
 const handleEdit = (row: any) => {
@@ -243,6 +284,8 @@ const handleEdit = (row: any) => {
 	else{
 		switch(row.type){
 			case "举报":
+				state = "举报";
+				affair_id = row.id;
 				store.commit('getReport', row.id)
 				//console.log(store.getters.getTheList)
 				let list = store.getters.getTheList;
@@ -272,12 +315,55 @@ const handleEdit = (row: any) => {
 				reportListVisible.value = true;
 				break;
 			case "申诉":
+				state = "申诉";
+				affair_id = row.id;
+				store.commit('getAppeal', row.id)
+				
+				let list1 = store.getters.getTheList;
+				console.log(list1)
 
-				form.name = row.name;
+				form.name = list1[0].username;
+				form.email = list1[0].appeal_email;
+				if(list1[0].appeal_email_common == false){
+					form.email_commom = "非机构邮箱";
+				}
+				else{
+					form.email_commom = "机构邮箱";
+				}
+				form.be_name = list1[0].scholar_name;
+				form.text = list1[0].report_text;
+				form.file = list1[0].report_file;
+				if(form.text == ''){
+					form.text = "用户未填写申诉理由"
+				}
+				if(form.file == ''){
+					form.file = "用户未上传申诉文件"
+				}
 				appealListVisible.value = true;
 				break;
 			case "认证申请":
-
+				affair_id = row.id;
+				state = "认证申请";
+				store.commit('getClaim', row.id)
+				let list2 = store.getters.getTheList;
+				console.log(list2)
+				form.name = list2[0].username;
+				form.email = list2[0].claim_email;
+				if(list2[0].appeal_email_common == false){
+					form.email_commom = "非机构邮箱";
+				}
+				else{
+					form.email_commom = "机构邮箱";
+				}
+				form.text = list2[0].claim_text;
+				form.file = list2[0].claim_file;
+				if(form.text == ''){
+					form.text = "用户未填写申诉理由"
+				}
+				if(form.file == ''){
+					form.file = "用户未上传申诉文件"
+				}
+				form.be_name = list2[0].scholar_name;
 				claimListVisible.value = true;
 				break;
 			default:
@@ -286,7 +372,85 @@ const handleEdit = (row: any) => {
 	}
 };
 const saveEdit = () => {
-	
+	switch (state){
+		case "举报":
+			console.log("begin report")
+    		axios({
+        		url: 'http://122.9.5.156:8000/api/v1/admin/handle_report',
+        		method: 'post',
+        		data: JSON.stringify({
+            		"token": store.getters.getUserinfo.token,
+					"affair_id": affair_id,
+					"handle_reason": handle_reason.value,
+					"decision": descion,
+        		})
+    		}).then(res => {
+        		console.log(res.data)
+    		}).catch(err => {
+        		console.log(err)
+    		})
+			reportListVisible.value = false;
+			break;
+		case "申诉":
+		console.log("begin appeal")
+			axios({
+        		url: 'http://122.9.5.156:8000/api/v1/admin/handle_appeal',
+        		method: 'post',
+        		data: JSON.stringify({
+            		"token": store.getters.getUserinfo.token,
+					"affair_id": affair_id,
+					"handle_reason": handle_reason.value,
+					"decision": descion,
+					"appeal_email_special": appeal_email_special,
+        		})
+    		}).then(res => {
+        		console.log(res.data)
+    		}).catch(err => {
+        		console.log(err)
+    		})
+			appealListVisible.value = false;
+			break;
+		case "认证申请":
+			console.log("begin claim")
+			axios({
+        		url: 'http://122.9.5.156:8000/api/v1/admin/handle_claim',
+        		method: 'post',
+        		data: JSON.stringify({
+            		"token": store.getters.getUserinfo.token,
+					"affair_id": affair_id,
+					"handle_reason": handle_reason.value,
+					"decision": descion,
+					"appeal_email_special": appeal_email_special,
+        		})
+    		}).then(res => {
+        		console.log(res.data)
+    		}).catch(err => {
+        		console.log(err)
+    		})
+			claimListVisible.value = false;
+			break;
+		default:
+		console.log("begin get the data")
+    	axios({
+        	url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
+        	method: 'post',
+        	data: JSON.stringify({
+            	"token": store.getters.getUserinfo.token
+        	})
+    	}).then(res => {
+        	console.log(res.data)
+        	store.commit('initAffairList', res.data.data)
+			
+        	//console.log(store.getters.getAppealList)
+        	//console.log(store.getters.getAffairList)
+    	}).catch(err => {
+        	console.log(err)
+    	})
+			dataList = store.getters.getAffairList
+			tableDataList = reactive(store.getters.getAffairList)
+			itemKey.value = Math.random()
+			break;
+	}
 };
 </script>
 
