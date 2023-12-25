@@ -1,4 +1,4 @@
-v<template>
+<template>
   <el-container class="main-container">
     <!-- 上方板块 -->
     <el-header class="main-header">
@@ -16,6 +16,8 @@ v<template>
             <p v-if="authorInformation.claimed" class="author-certificate">Scholar certified<el-button class="checkbutton" type="success" :icon="Check" circle /></p>
             <p v-if="!authorInformation.claimed" class="author-certificate">Scholar not certified</p>
           </template>
+        </div>
+        <div class="author-opt">
         </div>
       </div>
     </el-header>
