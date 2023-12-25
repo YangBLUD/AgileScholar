@@ -49,21 +49,26 @@
       <div class="rank-article-item" v-for="(item, index) in rankArticles" :key="index" @click="goArticle(item.id)">
         <div class="rank-article-index">{{ index + 1 }}</div>
         <div class="rank-article-content">
+          <div class="rank-article-date">{{ item.publication_date }}</div>
           <div class="rank-article-title">
             {{ item.title }}
           </div>
-          <div style="height: 60px">
+          <div style="height: 40px">
             <div class="rank-article-author">
+              <el-avatar :src="Avatar" style="cursor: pointer; position: relative; top: 7px; margin-right: 5px;"
+                :size="25"></el-avatar>
               <span>{{ item.author_all[0].name }}</span>
               <span v-if="item.author_all.length == 2">,</span>
               <span v-if="item.author_all.length > 2"> et al.</span>
             </div>
-            <div class="rank-article-author" v-if="item.author_all.length == 2">
-              <span>{{ item.author_all[1].name }}</span>
+            <div class="rank-article-author" v-if="item.author_all.length == 2" style="margin-top: 3px;">
+              <el-avatar :src="Avatar" style="cursor: pointer; position: relative; top: 7px; margin-right: 5px;"
+                :size="25"></el-avatar>
+              <span>{{
+                item.author_all[1].name }}</span>
             </div>
           </div>
-          <div style="height: 80px">
-            <div class="rank-article-date">{{ item.publication_date }}</div>
+          <div style="height: 40px; margin-top: 20px;">
             <div class="rank-article-cite">
               Cited {{ item.cited_count }} times
             </div>
@@ -199,6 +204,7 @@ import { ref, onMounted, reactive, nextTick } from "vue";
 import axios from "axios";
 import Echart from "../HomePage/Echats.vue"
 import AI from "../../components/Chat/chat.vue";
+import Avatar from "../../assets/logo.png"
 import TopNav from "../../components/HomePage/TopNav.vue";
 import Footer from "../../components/HomePage/Footer.vue";
 import { ElMessageBox } from 'element-plus'
@@ -1282,7 +1288,7 @@ function showInfo(item_id) {
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
   font-style: italic;
   margin: 20px 10px 40px 20px;
@@ -1290,8 +1296,8 @@ function showInfo(item_id) {
 
 .rank-content {
   margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 220px;
+  margin-right: 220px;
   border: 1px solid #ccd0d8;
   border-radius: 4px;
   background-color: #fff;
@@ -1304,20 +1310,19 @@ function showInfo(item_id) {
 }
 
 .rank-article-item {
+  padding-top: 10px;
   width: 25%;
   margin-bottom: 20px;
   padding-bottom: 30px;
   border-bottom: 1px solid #ccd0d8;
-  cursor: pointer;
 }
 
 .rank-article-index {
   margin-left: 5%;
   width: 15%;
   font-size: 30px;
-  font-style: italic;
   font-weight: bold;
-  color: rgb(255, 240, 103);
+  color: rgb(237, 218, 157);
   float: left;
 }
 
@@ -1339,22 +1344,30 @@ function showInfo(item_id) {
   padding: 0 10px;
   text-overflow: ellipsis;
   overflow-wrap: break-word;
+  cursor: pointer;
+}
+
+.rank-article-title:hover {
+  text-decoration: underline;
 }
 
 .rank-article-author {
-  margin-top: 20px;
+  margin-top: 0px;
   font-size: 14px;
-  color: #999;
+  color: rgb(97, 97, 97);
 }
 
 .rank-article-date {
-  margin-top: 30px;
   font-size: 14px;
-  font-style: italic;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-bottom: 13px;
+  color: rgb(150, 150, 150);
 }
 
 .rank-article-cite {
-  margin-top: 10px;
+  color: rgb(51, 51, 51);
+  margin-top: 30px;
   font-size: 14px;
   font-style: italic;
 }
@@ -1463,8 +1476,8 @@ function showInfo(item_id) {
 }
 
 .ins-rank {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 23px;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -1474,42 +1487,83 @@ function showInfo(item_id) {
 }
 
 .ins-views {
-  font-size: 14px;
+  font-size: 16px;
+}
+
+.normal-item {
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
 }
 
 .normal-item .rank {
   width: 15%;
   text-align: center;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 900;
 }
 
 .normal-item .name {
   width: 60%;
+  font-size: 17px;
+  font-weight: 700;
   overflow-x: auto;
   // font-style: italic;
 }
 
 .normal-item .views {
+  font-size: 17px;
   width: 20%;
+  font-weight: bold;
+}
+
+.normal-item:hover {
+  border: 2px solid #333;
 }
 
 .first-place {
   background-color: rgba(255, 217, 0, 0.6);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.first-place:hover {
+  border: 2px solid #333;
 }
 
 .second-place {
   background-color: rgba(192, 192, 192, 0.6);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.second-place:hover {
+  border: 2px solid #333;
 }
 
 .third-place {
   background-color: rgba(209, 73, 14, 0.459);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.third-place:hover {
+  border: 2px solid #333;
 }
 
 .normal-list {
