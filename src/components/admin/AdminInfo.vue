@@ -52,10 +52,13 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
+import { Base64 } from "js-base64";
+import { encodeUtf8 } from "node-forge/lib/util.js";
 
 import avatar from '../../assets/img.jpg';
 import store from '../../store';
 import axios from 'axios';
+
 
 const name = store.getters.getName;
 const form = reactive({
@@ -74,9 +77,10 @@ const onSubmit = () => {
             url: 'http://122.9.5.156:8000/api/v1/admin/add_admin',
             method: 'post',
             data: JSON.stringify({
-                "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhZG1pbjEiLCJ0eXBlIjoiYWRtaW4iLCJleHAiOjE3MDMyNDQwMzYuMzIyNDAwNn0.4TLKpJcX3V9YIM4Ht287xFzcJTrjoAYKb04PFZVgt5k",
+                "token": store.getters.getUserinfo.token,
 				"username": form.name,
-				"password": form.second,
+      			"password": Base64.encode(encodeUtf8(form.second)), //加密
+				
             })
     	}).then(res =>{
         	console.log(res.data)
