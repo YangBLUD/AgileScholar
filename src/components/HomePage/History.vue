@@ -118,11 +118,11 @@ function getHistory() {
 }
 function jump(row) {
   if (row.type == 0) {
-    router.push("");
+    router.push(`/article/${row.id}`);
   } else if (row.type == 1) {
-    router.push("");
+    router.push("/scholar");
   } else if (row.type == 2) {
-    router.push("");
+    router.push(`/institution/${row.id}`);
   }
 }
 </script>
