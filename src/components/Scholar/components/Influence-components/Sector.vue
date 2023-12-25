@@ -125,6 +125,21 @@ onMounted(() => {
     console.error("Chart element is not available");
   }
 });
-
-
+watch(getAuthorStates, (newVal, oldVal) => {
+  console.log(getAuthorStates().authorInformation.domain)
+  if (chartDiv.value) {
+    chartDiv.value.removeAttribute("_echarts_instance_");
+    const chart = echarts.init(chartDiv.value);
+    chart.setOption(chartOptions.value);
+    // 监听图表内容变化
+    watchEffect(() => {
+      // 获取图表内容的高度
+      const chartContentHeight = chartDiv.value.firstChild.clientHeight;
+      // 设置图表的高度为内容高度
+      chartHeight.value = chartContentHeight;
+    });
+  } else {
+    console.error("Chart element is not available");
+  }
+}, {deep:true});
 </script>
