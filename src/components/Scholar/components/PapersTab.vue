@@ -3,7 +3,7 @@
     <el-aside width="300px">
       <!-- 搜索框 -->
 
-      <el-input v-model="searchText" placeholder="Search" class="inputselect" @keyup.enter="performSearch"
+      <el-input v-model="searchText" placeholder="Search" class="inputselect" @keyup.enter="performSearch(currentPage.value)"
                 size="large" width="400px" id="search">
         <template #append>
           <el-button :icon="Search" @click="performSearch" />
@@ -65,9 +65,7 @@ function filterBy(field, value) {
     filteredPapers.value = papers.value.filter(paper => paper[field] === value);
   }
 }
-function performSearch(){
 
-}
 
 // 筛选后的论文数据
 const papernum = ref(10)
@@ -81,9 +79,51 @@ const selectedDomain = ref(null);
 const domains = ref([{ value: 'domain1', label: '领域1' }, { value: 'domain2', label: '领域2' }]); // 示例数据
 
 
-function handleSearch() {
-  // 实现搜索逻辑
+function performSearch(page){
+  axios({
+    url: "http://122.9.5.156:8000/api/v1/search_result/search",
+    method: "post",
+    data: JSON.stringify({
+      // "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
+      "search_type" : 0,
+      "and_list": [
+        {
+          "content":getAuthorStates().authorInformation.id,
+          "select":"Author",
+          "clear":1
+        },
+        {
+          "content":searchText.value,
+          "select":"",
+          "clear":1
+        }
+      ],
+      "or_list": [],
+      "not_list": [],
+      "start_time": "1990-12",
+      "end_time": "2023-10",
+      "first_search": 1,
+      "work_clustering": 0,
+      "author_clustering": 0,
+      "size": papernum.value,
+      "from": (page - 1) * papernum.value,
+      "sort": -1,
+      "extend_list": [
+      ]
+    })
+  })
+      .then((res) => {
+        console.log(res.data)
+        paper_list.value = res.data.data.result
+        console.log(paper_list)
+        totalpage.value = res.data.data.total;
+        search_to.value = Math.min(res.data.data.total,papernum.value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 }
+
 // 筛选函数
 function fetchPaperList(page){
   axios({
