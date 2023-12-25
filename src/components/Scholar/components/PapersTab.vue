@@ -2,13 +2,11 @@
   <el-container class="influ-container">
     <el-aside width="300px">
       <!-- 搜索框 -->
-      <el-input
-          placeholder="搜索论文..."
-          v-model="searchQuery"
-          @input="handleSearch"
-          class="filter-search">
+
+      <el-input v-model="searchText" placeholder="Search" class="inputselect" @keyup.enter="performSearch"
+                size="large" width="400px" id="search">
         <template #append>
-          <el-button icon="el-icon-search" @click="handleSearch"></el-button>
+          <el-button :icon="Search" @click="performSearch" />
         </template>
       </el-input>
 
@@ -54,8 +52,9 @@ import { onMounted ,defineAsyncComponent, computed, ref, reactive } from 'vue';
 import {useStore} from "vuex";
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElTabs, ElTabPane } from 'element-plus';
 import axios from 'axios';
+import {Search} from "@element-plus/icons-vue";
 const store = useStore()
-
+const searchText = ref("");
 function getAuthorStates(){
   return store.getters.getAuthorState
 }
@@ -65,6 +64,9 @@ function filterBy(field, value) {
   } else {
     filteredPapers.value = papers.value.filter(paper => paper[field] === value);
   }
+}
+function performSearch(){
+
 }
 
 // 筛选后的论文数据
@@ -88,7 +90,7 @@ function fetchPaperList(page){
     url: "http://122.9.5.156:8000/api/v1/search_result/search",
     method: "post",
     data: JSON.stringify({
-      "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
+      // "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
       "search_type" : 0,
       "and_list": [
         {
@@ -132,9 +134,14 @@ onMounted(()=>{
 
 
 </script>
-<style>
+<style scoped>
 .influ-container {
   /* 页面整体布局样式 */
+}
+
+.inputselect{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .paper-card {
