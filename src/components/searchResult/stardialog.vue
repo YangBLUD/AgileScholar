@@ -41,8 +41,11 @@
   import { useStore } from "vuex";
   const Store = useStore();
   import { useRouter } from "vue-router";
+  import { h } from 'vue'
+import { ElMessage } from 'element-plus'
   const router = useRouter ();
   const is_star = ref(false);
+  
   onMounted(() => {
     is_star.value = props.is_star;
 });
@@ -74,6 +77,8 @@ function getfold(){
   function start(){
     if(props.token==""){
       router.push({ path: "home"});
+      ElMessage('Please Sign In');
+      return;
     }
     centerDialogVisible.value = true;
     getfold();
