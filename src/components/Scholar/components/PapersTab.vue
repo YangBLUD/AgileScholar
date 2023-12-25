@@ -1,10 +1,10 @@
 <template>
   <el-container class="influ-container">
-    <el-aside width="300px">
+    <el-aside width="400px">
       <!-- 搜索框 -->
 
       <el-input v-model="searchText" placeholder="Search" class="inputselect" @keyup.enter="performSearch()"
-                size="large" width="400px" id="search">
+                size="large"  id="search">
         <template #append>
           <el-button :icon="Search" @click="performSearch" />
         </template>
@@ -13,12 +13,12 @@
       <!-- 筛选栏 -->
       <el-menu default-active="1" class="filter-menu" accordion>
         <el-menu-item-group>
-          <el-menu-item index="1-2" @click="filterSearch(0)">Descending by references</el-menu-item>
-          <el-menu-item index="1-3" @click="filterSearch(1)">Ascending by references</el-menu-item>
-          <el-menu-item index="1-4" @click="filterSearch(2)">Descending by publication time</el-menu-item>
-          <el-menu-item index="1-5" @click="filterSearch(3)">Ascending by publication time</el-menu-item>
-          <el-menu-item index="1-6" @click="filterSearch(4)">Descending by title</el-menu-item>
-          <el-menu-item index="1-7" @click="filterSearch(5)">Ascending by title</el-menu-item>
+          <el-menu-item index="1-2" @click="filterSearch(0)" class="filter-menu-iten">Descending by references</el-menu-item>
+          <el-menu-item index="1-3" @click="filterSearch(1)" class="filter-menu-iten">Ascending by references</el-menu-item>
+          <el-menu-item index="1-4" @click="filterSearch(2)" class="filter-menu-iten">Descending by publication time</el-menu-item>
+          <el-menu-item index="1-5" @click="filterSearch(3)" class="filter-menu-iten">Ascending by publication time</el-menu-item>
+          <el-menu-item index="1-6" @click="filterSearch(4)" class="filter-menu-iten">Descending by title</el-menu-item>
+          <el-menu-item index="1-7" @click="filterSearch(5)" class="filter-menu-iten">Ascending by title</el-menu-item>
         </el-menu-item-group>
       </el-menu>
     </el-aside>
@@ -218,6 +218,9 @@ onMounted(()=>{
   margin-right: 20px;
   font-size: 14px;
   display: inline-block;
+}
+.filter-menu-iten{
+  font-size: 17px;
 }
 
 </style>
