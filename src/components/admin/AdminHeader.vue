@@ -54,8 +54,6 @@ const handleCommand = (command) => {
 	if (command == 'logout') {
 		store.commit('AdminLogout')
 		console.log("退出admin")
-		store.commit('logOut')
-		console.log("退出admin")
 		router.push('/home');
 	} else if (command == 'user') {
 		router.push('/admin/info');

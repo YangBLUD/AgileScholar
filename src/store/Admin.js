@@ -1,7 +1,7 @@
 const AdminMoudle = {
     state: {
-        //isAdmin : false,
-        isAdmin : true,
+        isAdmin : false,
+        //isAdmin : true,
         collapse : true,
         name: 'Admin',
         role: '超级管理员',
