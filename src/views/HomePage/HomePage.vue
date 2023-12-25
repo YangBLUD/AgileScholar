@@ -1297,7 +1297,7 @@ function showInfo(item_id) {
 
 .carousel-item {
   color: white;
-  background-color: transparent;
+  background-color: transparent !important;
   text-align: center;
   align-items: center;
   justify-content: center;

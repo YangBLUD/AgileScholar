@@ -6,10 +6,10 @@
     </div>
     <div class="basic-block">
       <div v-for="author in authors" class="author-box">
-        <img class="author-img" src="../../assets/ArticleDisplay/free.jpg" alt="">
+        <img class="author-img" src="../../assets/logo.png" alt="">
         <div class="author-term-wrapper">
           <p class="author-content-header">
-            <router-link :to="{ name: 'scholar-display', params: { id: author.id } }">
+            <router-link class="link" :to="{ name: 'scholar-display', params: { id: author.id } }">
               {{ author.display_name }}
             </router-link>
 
@@ -26,23 +26,7 @@
       </div>
     </div>
   </div>
-  <div class="basic-block">
-    <div v-for="author in authors" class="author-box">
-      <img class="author-img" src="../../assets/ArticleDisplay/free.jpg" alt="">
-      <div class="author-term-wrapper">
-        <p class="author-content-header">{{ author.display_name }}</p>
-      </div>
-    </div>
-    <div v-if="total > 4" class="author-btn-group">
-      <div v-if="currentPage !== 1" class="author-more-two-btn" @click="minusPage()">
-        Previous
-      </div>
-      <div v-if="currentPage !== finalPage" class="author-more-two-btn" @click="addPage()">
-        Next
-      </div>
-    </div>
-  </div>
-</div></template>
+</template>
 
 
 <script setup>
@@ -258,4 +242,14 @@ function minusPage() {
   border-radius: 10px;
   background-color: #c8f7dc;
   cursor: pointer;
-}</style>
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+</style>

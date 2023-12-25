@@ -8,13 +8,13 @@
       <div v-for="article in articles" class="article-block">
         <h5>RESEARCH-ARTICLE</h5>
         <div class="article-title">
-          <router-link :to="{ name: 'article-display', params: { id: article.id } }">
+          <router-link class="title-link" :to="{ name: 'article-display', params: { id: article.id } }">
             {{ article.title }}
           </router-link>
         </div>
         <div class="article-author">
           <div v-for="author in article.author_all.slice(0, 2)" class="article-author-block">
-            <img src="../../assets/ArticleDisplay/head.jpg" alt="" class="article-author-img">
+            <img src="../../assets/logo.png" alt="" class="article-author-img">
             <span class="article-author-name text-gray">
               {{ author.name }},
             </span>
@@ -419,8 +419,13 @@ function minusPage() {
 }
 
 .article-author-name {
-  text-decoration: underline;
+  text-decoration: none;
   white-space: nowrap;
+}
+
+.article-author-name:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .author-more {
@@ -458,4 +463,13 @@ function minusPage() {
 .basic-bottom-text {
   color: #0077c2;
   cursor: pointer;
-}</style>
+}
+
+.title-link {
+  text-decoration: none;
+}
+
+.title-link:hover {
+  text-decoration: underline;
+}
+</style>

@@ -4,7 +4,7 @@
             <img src="../../assets/logo.png" class="scholar-pic" />
         </div>
         <div class="name" style="text-align: center;">
-            <router-link :to="{ name: 'scholar-display', params: { id: props.info.id } }">
+            <router-link style="color: black;" :to="{ name: 'scholar-display', params: { id: props.info.id } }">
                 <span v-html="props.info.display_name" style="display: inline-block;"></span>
             </router-link>
         </div>
@@ -46,12 +46,12 @@ const props = defineProps({
     display: flex;
     width: 100%;
     height: 100%;
-    cursor: pointer;
 }
 
 .pic {
     width: 250px;
     height: 140px;
+    cursor: pointer;
 
     .scholar-pic {
         margin-left: 60%;
@@ -124,6 +124,7 @@ const props = defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .star:hover {
