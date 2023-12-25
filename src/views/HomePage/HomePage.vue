@@ -28,7 +28,7 @@
             color: aliceblue;
 
           " @click="$router.push({ path: '/advanced' })" class="Advance">
-          <h5>Advanced Search</h5>
+          <h5 style="font-size: 16px;">Advanced Search</h5>
         </div>
       </div>
       <div class="carousel">
@@ -1204,7 +1204,8 @@ function showInfo(item_id) {
 .navigation-item {
   cursor: pointer;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
 }
 

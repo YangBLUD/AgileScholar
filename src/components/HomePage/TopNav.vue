@@ -6,7 +6,6 @@
           <img src="../../assets/7b5cd0fb87aa1c3e2b77df08f6161fa.png" alt=""
             style="width: 245px; position: relative; top: -7px;">
         </a>
-
         <!-- <a href="#" style="
             color: aliceblue;
             line-height: 40px;
@@ -16,8 +15,9 @@
           ">What Scholar</a> -->
       </li>
       <li style="width: 45%; margin-right: 0">
-        <div style="float: right">
-          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px">
+        <div style="margin-top: 3px; margin-left: 100px;">
+          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px"
+            style="font-size: 16px;">
             <template #prefix>
               <el-icon class="el-input__icon">
                 <search />
@@ -32,7 +32,7 @@
           <AI />
         </template>
         <template #reference>
-          <el-avatar :src="Avatar" style="cursor: pointer;"></el-avatar>
+          <el-avatar :src="Avatar" style="cursor: pointer; margin-top: 3px;"></el-avatar>
         </template>
       </el-popover>
       <el-popover placement="bottom" :width="225" trigger="click" v-if="!have_user_info" effect="dark">
@@ -47,17 +47,19 @@
           <el-button type="primary" class="ai-button" @click="login">登录</el-button>
         </template>
         <template #reference>
-          <el-avatar :src="Avatar" style="cursor: pointer;"></el-avatar>
+          <el-avatar :src="Avatar" style="cursor: pointer; margin-top: 3px;"></el-avatar>
         </template>
       </el-popover>
       <li class="right">
-        <button v-if="have_user_info" @click="history">History</button>
+        <button v-if="have_user_info" @click="history" style="border-radius: 10px 0 0 10px;">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
         <button v-if="is_admin" @click="toAdmin">Admin</button>
         <button v-if="is_scholar" @click="toPersonal">Personal Homepage</button>
-        <button v-if="have_user_info" @click="logout">Sign out</button>
-        <button v-if="!have_user_info" @click="login">Sign in</button>
-        <button v-if="!have_user_info" @click="register">Register</button>
+        <button v-if="have_user_info" @click="logout" style="margin-right: 20px;border-radius: 0 10px 10px 0;">Sign
+          out</button>
+        <button v-if="!have_user_info" @click="login" style="border-radius: 10px 0 0 10px;">Sign in</button>
+        <button v-if="!have_user_info" @click="register"
+          style="margin-right: 20px;border-radius: 0 10px 10px 0;">Register</button>
       </li>
     </ul>
   </div>
@@ -481,11 +483,13 @@ function getCaptcha() {
 }
 
 .top-nav button {
+  margin-top: 3px;
   background-color: rgb(37, 37, 37);
   color: #dfdfdf;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
 }
 
