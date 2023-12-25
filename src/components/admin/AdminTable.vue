@@ -44,7 +44,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="220" align="center">
 					<template #default="scope">
-						<el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)">
+						<el-button text :icon="Edit" @click="handleEdit(scope.row)">
 							处理事务
 						</el-button>
 					</template>
@@ -67,22 +67,103 @@
 		</div>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="编辑" v-model="editVisible" width="30%">
-			<el-form label-width="70px">
+		<el-dialog title ="申诉" v-model="appealListVisible" width="65%">
+			<el-form label-width="80px" :model="form" label-position="top">
 				<el-form-item label="用户名">
-					<el-input v-model="form.name"></el-input>
+					<span> {{ form.name }}</span>
 				</el-form-item>
-				<el-form-item label="地址">
-					<el-input v-model="form.address"></el-input>
+				<el-form-item label="申诉者邮箱">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+				<el-form-item label="邮箱状态">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+				<el-form-item label="具体诉求">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+				<el-form-item label="举报类型">
+					<el-input v-model="form.id"></el-input>
 				</el-form-item>
 			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="editVisible = false">取 消</el-button>
+					<el-button @click="appealListVisible = false">取 消</el-button>
 					<el-button type="primary" @click="saveEdit">确 定</el-button>
 				</span>
 			</template>
 		</el-dialog>
+
+		<el-dialog title ="认证申请" v-model="claimListVisible" width="65%">
+			<el-form label-width="80px" :model="form" label-position="top">
+				<el-form-item label="用户名">
+					<span> {{ form.name }}</span>
+				</el-form-item>
+				<el-form-item label="邮箱">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+				<el-form-item label="邮箱状态">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+				<el-form-item label="具体诉求">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+				<el-form-item label="举报类型">
+					<el-input v-model="form.id"></el-input>
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="claimListVisible = false">取 消</el-button>
+					<el-button type="primary" @click="saveEdit">确 定</el-button>
+				</span>
+			</template>
+		</el-dialog>
+
+		<el-dialog title ="举报" v-model="reportListVisible" width="65%">
+			<el-form label-width="80px" :model="form" label-position="top">
+				<el-form-item label="用户名">
+					<span> {{ form.name }}</span>
+				</el-form-item>
+				<el-form-item label="举报类型">
+					<span> {{ form.type }}</span>
+				</el-form-item>
+				<el-form-item label="举报内容">
+					<span> {{ form.text }}</span>
+				</el-form-item>
+				<el-form-item label="举报文件">
+					<el-link :underline="false" :href="form.file">点此下载</el-link>
+				</el-form-item>
+				<el-form-item label="论文标题">
+					<span> {{ form.paper_name }}</span>
+				</el-form-item>
+				<el-form-item v-show="comment" label="评论时间">
+					<span> {{ form.type }}</span>
+				</el-form-item>
+				<el-form-item v-show="comment" label="评论用户">
+					<span> {{ form.type }}</span>
+				</el-form-item>
+				<el-form-item v-show="comment" label="评论内容">
+					<span> {{ form.type }}</span>
+				</el-form-item>
+				<el-form-item label="处理理由">
+      				<el-input v-model="handle_reason" type="textarea" />
+    			</el-form-item>
+				<el-form-item label="处理结果">
+					<el-radio-group v-model="descion">
+        				<el-radio label="0" size="small">不处理</el-radio>
+      					<el-radio v-show="comment" label="1" size="small">删除评论</el-radio>
+						<el-radio v-show="!comment" label="2" size="small">删除文章</el-radio>
+      				</el-radio-group>
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="reportListVisible = false">取 消</el-button>
+					<el-button type="primary" @click="saveEdit">确 定</el-button>
+				</span>
+			</template>
+		</el-dialog>
+
 	</div>
 </template>
 
@@ -90,38 +171,20 @@
 import { ref, reactive } from 'vue';
 import { Edit, Search } from '@element-plus/icons-vue';
 
+import store from '../../store';
+
+let str = "111";
+
+let handle_reason = "";
+let affair_id = -10;
+let descion = ref(0);
+let appeal_email_special = -10;
+
+let comment = ref(false)
 let itemKey = ref()
 
-class tableData {
-	id: number;
-	name: string;
-	type: string;
-	date: string;
-	state: string;
-}
-
-let tableDataList : tableData[] = reactive([
-	{id: 1, name: "name1", type: "申诉", date: "2023-12-6", state:"未处理"},
-	{id: 11, name: "name2", type: "申诉", date: "2023-12-5", state:"已处理"},
-	{id: 2, name: "name3", type: "举报", date: "2023-12-6", state:"未处理"},
-	{id: 22, name: "name4", type: "举报", date: "2023-12-5", state:"已处理"},
-	{id: 3, name: "name5", type: "认证申请", date: "2023-12-6", state:"未处理"},
-	{id: 33, name: "name6", type: "认证申请", date: "2023-12-5", state:"已处理"},
-	{id: 1, name: "name1", type: "申诉", date: "2023-12-6", state:"未处理"},
-	{id: 11, name: "name2", type: "申诉", date: "2023-12-5", state:"已处理"},
-	{id: 2, name: "name3", type: "举报", date: "2023-12-6", state:"未处理"},
-	{id: 22, name: "name4", type: "举报", date: "2023-12-5", state:"已处理"},
-	{id: 3, name: "name5", type: "认证申请", date: "2023-12-6", state:"未处理"},
-	{id: 33, name: "name6", type: "认证申请", date: "2023-12-5", state:"已处理"},
-	{id: 1, name: "name1", type: "申诉", date: "2023-12-6", state:"未处理"},
-	{id: 11, name: "name2", type: "申诉", date: "2023-12-5", state:"已处理"},
-	{id: 2, name: "name3", type: "举报", date: "2023-12-6", state:"未处理"},
-	{id: 22, name: "name4", type: "举报", date: "2023-12-5", state:"已处理"},
-	{id: 3, name: "name5", type: "认证申请", date: "2023-12-6", state:"未处理"},
-	{id: 33, name: "name6", type: "认证申请", date: "2023-12-5", state:"已处理"},
-])
-
-//let dataNum = ref(tableDataList.length)
+const dataList = store.getters.getAffairList
+let tableDataList = reactive(store.getters.getAffairList)
 
 let query = reactive({
 	type: '全部',
@@ -133,7 +196,7 @@ let query = reactive({
 const handleSearch = () => {
 	//console.log("筛选")
 	//console.log(query)
-	tableDataList = tableDataList.filter(item => {
+	tableDataList = dataList.filter(item => {
         if (query.type !== "全部" && item.type !== query.type) {
             return false;
         }
@@ -143,6 +206,7 @@ const handleSearch = () => {
         if (query.name && !item.name.includes(query.name)) {
             return false;
         }
+		
         return true;
     });
 	itemKey.value = Math.random()
@@ -154,22 +218,71 @@ const handleSearch = () => {
 // };
 
 // 表格编辑时弹窗和保存
-const editVisible = ref(false);
+const appealListVisible = ref(false);
+const claimListVisible = ref(false);
+const reportListVisible = ref(false);
+
 let form = reactive({
+	id: '',
 	name: '',
-	address: ''
+	email: '',
+	email_commom: '',
+	text: '',
+	file: '',
+	paper_name: '',
+	type: '',
+	comment_text: '',
+	comment_user: '',
+	comment_time: '',
 });
 
-let idx: number = -1;
-const handleEdit = (index: number, row: any) => {
+const handleEdit = (row: any) => {
 	if(row.state == "已处理"){
 		alert("已经处理过啦")
 	}
 	else{
-		idx = index;
-		form.name = row.name;
-		form.address = row.address;
-		editVisible.value = true;
+		switch(row.type){
+			case "举报":
+				store.commit('getReport', row.id)
+				//console.log(store.getters.getTheList)
+				let list = store.getters.getTheList;
+				//console.log(list);
+				if(list[0].comment_id == -1){
+					console.log(comment)
+					form.type = "举报论文"
+					comment.value = false;
+				}
+				else{
+					form.type = "举报评论"
+					form.comment_text = list[0].comment_content
+					form.comment_user = list[0].comment_user
+					form.comment_time = list[0].comment_time
+					comment.value = true;
+				}
+				form.name = list[0].username;
+				form.paper_name = list[0].paper_title;
+				form.text = list[0].report_text;
+				form.file = list[0].report_file;
+				if(form.text == ''){
+					form.text = "用户未填写举报理由"
+				}
+				if(form.file == ''){
+					form.file = "用户未上传举报文件"
+				}
+				reportListVisible.value = true;
+				break;
+			case "申诉":
+
+				form.name = row.name;
+				appealListVisible.value = true;
+				break;
+			case "认证申请":
+
+				claimListVisible.value = true;
+				break;
+			default:
+				break;
+		}
 	}
 };
 const saveEdit = () => {
@@ -178,7 +291,11 @@ const saveEdit = () => {
 </script>
 
 <style scoped>
-
+.textArea {
+	height: auto;
+	width: auto;
+	resize:none
+}
 .handle-box {
 	margin-bottom: 20px;
 }

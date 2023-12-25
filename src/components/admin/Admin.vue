@@ -15,9 +15,6 @@
 <script setup>
 import AdminHeader from './AdminHeader.vue'
 import AdminAside from './AdminAside.vue'
-import AdminHome from './AdminHome.vue';
-import AdminTable from './AdminTable.vue';
-import AdminInfo from './AdminInfo.vue';
 
 import axios from 'axios';
 import { onBeforeMount } from 'vue'
@@ -41,20 +38,22 @@ onBeforeMount(() => {
     // }).catch(err => {
     //     console.log(err)
     // })
-
     console.log("begin get the data")
     axios({
         url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
         method: 'post',
         data: JSON.stringify({
-            "token": Store.getters.getUserinfo.token
+            "token": store.getters.getUserinfo.token
         })
     }).then(res => {
         console.log(res.data)
-
+        store.commit('initAffairList', res.data.data)
+        console.log(store.getters.getAppealList)
+        console.log(store.getters.getAffairList)
     }).catch(err => {
         console.log(err)
     })
+
 }
 )
 </script>

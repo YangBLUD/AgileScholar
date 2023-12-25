@@ -7,12 +7,13 @@ const AdminMoudle = {
         role: '超级管理员',
         lastLoginTime : '2023-12-26',
         lastLoginLocation : '北京',
+        list: [],
 
         affairList: [],
         //申诉
         appealList: [],
         //认证
-        cliamList: [],
+        claimList: [],
         //举报
         reportList: [],
 
@@ -67,11 +68,63 @@ const AdminMoudle = {
             state.todoList.splice(index, num)
         },
 
-        initAffairList(state, appealList, cliamList, reportList){
-            state.appealList = appealList
-            state.cliamList = cliamList
-            state.reportList = reportList
+        initAffairList(state, data){
+            state.appealList = data.appeal
+            state.claimList = data.claim
+            state.reportList = data.report
+            state.affairList = []
+            for(let i = 0; i < state.appealList.length; i ++){
+                state.affairList.push({
+                    "id" : state.appealList[i].affair_id,
+                    "name" : state.appealList[i].username,
+                    "type" : "申诉",
+                    "date" : state.appealList[i].submit_time,
+                    "state" : "未处理",
+                })
+            }
+            for(let i = 0; i < state.claimList.length; i ++){
+                state.affairList.push({
+                    "id" : state.claimList[i].affair_id,
+                    "name" : state.claimList[i].username,
+                    "type" : "认证申请",
+                    "date" : state.claimList[i].submit_time,
+                    "state" : "未处理",
+                })
+            }
+            for(let i = 0; i < state.reportList.length; i ++){
+                state.affairList.push({
+                    "id" : state.reportList[i].affair_id,
+                    "name" : state.reportList[i].username,
+                    "type" : "举报",
+                    "date" : state.reportList[i].submit_time,
+                    "state" : "未处理",
+                })
+            }
 
+            state.affairList = state.affairList.sort((a, b) =>{
+		        if(a.date == b.date){
+			        return a.id - b.id
+                }
+		        else{
+			        return Date.parse(a.date) - Date.parse(b.date);
+		        }
+	        }
+	        )
+        },
+
+        getAppeal(state, id){
+            state.list = []
+            state.list = state.appealList.filter(item => item.affair_id == id)
+        },
+
+        getClaim(state, id){
+            state.list = []
+            state.list = state.claimList.filter(item => item.affair_id == id)
+        },
+
+        getReport(state, id){
+            state.list = []
+            state.list = state.reportList.filter(item => item.affair_id == id)
         },
     },
 
@@ -117,12 +170,33 @@ const AdminMoudle = {
         },
 
         getClaimList(state){
-            return state.cliamList
+            return state.claimList
+        },
+
+        getTheList(state){
+            return state.list
         },
 
         getReportList(state){
             return state.reportList
-        }
+        },
+
+        getAffairListLength(state){
+            return state.affairList.length
+        },
+
+        getAppealListLength(state){
+            return state.appealList.length
+        },
+
+        getClaimListLength(state){
+            return state.claimList.length
+        },
+
+        getReportListLength(state){
+            return state.reportList.length
+        },
+
     },
 
 };
