@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import store from "../../store/index.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
@@ -57,8 +57,11 @@ watch(()=>store.state.Article.id, (newVal, oldVal)=>{
     recommendations_1.value = store.getters.get_recommendations
     recommendations_2.value = store.getters.get_few_recommendations
 })
-watch(()=>route.params.id, (newVal, oldVal)=>{
-    jump(newVal)
+// watch(()=>route.params.id, (newVal, oldVal)=>{
+//     jump(newVal)
+// })
+onMounted(()=>{
+    jump(route.params.id)
 })
 
 function getMoreRecommendation_i(){

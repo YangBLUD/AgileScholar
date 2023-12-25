@@ -5,13 +5,8 @@
             <div class="institution-show-content-nav-title">Cited Analysis</div>
         </div>
         <div class="basic-block">
-            <img class="institution-img" src="../../assets/ArticleDisplay/free.jpg" alt="" />
-            <div class="institution-basic">
-                <h2 class="institution-name">{{institution_name}}</h2>
-                <div class="institution-type"><strong>Type: </strong> {{institution_type}}</div>
-                <div class="institution-area"><strong>Area: </strong> {{institution_area}}</div>
-                <div class="institution-home"><strong>Home: </strong><a :href="institution_home">{{institution_home}}</a></div>
-            </div>
+
+            <div id="cited-echarts" class="cited-echarts"></div>
         </div>
     </div>
 
@@ -20,13 +15,140 @@
 
 <script setup>
 
-import {ref} from "vue";
-import HomePage from "../../views/HomePage/HomePage.vue";
+import {onMounted, reactive, ref, watch} from "vue";
+import * as echarts from "echarts"
+import store from "../../store/index.js";
+onMounted(()=> {
+    initChart()
+    console.log(11)
+    console.log(cited_count)
+    console.log(work_count)
+    window.addEventListener('resize', handleResize);
+})
+watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
+    years = store.getters.getYears
+    cited_count = store.getters.getCitedCount
+    work_count = store.getters.getWorkCount
+    oa_work_count = store.getters.getOaWorkCount
+    initChart()
+})
 
-let institution_name = ref("BeiHang University")
-let institution_area = ref("Beijing, China")
-let institution_type = ref("Company")
-let institution_home = ref("https://buaa.edu.cn")
+let years = ref(store.getters.getYears)
+let cited_count = ref(store.getters.getCitedCount)
+let work_count = ref(store.getters.getWorkCount)
+let oa_work_count = ref(store.getters.getOaWorkCount)
+function initChart(){
+    const chartDom = document.getElementById('cited-echarts');
+    const myChart = echarts.init(chartDom);
+    const option = ref({
+        title: {
+            text: 'Cited Count'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: [  'Cited Count','Work Count', 'Oa Work Count']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: years
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Cited Count',
+                type: 'line',
+                stack: 'Total',
+                data: cited_count
+            },
+            {
+                name: 'Work Count',
+                type: 'line',
+                stack: 'Total',
+                data: work_count
+            },
+            {
+                name: 'Oa Work Count',
+                type: 'line',
+                stack: 'Total',
+                data: oa_work_count
+            },
+        ]
+    })
+    myChart.setOption(option.value)
+}
+function handleResize(){
+    const chartDom = document.getElementById('cited-echarts');
+    const myChart = echarts.init(chartDom);
+    const option = ref({
+        title: {
+            text: 'Cited Count'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: [  'Cited Count','Work Count', 'Oa Work Count']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: years
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Cited Count',
+                type: 'line',
+                stack: 'Total',
+                data: cited_count
+            },
+            {
+                name: 'Work Count',
+                type: 'line',
+                stack: 'Total',
+                data: work_count
+            },
+            {
+                name: 'Oa Work Count',
+                type: 'line',
+                stack: 'Total',
+                data: oa_work_count
+            },
+        ]
+    })
+    myChart.setOption(option.value)
+    myChart.resize()
+}
+
 </script>
 
 
@@ -59,34 +181,11 @@ let institution_home = ref("https://buaa.edu.cn")
     display: flex;
     flex-direction: row;
 }
-.institution-img{
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin: 25px;
-}
-.institution-name{
-    font-family: Merriweather,serif;
-    margin-top: 30px;
-    font-size: 22px;
-    color: #333333;
-}
-.institution-type{
-    font-family: Merriweather,sans-serif;
-    margin-top: 15px;
-    font-size: 14px;
-    color: #333333;
-}
-.institution-area{
-    font-family: Merriweather,sans-serif;
-    margin-top: 15px;
-    font-size: 14px;
-    color: #333333;
-}
-.institution-home {
-    font-family: Merriweather, sans-serif;
-    margin-top: 15px;
-    font-size: 14px;
-    color: #333333;
+
+.cited-echarts{
+    margin: 10px;
+    width: 100%;
+    min-width: 560px;
+    height: 600px;
 }
 </style>

@@ -131,7 +131,7 @@ import {
     Link,
     Document, FolderRemove, Folder, CircleCheck, WarningFilled, Comment, Promotion, Warning
 } from "@element-plus/icons-vue";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import TopNav from "../HomePage/TopNav.vue";
 import ArticleComment from "./ArticleComment.vue";
 import Recommendation from "./Recommendation.vue";
