@@ -143,21 +143,18 @@
     <el-main class="main-content">
       <el-tabs class="tab-bar" v-model="activeTab" @tab-click="handleTabClick">
         <!-- 学术影响力分析 -->
-        <el-tab-pane label="学术影响力分析" name="influence" class="pane"
-          >学术影响力</el-tab-pane
+        <el-tab-pane label="Academic Influence" name="influence" class="pane"
+          >Show the scholar's influence through charts and graphs</el-tab-pane
         >
         <!-- 发表的论文 -->
-        <el-tab-pane label="发表的论文" name="papers" class="pane"
-          >论文</el-tab-pane
+        <el-tab-pane label="published papers" name="papers" class="pane"
+          >Display all papers published by scholars, supporting retrieval and sorting</el-tab-pane
         >
         <!-- 学术关系网络 -->
-        <el-tab-pane label="学术关系网络" name="network" class="pane"
-          >学术关系网络</el-tab-pane
+        <el-tab-pane label="Academic Relations Network" name="network" class="pane"
+          >Show the relationship network of this scholar</el-tab-pane
         >
-        <!-- 学术成果集 -->
-        <el-tab-pane label="学术成果集" name="achievements" class="pane"
-          >学术成果</el-tab-pane
-        >
+
       </el-tabs>
       <div class="tab-content">
         <component

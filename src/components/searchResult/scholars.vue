@@ -4,9 +4,9 @@
             <img src="../../assets/logo.png" class="scholar-pic"/>
         </div>
         <div class="name" style="text-align: center;">
-<!--            <router-link :to="{name:'scholar-display', params:{id:props.info.id} }">-->
+            <router-link :to="{name:'scholar-display', params:{id:props.info.id} }">
                 <span v-html="props.info.display_name" style="display: inline-block;"></span>
-<!--            </router-link>-->
+            </router-link>
         </div>
         <div class="jigou" v-if="props.info.institution && props.info.institution.length!=0" style="text-align: center;"> 
             <router-link :to="{name:'institution-display', params:{id:props.info.institution[0].id} }">
