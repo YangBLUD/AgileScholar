@@ -2,38 +2,50 @@
   <div class="star-dialog" ref="showFavorite">
     <div style="margin: 20px 0">
       <span style="margin-left: 20px; font-weight: 600">Favorites</span>
-      <el-button @click="createDialogShow" style="margin-right: 10px; float: right">Create new folder</el-button>
+      <el-button
+        @click="createDialogShow"
+        style="margin-right: 10px; float: right"
+        >Create new folder</el-button
+      >
     </div>
     <el-tree :data="favorites_list" :props="treeProps" ref="tree">
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
-          <span class="icon" v-if="nodeData.type == 0"><el-icon>
-              <Document />
-            </el-icon></span>
-          <span class="icon" v-if="nodeData.type == 1"><el-icon>
-              <User />
-            </el-icon></span>
-          <span class="icon" v-if="nodeData.type == 2"><el-icon>
-              <House />
-            </el-icon></span>
-          <span class="icon" v-if="nodeData.list != undefined"><el-icon>
-              <Folder />
-            </el-icon></span>
-          <span style="
+          <span class="icon" v-if="nodeData.type == 0"
+            ><el-icon> <Document /> </el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 1"
+            ><el-icon> <User /> </el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.type == 2"
+            ><el-icon> <House /> </el-icon
+          ></span>
+          <span class="icon" v-if="nodeData.list != undefined"
+            ><el-icon> <Folder /> </el-icon
+          ></span>
+          <span
+            style="
               width: 220px;
               overflow: hidden;
               text-overflow: ellipsis;
               word-break: break-all;
-            " @click="jump(nodeData)">{{
+            "
+            @click="jump(nodeData)"
+            >{{
               nodeData.name || nodeData.data.display_name || nodeData.data.title
-            }}</span>
+            }}</span
+          >
           <span>
             <el-button @click="remove(node, nodeData)">Delete</el-button>
           </span>
         </div>
       </template>
     </el-tree>
-    <el-dialog v-model="showCreateDialog" @close="createDialogClose" :lock-scroll="false">
+    <el-dialog
+      v-model="showCreateDialog"
+      @close="createDialogClose"
+      :lock-scroll="false"
+    >
       <template #header>
         <span class="dialog-footer" style="font-weight: 600">
           Create New Folder
@@ -281,15 +293,16 @@ function remove(node: Node, data) {
   }
 }
 function jump(data) {
-  if (data.list != undefined) {
+  console.log(data);
+  if (data.list != null) {
     return;
   }
   if (data.type == 0) {
-    router.push(`/article/${data.id}`);
+    router.push(`../article/${data.data.id}`);
   } else if (data.type == 1) {
-    router.push(`/scholar/${data.id}`);
+    router.push(`../scholar/${data.data.id}`);
   } else if (data.type == 2) {
-    router.push(`/institution/${data.id}`);
+    router.push(`../institution/${data.data.id}`);
   }
 }
 </script>
