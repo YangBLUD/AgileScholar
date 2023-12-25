@@ -69,7 +69,11 @@ const  PrintInfo = () =>{
 }
 /* CSS */
 .custom-menu-item-font {
-  //font-size: 17px; /* 或者您想要的任何大小 */
+  font-size: 17px; /* 或者您想要的任何大小 */
+  text-align: center;
 }
+
+
+
 
 </style>

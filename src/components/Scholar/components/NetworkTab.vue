@@ -1,10 +1,10 @@
 <template>
   <el-container class="network-container">
-    <el-aside width="20%">
+    <el-aside width="400px">
       <el-menu>
-        <el-menu-item index="1" @click="currentView = 'cited'">Cited Relationship</el-menu-item>
-        <el-menu-item index="2" @click="currentView = 'partnership'">Cooperative Relationship</el-menu-item>
-        <el-menu-item index="3" @click="currentView = 'reference'">Reference Relationship</el-menu-item>
+        <el-menu-item index="1" @click="currentView = 'cited'" class="network-item">Cited Relationship</el-menu-item>
+        <el-menu-item index="2" @click="currentView = 'partnership'" class="network-item">Cooperative Relationship</el-menu-item>
+        <el-menu-item index="3" @click="currentView = 'reference'" class="network-item">Reference Relationship</el-menu-item>
       </el-menu>
     </el-aside>
     <el-main>
@@ -42,3 +42,8 @@ onMounted(() => {
 });
 
 </script>
+<style scoped>
+.network-item{
+  font-size: 17px;
+}
+</style>

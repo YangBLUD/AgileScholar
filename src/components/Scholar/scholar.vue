@@ -9,7 +9,7 @@
       <div class="header-content-scholar">
         <!-- 作者头像 -->
         <div class="author-avatar">
-          <el-avatar :size="130" :src="circleUrl" />
+          <el-avatar :size="200" :src="circleUrl" />
         </div>
         <!-- 姓名与研究机构 -->
         <div class="author-info">
@@ -29,15 +29,20 @@
                 circle
               />
             </p>
-            <p v-if="!authorInformation.claimed" class="author-certificate">
-              Scholar not certified
-            </p>
+            <div style="display: flex; align-items: center; width: 500px;">
+              <p v-if="!authorInformation.claimed" class="author-certificate" style="margin-top: 12px;margin-right: 20px">
+                Scholar not certified
+              </p>
+              <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
+              <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
+            </div>
+
           </template>
         </div>
-        <div class="author-opt">
-          <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
-          <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
-        </div>
+<!--        <div class="author-opt">-->
+<!--          <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>-->
+<!--          <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>-->
+<!--        </div>-->
       </div>
     </el-header>
     <el-dialog v-model="showAppealDialog" :lock-scroll="false">
@@ -155,7 +160,6 @@
         <el-tab-pane label="Academic Relations Network" name="network" class="pane"
           >Show the relationship network of this scholar</el-tab-pane
         >
-
       </el-tabs>
       <div class="tab-content">
         <component
@@ -197,7 +201,8 @@ import {
 import axios from "axios";
 import TopNav from "../HomePage/TopNav.vue";
 import { Check, Delete, Edit } from "@element-plus/icons-vue";
-
+import yourImage from './assets/touxiang.png';
+const circleUrl = yourImage
 // 标签页状态
 const is_Login = ref(false);
 const activeTab = ref("influence");
@@ -720,7 +725,9 @@ watch(
   margin-left: 10px; /* 调整图标与文字之间的间距 */
   /* 其他样式设置 */
 }
-
+.tab-bar >>> .el-tabs__item {
+  font-size: 18px;
+}
 .author-info {
   display: flex;
   flex-direction: column;
@@ -743,7 +750,6 @@ watch(
 .AttrButton{
   height: auto;
   width: 70px;
-
 }
 
 .author-info .author-attr {
@@ -785,6 +791,7 @@ watch(
 .tab-content {
 }
 .tab-bar {
+
 }
 
 
