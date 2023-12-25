@@ -8,29 +8,49 @@
       <div v-for="author in authors" class="author-box">
         <img class="author-img" src="../../assets/ArticleDisplay/free.jpg" alt="">
         <div class="author-term-wrapper">
-          <p class="author-content-header">{{ author.display_name }}</p>
+          <p class="author-content-header">
+            <router-link :to="{ name: 'scholar-display', params: { id: author.id } }">
+              {{ author.display_name }}
+            </router-link>
+
+          </p>
         </div>
       </div>
-      <div v-if="total>4" class="author-btn-group">
-        <div v-if="currentPage!==1" class="author-more-two-btn" @click="minusPage()">
+      <div v-if="total > 4" class="author-btn-group">
+        <div v-if="currentPage !== 1" class="author-more-two-btn" @click="minusPage()">
           Previous
         </div>
-        <div v-if="currentPage!==finalPage" class="author-more-two-btn" @click="addPage()">
+        <div v-if="currentPage !== finalPage" class="author-more-two-btn" @click="addPage()">
           Next
         </div>
       </div>
     </div>
   </div>
-
-</template>
+  <div class="basic-block">
+    <div v-for="author in authors" class="author-box">
+      <img class="author-img" src="../../assets/ArticleDisplay/free.jpg" alt="">
+      <div class="author-term-wrapper">
+        <p class="author-content-header">{{ author.display_name }}</p>
+      </div>
+    </div>
+    <div v-if="total > 4" class="author-btn-group">
+      <div v-if="currentPage !== 1" class="author-more-two-btn" @click="minusPage()">
+        Previous
+      </div>
+      <div v-if="currentPage !== finalPage" class="author-more-two-btn" @click="addPage()">
+        Next
+      </div>
+    </div>
+  </div>
+</div></template>
 
 
 <script setup>
 
-import {onMounted, reactive, ref, watch} from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import store from "../../store/index.js";
 import axios from "axios";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
 
 let institution = reactive(store.state.Institution.institution)
@@ -42,14 +62,14 @@ let authors = ref([
 const total = ref(1)
 const currentPage = ref(0)
 const finalPage = ref(-1)
-onMounted(()=>{
+onMounted(() => {
 
 })
-watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
+watch(() => store.state.Institution.id, (newVal, oldVal) => {
   institution = store.state.Institution.institution
   addPage()
 })
-function addPage(){
+function addPage() {
   axios({
     // 接口网址：包含协议名，域名，端口和路由
     url: 'http://122.9.5.156:8000/api/v1/search_result/search',
@@ -63,7 +83,7 @@ function addPage(){
         select: 'Institution',
         clear: 1
       }],
-      or_list:[],
+      or_list: [],
       not_list: [],
       start_time: "",
       end_time: "",
@@ -76,22 +96,22 @@ function addPage(){
       extend_list: [],
       token: store.state.User.token,
     }),
-// 成功请求回数据后，进入then，并用console.log打印结果
+    // 成功请求回数据后，进入then，并用console.log打印结果
   }).then(res => {
-    if(res.data.errno === 0){
+    if (res.data.errno === 0) {
       console.log(res.data.data)
       authors.value = res.data.data.result
-      finalPage.value = Math.ceil(res.data.data.total/8)
+      finalPage.value = Math.ceil(res.data.data.total / 8)
     }
-    else{
+    else {
       ElMessage.error('出错啦，找周霄')
     }
-  }).catch(err=>{
+  }).catch(err => {
     console.log(err)
   })
   currentPage.value = currentPage.value + 1
 }
-function minusPage(){
+function minusPage() {
   currentPage.value = currentPage.value - 1
   axios({
     // 接口网址：包含协议名，域名，端口和路由
@@ -106,7 +126,7 @@ function minusPage(){
         select: 'Institution',
         clear: 1
       }],
-      or_list:[],
+      or_list: [],
       not_list: [],
       start_time: "",
       end_time: "",
@@ -119,18 +139,18 @@ function minusPage(){
       extend_list: [],
       token: store.state.User.token,
     }),
-// 成功请求回数据后，进入then，并用console.log打印结果
+    // 成功请求回数据后，进入then，并用console.log打印结果
   }).then(res => {
     console.log(res.data.errno)
-    if(res.data.errno === 0){
+    if (res.data.errno === 0) {
       console.log(res.data.data)
       authors.value = res.data.data.result
-      finalPage.value = Math.ceil(res.data.data.total/8)
+      finalPage.value = Math.ceil(res.data.data.total / 8)
     }
-    else{
+    else {
       ElMessage.error('出错啦，找周霄')
     }
-  }).catch(err=>{
+  }).catch(err => {
     console.log(err)
   })
 }
@@ -138,23 +158,26 @@ function minusPage(){
 
 
 <style scoped>
-.institution-show-content-nav{
+.institution-show-content-nav {
   background-color: #fafafa;
   margin: 10px 0 15px 0;
   /*padding: 30px;*/
 }
-.institution-show-content-nav-block{
+
+.institution-show-content-nav-block {
   /*margin: -30px 0 0 -30px;*/
   padding: 13px 0;
   display: flex;
   flex-direction: row;
 }
-.institution-show-content-nav-holder{
+
+.institution-show-content-nav-holder {
   width: 8px;
   height: 18px;
   background-color: #333333;
 }
-.institution-show-content-nav-title{
+
+.institution-show-content-nav-title {
   padding-left: 12px;
   font-size: 18px;
   line-height: 1.125rem;
@@ -162,7 +185,7 @@ function minusPage(){
   font-weight: bold;
 }
 
-.basic-block{
+.basic-block {
   display: flex;
   flex-direction: column;
 }
@@ -177,7 +200,8 @@ function minusPage(){
   display: flex;
   flex-direction: row;
 }
-.author-img{
+
+.author-img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -192,7 +216,7 @@ function minusPage(){
   margin-left: 15px;
 }
 
-.author-more-btn{
+.author-more-btn {
   padding: 10px;
   text-align: center;
   min-width: 150px;
@@ -208,7 +232,8 @@ function minusPage(){
   background-color: #c8f7dc;
   cursor: pointer;
 }
-.author-btn-group{
+
+.author-btn-group {
   display: flex;
   flex-direction: row;
   padding: 10px;
@@ -220,7 +245,8 @@ function minusPage(){
   font-family: Merriweather Sans, sans-serif;
   margin: 5px 15px 25px 15px;
 }
-.author-more-two-btn{
+
+.author-more-two-btn {
   padding: 10px 0 10px 0;
   text-align: center;
   width: 44%;
@@ -232,5 +258,4 @@ function minusPage(){
   border-radius: 10px;
   background-color: #c8f7dc;
   cursor: pointer;
-}
-</style>
+}</style>

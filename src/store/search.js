@@ -33,7 +33,7 @@ const SearchModule = {
       state.start_time = ""; //不知道是不是这样的0
       state.end_time = "";
     },
-    clearSearch() {
+    clearSearch(state) {
       state.isAdvancedSearch = false;
       state.searchType = "";
       state.and_list = [];
