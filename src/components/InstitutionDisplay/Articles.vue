@@ -7,13 +7,17 @@
     <div class="basic-block">
       <div v-for="article in articles" class="article-block">
         <h5>RESEARCH-ARTICLE</h5>
-        <div class="article-title">{{article.title}}</div>
+        <div class="article-title">
+          <router-link :to="{ name: 'article-display', params: { id: article.id } }">
+            {{article.title}}
+          </router-link>
+        </div>
         <div class="article-author">
           <div v-for="author in article.author_all.slice(0, 2)" class="article-author-block">
             <img src="../../assets/ArticleDisplay/head.jpg" alt="" class="article-author-img">
             <span class="article-author-name text-gray">
-                            {{ author.name }},
-                        </span>
+             {{ author.name }},
+            </span>
           </div>
           <div class="author-more">
             ...
