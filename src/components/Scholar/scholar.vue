@@ -18,7 +18,9 @@
             <p class="author-attr">
               {{ authorInformation.institution[0].name }}
             </p>
-            <p class="author-attr">{{ authorInformation.author_email }}</p>
+            <p class="author-attr">
+              {{ authorInformation.author_email }}
+            </p>
             <p v-if="authorInformation.claimed" class="author-certificate">
               Scholar certified<el-button
                 class="checkbutton"
@@ -326,32 +328,36 @@ const load = {
   },
 };
 const fetchAuthorInformation = () => {
+  console.log(route.params.id)
   axios({
     url: "http://122.9.5.156:8000/api/v1/author/get_author_information",
     method: "post",
     data: JSON.stringify({
-      author_id: authorId.value,
+      author_id: route.params.id,
     }),
   })
     .then((res) => {
       console.log(res.data.data);
       store.commit("setAuthorInformation", res.data.data);
+      authorInformation.value = getAuthorStates().authorInformation;
     })
     .catch((err) => {
       console.log(err);
     });
 };
 const fetchAuthorNetwork = () => {
+  console.log(route.params.id)
   axios({
     url: "http://122.9.5.156:8000/api/v1/author/author_network",
     method: "post",
     data: JSON.stringify({
-      author_id: authorId.value,
+      author_id: route.params.id,
     }),
   })
     .then((res) => {
       console.log(res.data.data);
       store.commit("setAuthorNetwork", res.data.data);
+      authorInformation.value = getAuthorStates().authorInformation;
     })
     .catch((err) => {
       console.log(err);
@@ -365,13 +371,28 @@ onBeforeMount(async () => {
   authorId.value = route.params.id;
   fetchAuthorNetwork();
   fetchAuthorInformation();
-  authorInformation.value = getAuthorStates().authorInformation;
   console.log(authorId)
 });
+watch(
+    () => route.params.id,
+    (newVal, oldVal) => {
+      is_Login.value = store.getters.getLoginState;
+      authorId.value = route.params.id;
+      fetchAuthorNetwork();
+      fetchAuthorInformation();
+    },
+    { deep: true }
+);
 // 在页面加载时触发请求
-onMounted(() => {
-  authorInformation.value = getAuthorStates().authorInformation;
+onMounted(async () => {
+  is_Login.value = store.getters.getLoginState;
+  authorId.value = route.params.id;
+  console.log(route.params.id)
+  fetchAuthorNetwork();
+  fetchAuthorInformation();
+  console.log(authorId)
 });
+
 authorId.value = route.params.id;
 fetchAuthorNetwork();
 fetchAuthorInformation();
@@ -761,6 +782,7 @@ watch(
 
 /* 继续保持原有的 pane 样式 */
 .pane {
+  font-style: italic;
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

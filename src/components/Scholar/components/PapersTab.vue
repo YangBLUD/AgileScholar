@@ -27,16 +27,13 @@
           <el-card class="paper-card">
             <div class="paper-authors-share">
               <router-link :to="{name:'article-display', params:{id:paper.id} }">
-                <span v-html="paper.title"></span>
+                <span v-html="paper.title" class="paper-title"></span>
               </router-link>
               <div>
                 <el-icon style="font-size: 20px; vertical-align: middle">
                   <Share />
                 </el-icon>
                 <div class="citedcount">{{paper.cited_count}}</div>
-<!--                <el-icon style="font-size: 20px; vertical-align: middle">-->
-<!--                  <Star />-->
-<!--                </el-icon>-->
               </div>
             </div>
             <div class="paper-info">
@@ -74,7 +71,7 @@ function getAuthorStates(){
 }
 
 // 筛选后的论文数据
-const papernum = ref(10)
+const papernum = ref(5)
 const paper_list = ref([])
 const currentPage = ref(1);
 const totalpage = ref(0);
@@ -173,25 +170,26 @@ onMounted(()=>{
 }
 
 .paper-card {
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 1px solid #eaecef;
+  border-radius: 8px;
   margin-bottom: 20px;
-  padding: 15px;
-  transition: box-shadow 0.3s;
+  transition: all 0.3s ease;
 }
-
 .paper-card:hover {
-  box-shadow: 0 4px 14px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  border-color: #d3dce6;
 }
-
 .paper-title {
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: bold;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-.paper-field, .paper-date {
-  color: #666;
+
+.paper-field, .paper-authors, .paper-date {
+  color: #555;
   font-size: 14px;
 }
 
@@ -199,14 +197,8 @@ onMounted(()=>{
   background-color: #fcfcfd; /* 浅灰色背景 */
   padding: 10px;
   border-radius: 4px;
-  margin-top: 10px;
 }
 
-.paper-authors {
-  color: #666;
-  font-size: 14px;
-  margin-top: 5px;
-}
 
 .paper-card:hover {
   border: 1px solid #d3dce6; /* 悬停时改变边框颜色 */
