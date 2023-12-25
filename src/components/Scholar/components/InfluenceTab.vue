@@ -1,13 +1,13 @@
 <template>
   <el-container class="influ-container">
-    <el-aside width="200px">
+    <el-aside width="20%">
       <el-menu>
-        <el-menu-item index="1" @click="currentView = 'sector'">Overview of achievements</el-menu-item>
-        <el-menu-item index="3" @click="currentView = 'interests'">Research interests</el-menu-item>
-        <el-menu-item index="4" @click="currentView = 'distribution'">academic achievements</el-menu-item>
-        <el-menu-item index="5" @click="currentView = 'citationTrend'">Citation trend</el-menu-item>
-        <el-menu-item index="2" @click="currentView = 'academicFocus'">Academic focus</el-menu-item>
-        <el-menu-item index="6" @click="currentView = 'overview'">Scholar Index</el-menu-item>
+        <el-menu-item index="1" @click="currentView = 'sector'" class="custom-menu-item-font">Overview of achievements</el-menu-item>
+        <el-menu-item index="3" @click="currentView = 'interests'" class="custom-menu-item-font">Research interests</el-menu-item>
+        <el-menu-item index="4" @click="currentView = 'distribution'" class="custom-menu-item-font">academic achievements</el-menu-item>
+        <el-menu-item index="5" @click="currentView = 'citationTrend'" class="custom-menu-item-font">Citation trend</el-menu-item>
+        <el-menu-item index="2" @click="currentView = 'academicFocus'" class="custom-menu-item-font">Academic focus</el-menu-item>
+        <el-menu-item index="6" @click="currentView = 'overview'" class="custom-menu-item-font">Scholar Index</el-menu-item>
       </el-menu>
     </el-aside>
 
@@ -67,4 +67,9 @@ const  PrintInfo = () =>{
 .influ-container{
 
 }
+/* CSS */
+.custom-menu-item-font {
+  //font-size: 17px; /* 或者您想要的任何大小 */
+}
+
 </style>

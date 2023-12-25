@@ -3,7 +3,7 @@
     <el-aside width="300px">
       <!-- 搜索框 -->
 
-      <el-input v-model="searchText" placeholder="Search" class="inputselect" @keyup.enter="performSearch(currentPage.value)"
+      <el-input v-model="searchText" placeholder="Search" class="inputselect" @keyup.enter="performSearch()"
                 size="large" width="400px" id="search">
         <template #append>
           <el-button :icon="Search" @click="performSearch" />
@@ -13,12 +13,12 @@
       <!-- 筛选栏 -->
       <el-menu default-active="1" class="filter-menu" accordion>
         <el-menu-item-group>
-          <el-menu-item index="1-2" @click="filterSearch(0, 0)">Descending by references</el-menu-item>
-          <el-menu-item index="1-3" @click="filterSearch(0, 1)">Ascending by references</el-menu-item>
-          <el-menu-item index="1-4" @click="filterSearch(0,2)">Descending by publication time</el-menu-item>
-          <el-menu-item index="1-5" @click="filterSearch(0,3)">Ascending by publication time</el-menu-item>
-          <el-menu-item index="1-6" @click="filterSearch(0,4)">Descending by title</el-menu-item>
-          <el-menu-item index="1-7" @click="filterSearch(0,5)">Ascending by title</el-menu-item>
+          <el-menu-item index="1-2" @click="filterSearch(0)">Descending by references</el-menu-item>
+          <el-menu-item index="1-3" @click="filterSearch(1)">Ascending by references</el-menu-item>
+          <el-menu-item index="1-4" @click="filterSearch(2)">Descending by publication time</el-menu-item>
+          <el-menu-item index="1-5" @click="filterSearch(3)">Ascending by publication time</el-menu-item>
+          <el-menu-item index="1-6" @click="filterSearch(4)">Descending by title</el-menu-item>
+          <el-menu-item index="1-7" @click="filterSearch(5)">Ascending by title</el-menu-item>
         </el-menu-item-group>
       </el-menu>
     </el-aside>
@@ -27,16 +27,13 @@
           <el-card class="paper-card">
             <div class="paper-authors-share">
               <router-link :to="{name:'article-display', params:{id:paper.id} }">
-                <span v-html="paper.title"></span>
+                <span v-html="paper.title" class="paper-title"></span>
               </router-link>
               <div>
                 <el-icon style="font-size: 20px; vertical-align: middle">
                   <Share />
                 </el-icon>
                 <div class="citedcount">{{paper.cited_count}}</div>
-<!--                <el-icon style="font-size: 20px; vertical-align: middle">-->
-<!--                  <Star />-->
-<!--                </el-icon>-->
               </div>
             </div>
             <div class="paper-info">
@@ -74,116 +71,59 @@ function getAuthorStates(){
 }
 
 // 筛选后的论文数据
-const papernum = ref(10)
+const papernum = ref(5)
 const paper_list = ref([])
 const currentPage = ref(1);
 const totalpage = ref(0);
 const search_to = ref(20)
-const search_from  = ref(1)
-const searchQuery = ref('');
-const selectedDomain = ref(null);
-const domains = ref([{ value: 'domain1', label: '领域1' }, { value: 'domain2', label: '领域2' }]); // 示例数据
-
-function filterSearch(page,type){
-  const sortType = type;
-  axios({
-    url: "http://122.9.5.156:8000/api/v1/search_result/search",
-    method: "post",
-    data: JSON.stringify({
-      // "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
-      "search_type" : 0,
-      "and_list": [
-        {
-          "content":getAuthorStates().authorInformation.id,
-          "select":"Author",
-          "clear":1
-        }
-      ],
-      "or_list": [],
-      "not_list": [],
-      "start_time": "1990-12",
-      "end_time": "2023-10",
-      "first_search": 1,
-      "work_clustering": 0,
-      "author_clustering": 0,
-      "size": 10,
-      "from": 0,
-      "sort": sortType,
-      "extend_list": [
-      ]
-    })
-  })
-      .then((res) => {
-        console.log(res.data)
-        paper_list.value = res.data.data.result
-        console.log(paper_list)
-        totalpage.value = res.data.data.total;
-        search_to.value = Math.min(res.data.data.total,papernum.value);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+const sortType = ref(-1);
+const addList = ref([
+  {
+    "content":getAuthorStates().authorInformation.id,
+    "select":"Author",
+    "clear":1
+  }
+])
+function filterSearch(type){
+  sortType.value = type;
+  fetchPaperList();
 }
-function performSearch(page){
-  axios({
-    url: "http://122.9.5.156:8000/api/v1/search_result/search",
-    method: "post",
-    data: JSON.stringify({
-      // "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
-      "search_type" : 0,
-      "and_list": [
-        {
-          "content":getAuthorStates().authorInformation.id,
-          "select":"Author",
-          "clear":1
-        },
-        {
-          "content":searchText.value,
-          "select":"",
-          "clear":1
-        }
-      ],
-      "or_list": [],
-      "not_list": [],
-      "start_time": "1990-12",
-      "end_time": "2023-10",
-      "first_search": 1,
-      "work_clustering": 0,
-      "author_clustering": 0,
-      "size": papernum.value,
-      "from": (page - 1) * papernum.value,
-      "sort": -1,
-      "extend_list": [
-      ]
-    })
-  })
-      .then((res) => {
-        console.log(res.data)
-        paper_list.value = res.data.data.result
-        console.log(paper_list)
-        totalpage.value = res.data.data.total;
-        search_to.value = Math.min(res.data.data.total,papernum.value);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+function performSearch(){
+  if (searchText.value == ""){
+    addList.value=[
+      {
+        "content":getAuthorStates().authorInformation.id,
+        "select":"Author",
+        "clear":1
+      },
+    ]
+    currentPage.value = 0;
+  }else {
+    addList.value=[
+      {
+        "content":getAuthorStates().authorInformation.id,
+        "select":"Author",
+        "clear":1
+      },
+      {
+        "content":searchText.value,
+        "select":"",
+        "clear":1
+      }
+    ]
+    currentPage.value = 0;
+  }
+  fetchPaperList()
 }
-
 // 筛选函数
-function fetchPaperList(page){
+function fetchPaperList(){
   axios({
     url: "http://122.9.5.156:8000/api/v1/search_result/search",
     method: "post",
     data: JSON.stringify({
       // "token": "eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJcdThjMjJcdTc5YzlcdTRlNjZcdTZjYTFcdTcyNWJcdTcyNWIiLCJ0eXBlIjoidXNlciIsImV4cCI6MTcwMjM2OTc3NS40MTAzMjYyfQ.5lNkhg2Wc2F8EBzByb8ATmPD3I2gd-_mr3Hcgo_SJ5U",
       "search_type" : 0,
-      "and_list": [
-        {
-          "content":getAuthorStates().authorInformation.id,
-          "select":"Author",
-          "clear":1
-        }
-      ],
+      "and_list": addList.value,
       "or_list": [],
       "not_list": [],
       "start_time": "1990-12",
@@ -192,8 +132,8 @@ function fetchPaperList(page){
       "work_clustering": 0,
       "author_clustering": 0,
       "size": papernum.value,
-      "from": (page - 1) * papernum.value,
-      "sort": -1,
+      "from": currentPage.value  * papernum.value,
+      "sort": sortType.value,
       "extend_list": [
       ]
     })
@@ -211,7 +151,7 @@ function fetchPaperList(page){
 }
 function handlePageChange(newPage) {
   currentPage.value = newPage;
-  fetchPaperList(newPage);
+  fetchPaperList();
 }
 onMounted(()=>{
   fetchPaperList(1);
@@ -230,40 +170,35 @@ onMounted(()=>{
 }
 
 .paper-card {
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 1px solid #eaecef;
+  border-radius: 8px;
   margin-bottom: 20px;
-  padding: 15px;
-  transition: box-shadow 0.3s;
+  transition: all 0.3s ease;
 }
-
 .paper-card:hover {
-  box-shadow: 0 4px 14px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  border-color: #d3dce6;
 }
-
 .paper-title {
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: bold;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-.paper-field, .paper-date {
-  color: #666;
+
+.paper-field, .paper-authors, .paper-date {
+  color: #555;
   font-size: 14px;
 }
 
 .paper-info {
-  background-color: #f9f9f9; /* 浅灰色背景 */
+  background-color: #fcfcfd; /* 浅灰色背景 */
   padding: 10px;
   border-radius: 4px;
-  margin-top: 10px;
 }
 
-.paper-authors {
-  color: #666;
-  font-size: 14px;
-  margin-top: 5px;
-}
 
 .paper-card:hover {
   border: 1px solid #d3dce6; /* 悬停时改变边框颜色 */

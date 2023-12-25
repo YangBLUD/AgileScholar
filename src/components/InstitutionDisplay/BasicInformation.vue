@@ -23,11 +23,12 @@
 
 import { onMounted, reactive, ref, watch } from "vue";
 import store from "../../store/index.js";
+import Vue from "node-forge/lib/util.js";
 
-let institution = reactive(store.state.Institution.institution)
-let institution_area = ref(store.getters.getGeo)
+const institution = ref(store.state.Institution.institution)
+const institution_area = ref(store.getters.getGeo)
 
-onMounted(() => {
+watch(() => store.state.Institution, (newVal, oldVal) => {
   institution.value = store.state.Institution.institution
   console.log(institution.image_url)
   institution_area.value = store.getters.getGeo
@@ -36,8 +37,7 @@ watch(() => store.state.Institution.id, (newVal, oldVal) => {
   institution.value = store.state.Institution.institution
   console.log(institution.image_url)
   institution_area.value = store.getters.getGeo
-})
-
+}, { deep: true })
 </script>
 
 

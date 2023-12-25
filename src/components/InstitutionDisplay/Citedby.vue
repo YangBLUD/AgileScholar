@@ -36,10 +36,10 @@ watch(() => store.state.Institution.id, (newVal, oldVal) => {
     }, 1)
 })
 
-const years = ref(store.getters.getYears)
-const cited_count = ref(store.getters.getCitedCount)
-const work_count = ref(store.getters.getWorkCount)
-const oa_work_count = ref(store.getters.getOaWorkCount)
+const years = ref(null)
+const cited_count = ref(null)
+const work_count = ref(null)
+const oa_work_count = ref(null)
 function initChart() {
     const chartDom = document.getElementById('cited-echarts');
     chartDom.removeAttribute("_echarts_instance_");

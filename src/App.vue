@@ -3,10 +3,10 @@
 </template>
 
 <script setup>
-import {useRouter} from 'vue-router'
-
+import {useRoute, useRouter} from 'vue-router'
+import {watch} from "vue";
+const route = useRoute();
 const router=useRouter();
-
 </script>
 
 <style scoped>
