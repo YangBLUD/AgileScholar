@@ -19,15 +19,24 @@
       </div>
       <div class="middle">
         <div class="middle-left">
-          <div v-if="search_type != 0" class="middle-left-people" :key="index" v-for="(item, index) in agg">
-            <Droplist :agginfo="item" class="drop1" />
-          </div>
-          <div v-else class="middle-left-people">
+          <div v-if="search_type === 0" class="middle-left-people">
             <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)" />
             <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)" />
             <Droplist :agginfo="sourceagg" class="drop1" @click="getaggagain(2)" />
             <Droplist :agginfo="domainagg" class="drop1" @click="getaggagain(3)" />
             <Droplist :agginfo="typeagg" class="drop1" @click="getaggagain(4)" />
+          </div>
+          <div v-if="search_type === 1" class="middle-left-people">
+            <Droplist :agginfo="nameAgg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="institutionAgg" class="drop1" @click="getaggagain(0)" />
+          </div>
+          <div v-if="search_type === 2" class="middle-left-people">
+            <Droplist :agginfo="countryAgg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="type_institution_Agg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="domain_institution_Agg" class="drop1" @click="getaggagain(0)" />
+          </div>
+          <div v-if="search_type === 3" class="middle-left-people">
+            <Droplist :agginfo="levelAgg" class="drop1" @click="getaggagain(0)" />
           </div>
         </div>
         <div class="middle-right">
@@ -141,7 +150,7 @@
       opacity: 100%;
       top: 10%;
       background-color: #7e7e7f !important;
-      border: 1px solid #7e7e7f !important;
+      border: 0px solid #7e7e7f !important;
     " :close-on-click-modal="false" :show-close="false">
     <div class="spinner-box">
       <div class="blue-orbit leo"></div>
@@ -175,7 +184,7 @@ const token = ref("");
 const isadvance = ref(false);
 //额外的请求参数
 const search_type = ref(0);
-const search_first_search = ref(1);
+const search_first_search = ref(0);
 const search_work_clustering = ref(0);
 const search_author_clustering = ref(0);
 const search_sort = ref(0);
@@ -196,6 +205,7 @@ function start() {
   search_title.value = Store.getters.getSearch.and_list[0].content;
   token.value = Store.getters.getUserinfo.token;
 }
+
 //初始化函数
 onBeforeMount(() => {
   start();
@@ -245,7 +255,8 @@ function getpaperlist() {
   })
     .then((res) => {
       let data = res.data.data;
-      console.log(data);
+      console.log(search_first_search.value)
+      importantProgress.value = false;
       paper_list.value = data.result;
       totalpage.value = data.total;
       // search_from.value = Math.max(1,papernum.value);
@@ -284,7 +295,20 @@ function getpaperlist() {
           domainagg.value.data = [];
         }
         search_extend_list.value = [];
-      } else {
+      }
+      else if(search_type.value === 1){
+        console.log(data)
+        nameAgg.value.data = dealagg(data.agg[0].data, "Name");
+        institutionAgg.value.data = dealagg(data.agg[1].data, "Institution Type");
+        search_extend_list.value = [];
+      }
+      else if(search_type.value === 2){
+        countryAgg.value.data = dealagg(data.agg[0].data, "Country Code");
+        type_institution_Agg.value.data = dealagg(data.agg[1].data, "Institution Type");
+        domain_institution_Agg.value.data = dealagg(data.agg[2].data, "Main Domain");
+        search_extend_list.value = [];
+      }
+      else {
         agg.value = [];
         for (let i = 0; i < data.agg.length; i++) {
           agg.value.push({
@@ -295,7 +319,6 @@ function getpaperlist() {
         }
         search_extend_list.value = [];
       }
-      importantProgress.value = false;
     })
     .catch((err) => {
       console.log(err);
@@ -311,6 +334,19 @@ function keysearch() {
     keyword: searchcontent.value,
   };
   Store.commit("setGeneralSearch", data1);
+  search_title.value = searchcontent.value
+  search_sort.value = 0;
+  timeagg.value.data = [];
+  writeragg.value.data = [];
+  sourceagg.value.data = [];
+  domainagg.value.data = [];
+  typeagg.value.data = [];
+  nameAgg.value.data = [];
+  institutionAgg.value.data = [];
+  countryAgg.value.data = []
+  domain_institution_Agg.value.data = []
+  type_institution_Agg.value.data = []
+  levelAgg.value.data = []
   getpaperlist();
 }
 
@@ -330,7 +366,19 @@ const handleClick = (tab, event) => {
     searchType: search_type.value,
     keyword: searchcontent.value,
   });
+  search_first_search.value = 0;
   search_extend_list.value = [];
+  timeagg.value.data = [];
+  writeragg.value.data = [];
+  sourceagg.value.data = [];
+  domainagg.value.data = [];
+  typeagg.value.data = [];
+  nameAgg.value.data = [];
+  institutionAgg.value.data = [];
+  countryAgg.value.data = []
+  domain_institution_Agg.value.data = []
+  type_institution_Agg.value.data = []
+  levelAgg.value.data = []
   getpaperlist();
   resetpage();
 };
@@ -381,9 +429,7 @@ const agg = ref([]);
 function getCluster() {
   return Store.getters.getCluster;
 }
-watch(
-  getCluster,
-  (newVal, oldVal) => {
+watch(getCluster, (newVal, oldVal) => {
     console.log("newVal, oldVal", newVal, oldVal);
     getnewagg();
   },
@@ -396,13 +442,29 @@ function getnewagg() {
     text: pp.agg_text,
     value: pp.agg_raw,
   });
+  search_first_search.value = 1;
   getpaperlist();
+  search_first_search.value = 0;
   resetpage();
 }
 //取消聚类的搜索
 function withoutagg() {
   search_extend_list.value = [];
+  Store.commit("setaggtext", "")
+  Store.commit("setaggraw", "")
+  timeagg.value.data = [];
+  writeragg.value.data = [];
+  sourceagg.value.data = [];
+  domainagg.value.data = [];
+  typeagg.value.data = [];
+  nameAgg.value.data = [];
+  institutionAgg.value.data = [];
+  countryAgg.value.data = []
+  domain_institution_Agg.value.data = []
+  type_institution_Agg.value.data = []
+  levelAgg.value.data = []
   getpaperlist();
+  search_first_search.value = 0;
   resetpage();
 }
 
@@ -416,12 +478,19 @@ const writeragg = ref({ name: "Main Author", text: "author_main", data: [] });
 const sourceagg = ref({ name: "Source", text: "source", data: [] });
 const domainagg = ref({ name: "Main Domain", text: "domain_main", data: [] });
 const typeagg = ref({ name: "Type", text: "type_num", data: [] });
+// scholar
+const nameAgg = ref({ name: "Name", text: "display_name", data: [] });
+const institutionAgg = ref({ name: "Institution", text: "institution", data: [] });
+const countryAgg = ref({ name: "Country", text: "country_code", data: [] });
+const type_institution_Agg = ref({ name: "Type", text: "type", data: [] });
+const domain_institution_Agg = ref({ name: "Main Domain", text: "domain_main", data: [] });
+const levelAgg = ref({ name: "Level", text: "level", data: [] });
 function getaggagain(type) {
   if (Store.getters.getOutConditon === false) {
     Store.commit("setOutCondition", true);
     return;
   }
-  console.log("getaggagain");
+  search_first_search.value = 1;
   // if(type == 0 && timeagg.value.data.length != 0){
   //     timeagg.value.data = [];
   //     return;
@@ -445,6 +514,7 @@ function getaggagain(type) {
 
   search_work_clustering.value = type;
   getpaperlist();
+  search_first_search.value = 0;
 }
 function dealagg(datalist, type) {
   let results = [];
