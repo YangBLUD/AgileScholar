@@ -10,54 +10,54 @@ const chartDiv = ref(null);
 // ECharts 配置项
 var data = [
   {
-    name: 'Grandpa',
+    name: 'Mathematics',
     children: [
       {
-        name: 'Uncle Leo',
+        name: 'Algebra',
         value: 15,
         children: [
           {
-            name: 'Cousin Jack',
+            name: 'Linear Algebra',
             value: 2
           },
           {
-            name: 'Cousin Mary',
+            name: 'Abstract Algebra',
             value: 5,
             children: [
               {
-                name: 'Jackson',
+                name: 'Group Theory',
                 value: 9
               }
             ]
           },
           {
-            name: 'Cousin Ben',
+            name: 'Number Theory',
             value: 4
           }
         ]
       },
       {
-        name: 'Aunt Jane',
+        name: 'Geometry',
         children: [
           {
-            name: 'Cousin Kate',
+            name: 'Euclidean Geometry',
             value: 4
           }
         ]
       },
       {
-        name: 'Father',
+        name: 'Calculus',
         value: 10,
         children: [
           {
-            name: 'Me',
+            name: 'Differential Calculus',
             value: 5,
             itemStyle: {
               color: 'red'
             }
           },
           {
-            name: 'Brother Peter',
+            name: 'Integral Calculus',
             value: 1
           }
         ]
@@ -65,21 +65,21 @@ var data = [
     ]
   },
   {
-    name: 'Mike',
+    name: 'Science',
     children: [
       {
-        name: 'Uncle Dan',
+        name: 'Physics',
         children: [
           {
-            name: 'Cousin Lucy',
+            name: 'Quantum Mechanics',
             value: 3
           },
           {
-            name: 'Cousin Luck',
+            name: 'Classical Mechanics',
             value: 4,
             children: [
               {
-                name: 'Nephew',
+                name: 'Newtonian Mechanics',
                 value: 2
               }
             ]
@@ -89,17 +89,17 @@ var data = [
     ]
   },
   {
-    name: 'Nancy',
+    name: 'Literature',
     children: [
       {
-        name: 'Uncle Nike',
+        name: 'English Literature',
         children: [
           {
-            name: 'Cousin Betty',
+            name: 'Shakespearean Studies',
             value: 1
           },
           {
-            name: 'Cousin Jenny',
+            name: 'Modern Literature',
             value: 2
           }
         ]
@@ -107,6 +107,7 @@ var data = [
     ]
   }
 ];
+
 const chartOptions = {
   title: {
     text: 'Academic Focus Graph',
