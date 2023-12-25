@@ -19,6 +19,8 @@
       </div>
       <div class="middle">
         <div class="middle-left">
+          <div style=" font-size: 25px;
+        font-weight: bold;margin-left: 90px; margin-bottom: 10px; color: rgb(84, 84, 84);">Filters</div>
           <div v-if="search_type === 0" class="middle-left-people">
             <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)" />
             <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)" />
@@ -44,18 +46,29 @@
           <div class="middle-right-sum">
             <div class="first-line">
               <div class="search-num">
-                <div v-if="totalpage == 10000">{{ totalpage }}+</div>
-                <div v-else>{{ totalpage }}</div>
-                <div style="font-weight: 300">Results for:</div>
-                All: {{ search_title }}
+                <div style="
+    font-family: Merriweather Sans,sans-serif; font-weight: normal; font-style: italic; font-size: 18px;"
+                  v-if="totalpage == 10000">{{
+                    totalpage }}+&nbsp;</div>
+                <div style="
+    font-family: Merriweather Sans,sans-serif; font-weight: normal; font-style: italic; font-size: 18px;" v-else>{{
+      totalpage }}&nbsp;</div>
+                <div style="
+    font-family: Merriweather Sans,sans-serif; font-weight:300; font-style: italic; font-size: 18px;">Results for:
+                </div>
+                <div style="position: relative; top: -2px;
+    font-family: Merriweather Sans,sans-serif; font-weight: bold; font-style: italic; font-size: 20px;">
+                  &nbsp;All: {{ search_title }}
+                </div>
               </div>
             </div>
             <div class="sum-text">
-              <div class="text-first">
-                Searched The Full-Text Collection ({{ totalpage }} records)|
-              </div>
+              <span class="text-first">
+                Searched The Full-Text Collection (<span style="font-weight: normal;">{{ totalpage }}</span> records)
+                &nbsp; <span style="font-style: normal;">|</span>
+              </span>
               <div class="text-second">
-                Expand to The ACM Guide to Computing Literature (3,605,660
+                Expand to The ACM Guide to Computing Literature (<span style="font-weight: normal;">3,605,660</span>
                 records)
               </div>
             </div>
@@ -70,8 +83,10 @@
               </el-tabs>
             </div>
             <div class="nav-result">
-              Showing {{ search_from }} - {{ search_to }} of
-              {{ totalpage }} Results
+              Showing <span style="font-style: italic; font-weight: bold;">{{ search_from }}</span> - <span
+                style="font-style: italic; font-weight: bold;">{{
+                  search_to }}</span> of
+              <span style="font-style: italic; font-weight: bold;">{{ totalpage }}</span>&nbsp;Results
             </div>
           </div>
           <div class="search-result-checkbox">
@@ -82,7 +97,7 @@
               &lt; Return Normal
             </div>
             <div class="per-page">
-              per page:
+              per page&nbsp;&nbsp;:&nbsp;&nbsp;
               <div v-if="papernum == 10" class="page-num-active">10</div>
               <div v-else class="page-num-com" @click="changeSize(10)">10</div>
 
@@ -296,20 +311,20 @@ function getpaperlist() {
         }
         search_extend_list.value = [];
       }
-      else if(search_type.value === 1){
+      else if (search_type.value === 1) {
         console.log(data)
         nameAgg.value.data = dealagg(data.agg[0].data, "Name");
         institutionAgg.value.data = dealagg(data.agg[1].data, "Institution Type");
         search_extend_list.value = [];
       }
-      else if(search_type.value === 2){
+      else if (search_type.value === 2) {
         countryAgg.value.data = dealagg(data.agg[0].data, "Country Code");
         type_institution_Agg.value.data = dealagg(data.agg[1].data, "Institution Type");
         domain_institution_Agg.value.data = dealagg(data.agg[2].data, "Main Domain");
         search_extend_list.value = [];
       }
-      else if(search_type.value === 3){
-        
+      else if (search_type.value === 3) {
+
         levelAgg.value.data = dealagg(data.agg[0].data, "Level");
         search_extend_list.value = [];
       }
@@ -435,9 +450,9 @@ function getCluster() {
   return Store.getters.getCluster;
 }
 watch(getCluster, (newVal, oldVal) => {
-    console.log("newVal, oldVal", newVal, oldVal);
-    getnewagg();
-  },
+  console.log("newVal, oldVal", newVal, oldVal);
+  getnewagg();
+},
   { deep: true }
 );
 function getnewagg() {
@@ -969,7 +984,6 @@ ul {
 .second {
   top: 0px;
   height: 150px;
-  width: 87%;
   background-image: url("../../assets/border.jpg");
   display: flex;
   padding: 0px 100px;
@@ -1002,6 +1016,7 @@ ul {
       border-radius: 8px;
 
       .content-search-input {
+        font-size: 20px;
         padding: 0 10px;
         width: 530px;
         height: 50px;
@@ -1066,13 +1081,18 @@ ul {
         display: flex;
 
         .text-first {
+          font-family: Merriweather Sans, sans-serif;
+          font-style: italic;
           width: 43%;
         }
 
         .text-second {
           position: relative;
+          font-family: Merriweather Sans, sans-serif;
+          font-style: italic;
           color: #0077c2;
-          left: 0px;
+          left: -26px;
+          top: 1px;
           width: 55%;
         }
       }
@@ -1096,6 +1116,7 @@ ul {
       }
 
       .nav-result {
+        font-family: Merriweather Sans, sans-serif;
         position: relative;
         top: -3px;
         left: 20%;
@@ -1118,14 +1139,16 @@ ul {
       .select-all {
         margin: 18px 20px;
         font-size: 15px;
-        color: #e6e6e6;
+        color: rgb(51, 117, 188);
         font-weight: 500;
         width: 160px;
         cursor: pointer;
+        transition: ease 0.3s;
       }
 
       .select-all:hover {
-        color: black;
+        transform: scale(1.1);
+        transition: ease 0.3s;
       }
 
       .per-page {
@@ -1137,8 +1160,9 @@ ul {
         font-size: 15px;
         font-weight: 400;
         color: black;
-        border-right: 1px solid #e6e6e6;
+        border-right: 2px solid #e6e6e6;
         display: flex;
+        font-family: Merriweather Sans, sans-serif;
 
         .page-num-com {
           margin-right: 15px;
@@ -1159,6 +1183,7 @@ ul {
         margin-top: 28px;
 
         .el-dropdown-link {
+          font-weight: bold;
           cursor: pointer;
         }
       }
@@ -1187,7 +1212,7 @@ ul {
         .list-item {
           margin: 20px 0px;
           width: 100%;
-          height: 250px;
+          height: 300px;
           display: flex;
 
           .checkbox {
@@ -1210,6 +1235,7 @@ ul {
 
       .bottom-page {
         margin-left: 300px;
+        padding-bottom: 20px;
 
         .example-pagination-block+.example-pagination-block {
           margin-top: 10px;
@@ -1217,5 +1243,10 @@ ul {
       }
     }
   }
+}
+
+::v-deep .el-tabs__item {
+  font-weight: bold;
+  /* 你想要的字重，比如 bold 或者 normal */
 }
 </style>

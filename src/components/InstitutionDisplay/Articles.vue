@@ -43,7 +43,7 @@
 
 <script setup>
 
-import { onMounted, ref, watch } from "vue";
+import {onMounted, ref, watch} from "vue";
 import axios from "axios";
 import store from "../../store/index.js";
 import { ElMessage } from "element-plus";
@@ -52,93 +52,89 @@ const articles = ref([])
 const page = ref(0)
 const total = ref(1)
 const finalPage = ref(-1)
-onMounted(() => {
-  page.value = 0;
-  addPage()
-})
 watch(() => store.state.Institution.id, (newVal, oldVal) => {
-  axios({
-    // 接口网址：包含协议名，域名，端口和路由
-    url: 'http://122.9.5.156:8000/api/v1/search_result/search',
-    // 请求方式，默认为get，可以不写
-    method: 'post',
-    // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
-    data: JSON.stringify({
-      search_type: 0,
-      and_list: [{
-        content: store.state.Institution.id,
-        select: 'corresponding_institution_ids',
-        clear: 1
-      }],
-      or_list: [],
-      not_list: [],
-      start_time: "",
-      end_time: "",
-      first_search: 0,
-      work_clustering: 0,
-      author_clustering: 0,
-      size: 8,
-      from: page.value * 8,
-      sort: -1,
-      extend_list: [],
-      token: store.state.User.token,
-    }),
-    // 成功请求回数据后，进入then，并用console.log打印结果
-  }).then(res => {
-    console.log(res.data.errno)
-    if (res.data.errno === 0) {
-      console.log(res.data.data)
-      articles.value = res.data.data.result
-      finalPage.value = Math.ceil(res.data.data.total / 8)
-    }
-    else {
-      ElMessage.error('出错啦，找周霄')
-    }
-  }).catch(err => {
-    console.log(err)
-  })
+    axios({
+      // 接口网址：包含协议名，域名，端口和路由
+      url: 'http://122.9.5.156:8000/api/v1/search_result/search',
+      // 请求方式，默认为get，可以不写
+      method: 'post',
+      // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+      data: JSON.stringify({
+        search_type: 0,
+        and_list: [{
+          content: store.state.Institution.id,
+          select: 'corresponding_institution_ids',
+          clear: 1
+        }],
+        or_list: [],
+        not_list: [],
+        start_time: "",
+        end_time: "",
+        first_search: 0,
+        work_clustering: 0,
+        author_clustering: 0,
+        size: 8,
+        from: page.value * 8,
+        sort: -1,
+        extend_list: [],
+        token: store.state.User.token,
+      }),
+      // 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+      console.log(res.data.errno)
+      if (res.data.errno === 0) {
+        console.log(res.data.data)
+        articles.value = res.data.data.result
+        finalPage.value = Math.ceil(res.data.data.total / 8)
+      }
+      else {
+        ElMessage.error('出错啦，找周霄')
+      }
+    }).catch(err => {
+      console.log(err)
+    })
 })
-onMounted(() => {
-  axios({
-    // 接口网址：包含协议名，域名，端口和路由
-    url: 'http://122.9.5.156:8000/api/v1/search_result/search',
-    // 请求方式，默认为get，可以不写
-    method: 'post',
-    // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
-    data: JSON.stringify({
-      search_type: 0,
-      and_list: [{
-        content: store.state.Institution.id,
-        select: 'corresponding_institution_ids',
-        clear: 1
-      }],
-      or_list: [],
-      not_list: [],
-      start_time: "",
-      end_time: "",
-      first_search: 0,
-      work_clustering: 0,
-      author_clustering: 0,
-      size: 8,
-      from: page.value * 8,
-      sort: -1,
-      extend_list: [],
-      token: store.state.User.token,
-    }),
-    // 成功请求回数据后，进入then，并用console.log打印结果
-  }).then(res => {
-    console.log(res.data.errno)
-    if (res.data.errno === 0) {
-      console.log(res.data.data)
-      articles.value = res.data.data.result
-      finalPage.value = Math.ceil(res.data.data.total / 8)
-    }
-    else {
-      ElMessage.error('出错啦，找周霄')
-    }
-  }).catch(err => {
-    console.log(err)
-  })
+onMounted(()=>{
+    axios({
+      // 接口网址：包含协议名，域名，端口和路由
+      url: 'http://122.9.5.156:8000/api/v1/search_result/search',
+      // 请求方式，默认为get，可以不写
+      method: 'post',
+      // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+      data: JSON.stringify({
+        search_type: 0,
+        and_list: [{
+          content: store.state.Institution.id,
+          select: 'corresponding_institution_ids',
+          clear: 1
+        }],
+        or_list: [],
+        not_list: [],
+        start_time: "",
+        end_time: "",
+        first_search: 0,
+        work_clustering: 0,
+        author_clustering: 0,
+        size: 8,
+        from: page.value * 8,
+        sort: -1,
+        extend_list: [],
+        token: store.state.User.token,
+      }),
+      // 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+      console.log(res.data.errno)
+      if (res.data.errno === 0) {
+        console.log(res.data.data)
+        articles.value = res.data.data.result
+        finalPage.value = Math.ceil(res.data.data.total / 8)
+      }
+      else {
+        ElMessage.error('出错啦，找周霄')
+      }
+    }).catch(err => {
+      console.log(err)
+    })
 })
 function addPage() {
   page.value = page.value + 1

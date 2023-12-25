@@ -1381,6 +1381,7 @@ function showInfo(item_id) {
   margin-top: 0px;
   font-size: 14px;
   color: rgb(97, 97, 97);
+  text-decoration: underline;
 }
 
 .rank-article-date {

@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="pic">
-                <img src="../../assets/result.png" alt="" style="width: 100px;height: 120px;">
+                <img src="../../assets/result.png" alt="" style="width: 120px;height: 150px;">
             </div>
         </div>
         <div class="right">
@@ -39,20 +39,16 @@
                         <div class="inf-num">{{ props.info.cited_count }}</div>
                     </div>
                     <div class="trend">
-                        <img style="width: 20px; height: 20px;" src="../../assets/ArticleDisplay/click.png" alt="Clicks">
+                        <img style="width: 20px; height: 20px;" src="../../assets/icon-trend.png" alt="Clicks">
                         <div class="tr-num">{{ props.info.type_num }}</div>
                     </div>
                 </div>
                 <div class="choice">
                     <div class="introduce" v-if="props.info.pdf_url">
-                        <el-icon @click="gotopdf">
-                            <Document />
-                        </el-icon>
+                        <img style="width: 25px; height: 25px;" src="../../assets/PDF.png" alt="Clicks">
                     </div>
                     <div class="introduce" v-if="props.info.landing_page_url">
-                        <el-icon @click="gotolink">
-                            <Link />
-                        </el-icon>
+                        <img style="width: 25px; height: 25px;" src="../../assets/view.png" alt="Clicks">
                     </div>
                     <div class="introduce">
                         <stardialog :token="props.token" :paper_id="paper_id" :type="type" :is_star="props.info.is_star">
@@ -117,7 +113,6 @@ const props = defineProps({
 
     .pic {
         position: relative;
-        left: 10%;
         margin: 15px;
         width: 30px;
         height: 30px;
@@ -140,17 +135,19 @@ const props = defineProps({
         white-space: pre-wrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        /* font-family: Merriweather, serif; */
+        font-family: Merriweather Sans, sans-serif;
         color: #0077c2;
         font-weight: 600;
 
         >>>em {
-            background-color: yellow;
+            font-weight: bold;
+            background-color: rgb(254, 253, 196);
 
         }
     }
 
     .wri_list {
+        margin-top: 15px;
         display: flex;
 
         .writer {
@@ -165,7 +162,6 @@ const props = defineProps({
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
-                border: 1px solid;
                 /* -webkit-filter: grayscale(100%);
             -moz-filter: grayscale(100%);
             -ms-filter: grayscale(100%);
@@ -177,18 +173,23 @@ const props = defineProps({
             .name {
                 margin: 15px 0;
                 color: #616374;
-                text-decoration: underline;
                 font-family: Merriweather, serif;
 
                 >>>em {
-                    background-color: yellow;
+                    font-weight: bold;
+                    background-color: rgb(254, 253, 196);
 
                 }
+            }
+
+            .name:hover {
+                text-decoration: underline;
             }
         }
     }
 
     .abstract {
+        margin-top: 15px;
         font-size: 16px;
         width: 87%;
         height: 65px;
@@ -198,7 +199,8 @@ const props = defineProps({
         font-family: Merriweather Sans, sans-serif;
 
         >>>em {
-            background-color: yellow;
+            font-weight: bold;
+            background-color: rgb(254, 253, 196);
 
         }
     }
