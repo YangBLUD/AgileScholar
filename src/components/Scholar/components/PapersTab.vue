@@ -253,7 +253,7 @@ onMounted(()=>{
 }
 
 .paper-info {
-  background-color: #f9f9f9; /* 浅灰色背景 */
+  background-color: #fcfcfd; /* 浅灰色背景 */
   padding: 10px;
   border-radius: 4px;
   margin-top: 10px;

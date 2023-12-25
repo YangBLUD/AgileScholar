@@ -1,6 +1,6 @@
 <template>
   <el-container class="influ-container">
-    <el-aside width="200px">
+    <el-aside width="20%">
       <el-menu>
         <el-menu-item index="1" @click="currentView = 'sector'">Overview of achievements</el-menu-item>
         <el-menu-item index="3" @click="currentView = 'interests'">Research interests</el-menu-item>

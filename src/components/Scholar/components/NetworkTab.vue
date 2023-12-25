@@ -1,6 +1,6 @@
 <template>
   <el-container class="network-container">
-    <el-aside width="200px">
+    <el-aside width="20%">
       <el-menu>
         <el-menu-item index="1" @click="currentView = 'cited'">Cited Relationship</el-menu-item>
         <el-menu-item index="2" @click="currentView = 'partnership'">Cooperative Relationship</el-menu-item>
