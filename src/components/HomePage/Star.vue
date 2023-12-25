@@ -12,16 +12,16 @@
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
           <span class="icon" v-if="nodeData.type == 0"
-            ><el-icon><Document /></el-icon
+            ><el-icon> <Document /> </el-icon
           ></span>
           <span class="icon" v-if="nodeData.type == 1"
-            ><el-icon><User /></el-icon
+            ><el-icon> <User /> </el-icon
           ></span>
           <span class="icon" v-if="nodeData.type == 2"
-            ><el-icon><House /></el-icon
+            ><el-icon> <House /> </el-icon
           ></span>
           <span class="icon" v-if="nodeData.list != undefined"
-            ><el-icon><Folder /></el-icon
+            ><el-icon> <Folder /> </el-icon
           ></span>
           <span
             style="
@@ -293,15 +293,16 @@ function remove(node: Node, data) {
   }
 }
 function jump(data) {
-  if (data.list != undefined) {
+  console.log(data);
+  if (data.list != null) {
     return;
   }
   if (data.type == 0) {
-    router.push(`/article/${data.id}`);
+    router.push(`../article/${data.data.id}`);
   } else if (data.type == 1) {
-    router.push("");
+    router.push(`../scholar/${data.data.id}`);
   } else if (data.type == 2) {
-    router.push(`/institution/${data.id}`);
+    router.push(`../institution/${data.data.id}`);
   }
 }
 </script>
@@ -319,11 +320,13 @@ function jump(data) {
   overflow-y: auto;
   z-index: 999;
 }
+
 .icon {
   width: 10px;
   margin-left: 5px;
   padding-top: 5px;
 }
+
 .custom-tree-node {
   flex: 1;
   display: flex;
@@ -332,16 +335,20 @@ function jump(data) {
   font-size: 14px;
   padding-right: 8px;
 }
+
 :deep(.el-tree-node__content) {
   height: 50px !important;
   background-color: transparent;
+
   &:hover {
     background: #cccccc;
   }
 }
+
 :deep(.el-tree) {
   background-color: transparent !important;
 }
+
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;

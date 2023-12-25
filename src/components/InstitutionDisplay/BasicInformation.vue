@@ -5,7 +5,8 @@
       <div class="institution-show-content-nav-title">BASIC INFORMATION</div>
     </div>
     <div class="basic-block">
-      <img class="institution-img" src="../../assets/ArticleDisplay/free.jpg" alt="" />
+      <img v-if="institution.image_url" :src="institution.image_url" class="institution-img" alt="">
+      <img v-else class="institution-img" src="../../assets/ArticleDisplay/free.jpg" alt="" />
       <div class="institution-basic">
         <h2 class="institution-name">{{institution.display_name}}</h2>
         <div class="institution-type"><strong>Type: </strong> {{ institution.type }}</div>
@@ -20,17 +21,18 @@
 
 <script setup>
 
-import {reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import store from "../../store/index.js";
+import Vue from "node-forge/lib/util.js";
 
-let institution = reactive(store.state.Institution.institution)
-let institution_area = ref(store.getters.getGeo)
+const institution = ref(store.state.Institution.institution)
+const institution_area = ref(store.getters.getGeo)
 
-watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
-  institution = store.state.Institution.institution
-  institution_area = store.getters.getGeo
-})
-
+watch(()=>store.state.Institution, (newVal, oldVal)=>{
+  institution.value = store.state.Institution.institution
+    console.log(institution.image_url)
+  institution_area.value = store.getters.getGeo
+},{deep:true})
 </script>
 
 

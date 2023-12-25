@@ -176,9 +176,6 @@ import Institutions from "./institution.vue";
 import Subjects from "./subject.vue";
 import { Search, ArrowLeft } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
-
-
-
 const Store = useStore();
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -309,6 +306,11 @@ function getpaperlist() {
         countryAgg.value.data = dealagg(data.agg[0].data, "Country Code");
         type_institution_Agg.value.data = dealagg(data.agg[1].data, "Institution Type");
         domain_institution_Agg.value.data = dealagg(data.agg[2].data, "Main Domain");
+        search_extend_list.value = [];
+      }
+      else if(search_type.value === 3){
+        
+        levelAgg.value.data = dealagg(data.agg[0].data, "Level");
         search_extend_list.value = [];
       }
       else {

@@ -371,18 +371,9 @@ onBeforeMount(async () => {
   authorId.value = route.params.id;
   fetchAuthorNetwork();
   fetchAuthorInformation();
+  authorInformation.value = getAuthorStates().authorInformation;
   console.log(authorId)
 });
-watch(
-    () => route.params.id,
-    (newVal, oldVal) => {
-      is_Login.value = store.getters.getLoginState;
-      authorId.value = route.params.id;
-      fetchAuthorNetwork();
-      fetchAuthorInformation();
-    },
-    { deep: true }
-);
 // 在页面加载时触发请求
 onMounted(async () => {
   is_Login.value = store.getters.getLoginState;
@@ -560,16 +551,13 @@ function handleClaimClose() {
   claimForm.captcha = "";
   claimForm.file = "";
 }
-watch(
-  () => claimForm.email,
-  (newVal, oldVal) => {
-    if (claimForm.captcha_get != "") {
-      claimForm.email_change = true;
-      claimForm.captcha_get = "";
-    }
-  },
-  { deep: true }
-);
+watch(() => route.path, (newPath, oldPath) => {
+  is_Login.value = store.getters.getLoginState;
+  authorId.value = route.params.id;
+  console.log(route.params.id)
+  fetchAuthorNetwork();
+  fetchAuthorInformation();
+});
 function getAppealCaptcha() {
   if (appealForm.email === "") {
     ElMessage.error("Please enter your email");

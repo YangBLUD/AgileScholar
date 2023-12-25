@@ -13,27 +13,36 @@
       <el-table-column width="40px">
         <template #default="{ row, $index }">
           <span v-if="row.type == 0"
-            ><el-icon><Document /></el-icon
+            ><el-icon> <Document /> </el-icon
           ></span>
           <span v-if="row.type == 1"
-            ><el-icon><User /></el-icon
+            ><el-icon> <User /> </el-icon
           ></span>
           <span v-if="row.type == 2"
-            ><el-icon><House /></el-icon
+            ><el-icon> <House /> </el-icon
           ></span>
         </template>
       </el-table-column>
       <el-table-column>
         <template #default="{ row, $index }">
-          <span v-if="row.type == 0" @click="jump(row)">{{
-            row.data.title
-          }}</span>
-          <span v-if="row.type == 1" @click="jump(row)">{{
-            row.data.display_name
-          }}</span>
-          <span v-if="row.type == 2" @click="jump(row)">{{
-            row.data.display_name
-          }}</span>
+          <span
+            style="cursor: pointer"
+            v-if="row.type == 0"
+            @click="jump(row)"
+            >{{ row.data.title }}</span
+          >
+          <span
+            style="cursor: pointer"
+            v-if="row.type == 1"
+            @click="jump(row)"
+            >{{ row.data.display_name }}</span
+          >
+          <span
+            style="cursor: pointer"
+            v-if="row.type == 2"
+            @click="jump(row)"
+            >{{ row.data.display_name }}</span
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -117,12 +126,13 @@ function getHistory() {
   }
 }
 function jump(row) {
+  console.log(row);
   if (row.type == 0) {
-    router.push(`/article/${row.id}`);
+    router.push(`/article/${row.data.id}`);
   } else if (row.type == 1) {
-    router.push("/scholar");
+    router.push(`/scholar/${row.data.id}`);
   } else if (row.type == 2) {
-    router.push(`/institution/${row.id}`);
+    router.push(`/institution/${row.data.id}`);
   }
 }
 </script>
@@ -139,14 +149,17 @@ function jump(row) {
   right: 120px;
   z-index: 999;
 }
+
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;
 }
+
 :deep(.el-table) {
   background-color: #ffffff;
   color: black;
 }
+
 :deep(.cell) {
   max-width: 260px;
   white-space: nowrap;

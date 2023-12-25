@@ -2,27 +2,22 @@
   <div class="mask" v-if="showLogin || showRegister"></div>
   <div class="top-nav">
     <ul>
-      <li style="padding-left: 30px">
-        <a
-          href="#"
-          style="
+      <li style="padding-left: 18px"><a href="#">
+          <img src="../../assets/7b5cd0fb87aa1c3e2b77df08f6161fa.png" alt=""
+            style="width: 245px; position: relative; top: -7px;">
+        </a>
+        <!-- <a href="#" style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          "
-          >What Scholar</a
-        >
+          ">What Scholar</a> -->
       </li>
-      <li style="width: 35%; margin-right: 0">
-        <div style="float: right">
-          <el-input
-            v-model="searchText"
-            @keyup="userNameKeyup($event)"
-            size="large"
-            width="200px"
-          >
+      <li style="width: 45%; margin-right: 0">
+        <div style="margin-top: 3px; margin-left: 100px;">
+          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px"
+            style="font-size: 16px;">
             <template #prefix>
               <el-icon class="el-input__icon">
                 <search />
@@ -32,50 +27,38 @@
           <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
-      <el-popover
-        placement="bottom"
-        :width="425"
-        trigger="click"
-        v-if="have_user_info"
-      >
+      <el-popover placement="bottom" :width="425" trigger="click" v-if="have_user_info">
         <template #default>
           <AI />
         </template>
         <template #reference>
-          <el-avatar
-            src="https://avatars.githubusercontent.com/u/72015883?v=4"
-            style="cursor: pointer"
-          />
+          <el-avatar :src="Avatar" style="cursor: pointer; margin-top: 3px;"></el-avatar>
         </template>
       </el-popover>
-      <el-popover
-        placement="bottom"
-        :width="425"
-        trigger="click"
-        v-if="!have_user_info"
-      >
+      <el-popover placement="bottom" :width="325" trigger="click" v-if="!have_user_info" effect="dark">
         <template #default>
-          <div>智能助手</div>
+          <div class="ai-text-title">AI Assistant</div>
+          <div class="ai-text">Understand your words</div>
+          <div class="ai-text">Answer your questions</div>
+          <div class="ai-text">Create your needs</div>
+          <div class="ai-text">Solve your difficulties</div>
+          <div class="ai-text">Learn your teachings</div>
+          <el-button type="primary" class="ai-button" @click="login">登录</el-button>
         </template>
         <template #reference>
-          <el-avatar
-            src="https://avatars.githubusercontent.com/u/72015883?v=4"
-            style="cursor: pointer"
-          />
+          <el-avatar :src="Avatar" style="cursor: pointer; margin-top: 3px;"></el-avatar>
         </template>
       </el-popover>
       <li class="right">
-        <button v-if="have_user_info" @click="history">History</button>
+        <button v-if="have_user_info" @click="history" style="border-radius: 10px 0 0 10px;">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
-        <button v-if="have_user_info && is_admin" @click="toAdmin">
-          Admin
-        </button>
-        <button v-if="have_user_info && is_scholar" @click="toPersonal">
-          Personal Homepage
-        </button>
-        <button v-if="have_user_info" @click="logout">Sign out</button>
-        <button v-if="!have_user_info" @click="login">Sign in</button>
-        <button v-if="!have_user_info" @click="register">Register</button>
+        <button v-if="is_admin && have_user_info" @click="toAdmin">Admin</button>
+        <button v-if="is_scholar && have_user_info" @click="toPersonal">Personal Homepage</button>
+        <button v-if="have_user_info" @click="logout" style="margin-right: 20px;border-radius: 0 10px 10px 0;">Sign
+          out</button>
+        <button v-if="!have_user_info" @click="login" style="border-radius: 10px 0 0 10px;">Sign in</button>
+        <button v-if="!have_user_info" @click="register"
+          style="margin-right: 20px;border-radius: 0 10px 10px 0;">Register</button>
       </li>
     </ul>
   </div>
@@ -99,20 +82,10 @@
           <label>E-mail</label>
         </div>
         <div class="user-box">
-          <input
-            type="text"
-            name=""
-            required=""
-            v-model="form.captcha"
-            style="width: 60%; float: left"
-          />
+          <input type="text" name="" required="" v-model="form.captcha" style="width: 60%; float: left" />
           <label>Captcha</label>
-          <el-button
-            type="primary"
-            @click="getCaptcha"
-            style="float: right; margin-top: 7px"
-            >{{ captcha_time }}</el-button
-          >
+          <el-button type="primary" @click="getCaptcha" style="float: right; margin-top: 7px">{{ captcha_time
+          }}</el-button>
         </div>
         <a href="#" @click="handleSubmit">
           <span></span>
@@ -132,12 +105,7 @@
           <label>Username</label>
         </div>
         <div class="user-box">
-          <input
-            type="password"
-            name=""
-            required=""
-            v-model="loginForm.password"
-          />
+          <input type="password" name="" required="" v-model="loginForm.password" />
           <label>Password</label>
         </div>
         <a href="#" @click="handleLoginSubmit">
@@ -156,6 +124,7 @@
 import { ref, reactive, watch, onMounted, onUnmounted } from "vue";
 import Login from "./Login.vue";
 import AI from "../Chat/chat.vue";
+import Avatar from "../../assets/icon.png"
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
@@ -238,6 +207,7 @@ function login() {
 function logout() {
   ElMessage.success("You have successfully signed out");
   Store.commit("logOut");
+  router.push("/home")
 }
 function register() {
   showRegister.value = true;
@@ -250,6 +220,7 @@ function history() {
 }
 function toPersonal() {
   let id = Store.getters.getUserinfo.claimed_scholar_id;
+  router.push(`/scholar/${id}`);
 }
 function refresh() {
   showLogin.value = false;
@@ -515,11 +486,13 @@ function getCaptcha() {
 }
 
 .top-nav button {
+  margin-top: 3px;
   background-color: rgb(37, 37, 37);
   color: #dfdfdf;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
 }
 
@@ -576,8 +549,8 @@ function getCaptcha() {
   transition: 0.5s;
 }
 
-.login-box .user-box input:focus ~ label,
-.login-box .user-box input:valid ~ label {
+.login-box .user-box input:focus~label,
+.login-box .user-box input:valid~label {
   top: -20px;
   left: 0;
   color: #03e9f4;
@@ -713,5 +686,50 @@ function getCaptcha() {
 
 :deep(.el-button:hover) {
   border-color: #03e9f4;
+}
+
+.ai-text-title {
+  background: linear-gradient(to right, #ff00ff, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  height: 70px;
+  line-height: 70px;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+.ai-text {
+  background: linear-gradient(to right, #48c6ef, #6f86d6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Arial Black", sans-serif;
+}
+
+.ai-button {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-left: 120px;
+  background: linear-gradient(to right, #ff00ff, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-color 0.3s ease;
+  /* 添加过渡效果 */
+}
+
+.ai-button:hover {
+  background-color: #cccccc;
+  /* 鼠标悬停时背景颜色变为灰色 */
+}
+
+.ai-button:not(:hover) {
+  animation: none !important;
+  /* 鼠标离开后取消动画效果 */
 }
 </style>

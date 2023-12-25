@@ -1,6 +1,5 @@
 <template>
-  <div
-    style="line-height: 30px; height: 30px; font-size: 20px; text-align: center; margin-bottom: 10px; font-weight: bold;">
+  <div class="title">
     智能助手<el-button :icon="Refresh" circle style="position:absolute; margin-left: 120px;" @click="resetList" />
   </div>
   <div style="width: 400px;">
@@ -96,4 +95,16 @@ function ask(s) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.title {
+  background: linear-gradient(to right, #ff00ff, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  height: 70px;
+  line-height: 70px;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: "Helvetica Neue", sans-serif;
+}
+</style>

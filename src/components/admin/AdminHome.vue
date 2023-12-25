@@ -28,11 +28,11 @@
 					待处理
 					<el-progress :percentage="100" color="#42b983"></el-progress>
 					申诉
-					<el-progress :percentage="P_informNum / P_Num * 100" color="#f1e05a"></el-progress>
+					<el-progress :percentage="appealNum / affairNum * 100" color="#f1e05a"></el-progress>
 					举报
-					<el-progress :percentage="P_appealNum / P_Num * 100"></el-progress>
+					<el-progress :percentage="reportNum / affairNum * 100"></el-progress>
 					认证申请
-					<el-progress :percentage="P_applyNum / P_Num * 100" color="#f56c6c"></el-progress>
+					<el-progress :percentage="claimNum / affairNum * 100" color="#f56c6c"></el-progress>
 				</el-card>
 			</el-col>
 			<el-col :span="16">
@@ -42,7 +42,7 @@
 							<div class="grid-content grid-con-1">
 								<el-icon class="grid-con-icon"><User /></el-icon>
 								<div class="grid-cont-right">
-									<div class="grid-num">{{informNum}}</div>
+									<div class="grid-num">{{appealNum}}</div>
 									<div>申诉</div>
 								</div>
 							</div>
@@ -53,7 +53,7 @@
 							<div class="grid-content grid-con-2">
 								<el-icon class="grid-con-icon"><ChatDotRound /></el-icon>
 								<div class="grid-cont-right">
-									<div class="grid-num">{{appealNum}}</div>
+									<div class="grid-num">{{reportNum}}</div>
 									<div>举报</div>
 								</div>
 							</div>
@@ -64,7 +64,7 @@
 							<div class="grid-content grid-con-3">
                                 <el-icon class="grid-con-icon"><Stamp /></el-icon>
 								<div class="grid-cont-right">
-									<div class="grid-num">{{applyNum}}</div>
+									<div class="grid-num">{{claimNum}}</div>
 									<div>认证申请</div>
 								</div>
 							</div>
@@ -128,14 +128,10 @@ const role = store.getters.getRole;
 const lastTime = store.getters.getLoginTime;
 const lastLocation = store.getters.getLoginLocation;
 
-const informNum = 1000;
-const appealNum = 1347;
-const applyNum = 2000;
-
-const P_Num = 250;
-const P_informNum = 100;
-const P_appealNum = 100;
-const P_applyNum = 50;
+const affairNum = store.getters.getAffairListLength;
+const appealNum = store.getters.getAppealListLength;
+const reportNum = store.getters.getReportListLength;
+const claimNum = store.getters.getClaimListLength;
 
 let todoList = ref(store.getters.getTodoList)
 

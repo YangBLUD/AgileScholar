@@ -11,47 +11,31 @@
   <div class="article-search" id="section1">
     <div style="z-index: 5">
       <div class="headline">
-        <h1>What Scholar</h1>
+        <h1 style="font-size: 70px;">AgileScholar</h1>
       </div>
       <div class="search_box">
-        <el-input
-          v-model="searchText"
-          placeholder="Search"
-          class="input-with-select"
-          @keyup.enter="performSearch"
-          size="large"
-          width="400px"
-          id="search"
-        >
+        <el-input v-model="searchText" placeholder="Search" class="input-with-select" @keyup.enter="performSearch"
+          size="large" width="400px" id="search">
           <template #append>
             <el-button :icon="Search" @click="performSearch" />
           </template>
         </el-input>
-        <div
-          style="
+        <div style="
             float: right;
             cursor: pointer;
             margin-right: 5px;
             margin-top: 10px;
             color: aliceblue;
-          "
-          @click="$router.push({ path: '/advanced' })"
-        >
-          <h5>Advanced Search</h5>
+
+          " @click="$router.push({ path: '/advanced' })" class="Advance">
+          <h5 style="font-size: 16px;">Advanced Search</h5>
         </div>
       </div>
       <div class="carousel">
         <el-carousel :interval="4000" height="130px" arrow="always">
-          <el-carousel-item
-            class="carousel-item"
-            v-for="(message, index) in messages"
-            :key="index"
-          >
-            <p
-              v-for="(item, index) in message.list"
-              :key="index"
-              style="font-size: 14px; margin: 5px; font-style: italic"
-            >
+          <el-carousel-item class="carousel-item" v-for="(message, index) in messages" :key="index">
+            <p v-for="(item, index) in message.list" :key="index"
+              style="font-size: 14px; margin: 5px; font-style: italic">
               {{ item }}
             </p>
           </el-carousel-item>
@@ -62,29 +46,29 @@
   <div class="article-rank" id="section2">
     <div class="section-title">Popular Articles</div>
     <div class="rank-content">
-      <div
-        class="rank-article-item"
-        v-for="(item, index) in rankArticles"
-        :key="index"
-        @click="goArticle(item.id)"
-      >
+      <div class="rank-article-item" v-for="(item, index) in rankArticles" :key="index" @click="goArticle(item.id)">
         <div class="rank-article-index">{{ index + 1 }}</div>
         <div class="rank-article-content">
+          <div class="rank-article-date">{{ item.publication_date }}</div>
           <div class="rank-article-title">
             {{ item.title }}
           </div>
-          <div style="height: 60px">
+          <div style="height: 40px">
             <div class="rank-article-author">
+              <el-avatar :src="Avatar" style="cursor: pointer; position: relative; top: 7px; margin-right: 5px;"
+                :size="25"></el-avatar>
               <span>{{ item.author_all[0].name }}</span>
               <span v-if="item.author_all.length == 2">,</span>
               <span v-if="item.author_all.length > 2"> et al.</span>
             </div>
-            <div class="rank-article-author" v-if="item.author_all.length == 2">
-              <span>{{ item.author_all[1].name }}</span>
+            <div class="rank-article-author" v-if="item.author_all.length == 2" style="margin-top: 3px;">
+              <el-avatar :src="Avatar" style="cursor: pointer; position: relative; top: 7px; margin-right: 5px;"
+                :size="25"></el-avatar>
+              <span>{{
+                item.author_all[1].name }}</span>
             </div>
           </div>
-          <div style="height: 80px">
-            <div class="rank-article-date">{{ item.publication_date }}</div>
+          <div style="height: 40px; margin-top: 20px;">
             <div class="rank-article-cite">
               Cited {{ item.cited_count }} times
             </div>
@@ -96,84 +80,45 @@
   <div class="classification" id="section3">
     <div class="section-title">Search by Subject</div>
     <div style="margin: auto; width: 90%">
-      <el-carousel
-        interval="1000000"
-        type="card"
-        height="600px"
-        indicator-position="outside"
-      >
+      <el-carousel interval="1000000" type="card" height="600px" indicator-position="outside">
         <el-carousel-item v-for="(item, index) in classifications" :key="index">
-          <el-button
-            :icon="More"
-            size="large"
-            circle
-            @click="showInfo(item.id)"
-            style="position: absolute; right: 40px; top: 20px"
-            v-show="item.show"
-          />
+          <el-button :icon="More" size="large" circle @click="showInfo(item.id)"
+            style="position: absolute; right: 40px; top: 20px" v-show="item.show" />
           <div v-show="item.show">
             <div class="image-block" @click="goSubject(item.value)">
               <img :src="item.image" class="image" />
             </div>
             <div class="subject-name">
               <span @click="goSubject(item.value)">{{ item.value }}</span>
-              <el-button
-                :icon="Search"
-                size="large"
-                circle
-                style="
+              <el-button :icon="Search" size="large" circle style="
                   float: right;
                   position: absolute;
                   top: 520px;
                   right: 40px;
-                "
-                @click="change(item)"
-              />
+                " @click="change(item)" />
             </div>
           </div>
           <div v-show="!item.show">
             <div class="nav-list">
-              <div
-                v-for="(item1, index1) in item.text"
-                :key="index1"
-                class="nav-item"
-              >
+              <div v-for="(item1, index1) in item.text" :key="index1" class="nav-item">
                 <div class="nav-item-left">
-                  <el-button
-                    :icon="More"
-                    size="large"
-                    circle
-                    @click="showInfo(item1.id)"
-                  />
-                  <div
-                    style="float: left; width: 70%; cursor: auto"
-                    @click="goSubject(item1.name)"
-                  >
+                  <el-button :icon="More" size="large" circle @click="showInfo(item1.id)" />
+                  <div style="float: left; width: 70%; cursor: auto" @click="goSubject(item1.name)">
                     {{ item1.name }}
                   </div>
-                  <div
-                    class="arrow"
-                    style="float: right; width: 30%; font-size: 20px"
-                    @click="goSubject(item1.name)"
-                  >
+                  <div class="arrow" style="float: right; width: 30%; font-size: 20px" @click="goSubject(item1.name)">
                     <el-icon>
                       <Right />
                     </el-icon>
                   </div>
                 </div>
               </div>
-              <el-button
-                :icon="ArrowLeft"
-                size="large"
-                circle
-                style="
+              <el-button :icon="ArrowLeft" size="large" circle style="
                   float: right;
                   position: absolute;
                   top: 520px;
                   right: 40px;
-                "
-                @click="change(item)"
-              />
+                " @click="change(item)" />
             </div>
           </div>
         </el-carousel-item>
@@ -185,13 +130,8 @@
     <div class="section-main-dev">
       <!-- 领奖台排名 -->
       <div class="podium">
-        <div
-          v-for="(institution, index) in podiumList"
-          :key="institution.id"
-          class="podium-item"
-          :class="getPodiumClass(index)"
-          @click="goInstitution(institution.id)"
-        >
+        <div v-for="(institution, index) in podiumList" :key="institution.id" class="podium-item"
+          :class="getPodiumClass(index)" @click="goInstitution(institution.id)">
           <div class="ins-rank">{{ index + 1 }}</div>
           <div class="ins-name">{{ institution.display_name }}</div>
           <div class="ins-views">
@@ -202,12 +142,8 @@
 
       <!-- 列表排名 -->
       <div class="normal-list">
-        <div
-          v-for="(institution, index) in normalList"
-          :key="institution.id"
-          class="normal-item"
-          @click="goInstitution(institution.id)"
-        >
+        <div v-for="(institution, index) in normalList" :key="institution.id" class="normal-item"
+          @click="goInstitution(institution.id)">
           <div class="rank">{{ index + 4 }}</div>
           <div class="name">{{ institution.display_name }}</div>
           <div class="views">
@@ -219,21 +155,11 @@
   </div>
   <!-- <div><Footer /></div> -->
   <!-- 学科详细信息dialog -->
-  <el-dialog
-    v-model="dialogVisible"
-    width="70%"
-    :show-close="false"
-    open-delay="500"
-  >
-    <div style="max-height: 700px; overflow-y: auto">
+  <el-dialog v-model="dialogVisible" width="70%" :show-close="false" open-delay="500" top="4vh">
+    <div style="max-height: 690px; overflow-y: auto;">
       <div class="subject-name">{{ subjectInfo.name }}</div>
-      <img
-        :src="subjectInfo.img_url"
-        alt="cnm加载得出来"
-        :onerror="display_vacant"
-        class="image"
-        style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px"
-      />
+      <img :src="subjectInfo.img_url" alt="" :onerror="display_vacant" class="image"
+        style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
       <div class="subject-description">{{ subjectInfo.description }}</div>
       <div class="summary">Summary Statistics</div>
       <el-descriptions direction="vertical" :column="4" border>
@@ -249,11 +175,9 @@
         <el-descriptions-item label="i10 Index" :span="2">{{
           subjectInfo.summary_stats.i10_index
         }}</el-descriptions-item>
-        <el-descriptions-item label="Open Access Percentage"
-          >{{ subjectInfo.summary_stats.oa_percent }}
+        <el-descriptions-item label="Open Access Percentage">{{ subjectInfo.summary_stats.oa_percent }}
         </el-descriptions-item>
-        <el-descriptions-item label="2-Year Mean Citedness"
-          >{{ subjectInfo.summary_stats.yr2_mean_citedness }}
+        <el-descriptions-item label="2-Year Mean Citedness">{{ subjectInfo.summary_stats.yr2_mean_citedness }}
         </el-descriptions-item>
         <el-descriptions-item label="Number of Works">{{
           subjectInfo.summary_stats.works_count
@@ -269,27 +193,12 @@
         }}</el-descriptions-item>
       </el-descriptions>
       <el-button-group style="margin-top: 50px; margin-bottom: 50px">
-        <el-button
-          type="primary"
-          @click="showChart1()"
-          text
-          style="font-size: 20px; font-weight: bold; font-style: italic"
-          >Total cited by count</el-button
-        >
-        <el-button
-          type="primary"
-          @click="showChart2()"
-          text
-          style="font-size: 20px; font-weight: bold; font-style: italic"
-          >Total works count</el-button
-        >
-        <el-button
-          type="primary"
-          @click="showChart3()"
-          text
-          style="font-size: 20px; font-weight: bold; font-style: italic"
-          >Total open access works count</el-button
-        >
+        <el-button type="primary" @click="showChart1()" text
+          style="font-size: 20px; font-weight: bold; font-style: italic">Total cited by count</el-button>
+        <el-button type="primary" @click="showChart2()" text
+          style="font-size: 20px; font-weight: bold; font-style: italic">Total works count</el-button>
+        <el-button type="primary" @click="showChart3()" text
+          style="font-size: 20px; font-weight: bold; font-style: italic">Total open access works count</el-button>
       </el-button-group>
       <Echart v-if="flag === 1" :xData="xData" :yData="yData1"></Echart>
       <Echart v-if="flag === 2" :xData="xData" :yData="yData2"></Echart>
@@ -310,6 +219,7 @@ import { ref, onMounted, reactive, nextTick } from "vue";
 import axios from "axios";
 import Echart from "../HomePage/Echats.vue";
 import AI from "../../components/Chat/chat.vue";
+import Avatar from "../../assets/logo.png"
 import TopNav from "../../components/HomePage/TopNav.vue";
 import Footer from "../../components/HomePage/Footer.vue";
 import { ElMessageBox } from "element-plus";
@@ -333,7 +243,7 @@ const subjectInfo = reactive({
   img_url: "",
 });
 function display_vacant() {
-  subjectInfo.img_url = "src/assets/homepage/vacant.jpg";
+  subjectInfo.img_url = "http://122.9.5.156:8000/api/v1/media/pic1.png"
 }
 var flag = ref(0);
 var xData = ref("");
@@ -640,7 +550,7 @@ const classifications = ref([
       { name: "Agricultural science", id: 37621935 },
     ],
     value: "Biology",
-    image: "/src/assets/homepage/Biology.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/32/EscherichiaColi_NIAID.jpg",
     show: true,
     id: 86803240,
   },
@@ -693,7 +603,7 @@ const classifications = ref([
       { name: "Optometry", id: 119767625 },
     ],
     value: "Medicine",
-    image: "/src/assets/homepage/Medicine.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Asklepios.3.jpg",
     show: true,
     id: 71924100,
   },
@@ -721,7 +631,7 @@ const classifications = ref([
       { name: "Radiochemistry", id: 177322064 },
     ],
     value: "Chemisrtry",
-    image: "/src/assets/homepage/Chemistry.jpg",
+    image: "http://122.9.5.156:8000/api/v1/media/pic2.jpg",
     show: true,
     id: 185592680,
   },
@@ -762,7 +672,7 @@ const classifications = ref([
       { name: "Computer engineering", id: 113775141 },
     ],
     value: "Computer science",
-    image: "/src/assets/homepage/Sorting_quicksort_anim.gif",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif",
     show: true,
     id: 41008148,
   },
@@ -786,7 +696,7 @@ const classifications = ref([
       { name: "Computational science", id: 459310 },
     ],
     value: "Mathematics",
-    image: "/src/assets/homepage/Mathematics.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Euclid.jpg",
     show: true,
     id: 33923547,
   },
@@ -821,7 +731,7 @@ const classifications = ref([
       { name: "Medical physics", id: 19527891 },
     ],
     value: "Physics",
-    image: "/src/assets/homepage/Physic.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/9/9a/CollageFisica.jpg",
     show: true,
     id: 121332964,
   },
@@ -835,7 +745,7 @@ const classifications = ref([
       { name: "Polymer science", id: 126348684 },
     ],
     value: "Materials science",
-    image: "/src/assets/homepage/MaterialScience.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Diamond_cuboctahedron.jpg",
     show: true,
     id: 192562407,
   },
@@ -886,7 +796,7 @@ const classifications = ref([
       { name: "Construction engineering", id: 107053488 },
     ],
     value: "Engineering",
-    image: "/src/assets/homepage/Engineering.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/3d/PIA19664-MarsInSightLander-Assembly-20150430.jpg",
     show: true,
     id: 127413603,
   },
@@ -908,7 +818,7 @@ const classifications = ref([
       { name: "Criminology", id: 73484699 },
     ],
     value: "Psychology",
-    image: "/src/assets/homepage/Psychology.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Psi2.svg",
     show: true,
     id: 15744967,
   },
@@ -956,7 +866,7 @@ const classifications = ref([
       { name: "Classical economics", id: 167562979 },
     ],
     value: "Economics",
-    image: "/src/assets/homepage/Economics.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Supply-demand-right-shift-demand.svg",
     show: true,
     id: 162324750,
   },
@@ -971,7 +881,7 @@ const classifications = ref([
       { name: "Religious studies", id: 24667770 },
     ],
     value: "Philosophy",
-    image: "/src/assets/homepage/Philosophy.png",
+    image: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Philbar_3.png",
     show: true,
     id: 138885662,
   },
@@ -982,7 +892,7 @@ const classifications = ref([
       { name: "Public administration", id: 3116431 },
     ],
     value: "Political science",
-    image: "/src/assets/homepage/Political.jpg",
+    image: "http://122.9.5.156:8000/api/v1/media/pic3.jpg",
     show: true,
     id: 17744445,
   },
@@ -1003,7 +913,7 @@ const classifications = ref([
       { name: "Ethnology", id: 2549261 },
     ],
     value: "Sociology",
-    image: "/src/assets/homepage/Sociology.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Social_Network_Diagram_%28segment%29.svg",
     show: true,
     id: 144024400,
   },
@@ -1022,7 +932,7 @@ const classifications = ref([
       { name: "Regional science", id: 148383697 },
     ],
     value: "Geography",
-    image: "/src/assets/homepage/Geology.jpeg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6f/OrteliusWorldMap.jpeg",
     show: true,
     id: 205649164,
   },
@@ -1047,7 +957,7 @@ const classifications = ref([
       { name: "Mining engineering", id: 16674752 },
     ],
     value: "Geology",
-    image: "/src/assets/homepage/Geography.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/2/25/1875_Dumont%27s_geological_map_of_Europe.jpg",
     show: true,
     id: 127313418,
   },
@@ -1063,7 +973,7 @@ const classifications = ref([
       { name: "Agricultural science", id: 37621935 },
     ],
     value: "Environmental science",
-    image: "/src/assets/homepage/Environment.png",
+    image: "https://upload.wikimedia.org/wikipedia/commons/4/43/The_Earth_seen_from_Apollo_17_with_transparent_background.png",
     show: true,
     id: 39432304,
   },
@@ -1084,7 +994,7 @@ const classifications = ref([
       { name: "Business administration", id: 178550888 },
     ],
     value: "Business",
-    image: "/src/assets/homepage/Business.svg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Society.svg",
     show: true,
     id: 144133560,
   },
@@ -1098,7 +1008,7 @@ const classifications = ref([
       { name: "Classics", id: 74916050 },
     ],
     value: "Art",
-    image: "/src/assets/homepage/Art.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/3/34/Art-portrait-collage_2.jpg",
     show: true,
     id: 142362112,
   },
@@ -1113,7 +1023,7 @@ const classifications = ref([
       { name: "Genealogy", id: 53553401 },
     ],
     value: "History",
-    image: "/src/assets/homepage/History.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Herodotus_Massimo_Inv124478.jpg",
     show: true,
     id: 95457728,
   },
@@ -1326,7 +1236,8 @@ function showInfo(item_id) {
 .navigation-item {
   cursor: pointer;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -1386,7 +1297,7 @@ function showInfo(item_id) {
 
 .carousel-item {
   color: white;
-  background-color: transparent;
+  background-color: transparent !important;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -1403,7 +1314,7 @@ function showInfo(item_id) {
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
   font-style: italic;
   margin: 20px 10px 40px 20px;
@@ -1411,8 +1322,8 @@ function showInfo(item_id) {
 
 .rank-content {
   margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 220px;
+  margin-right: 220px;
   border: 1px solid #ccd0d8;
   border-radius: 4px;
   background-color: #fff;
@@ -1425,20 +1336,19 @@ function showInfo(item_id) {
 }
 
 .rank-article-item {
+  padding-top: 10px;
   width: 25%;
   margin-bottom: 20px;
   padding-bottom: 30px;
   border-bottom: 1px solid #ccd0d8;
-  cursor: pointer;
 }
 
 .rank-article-index {
   margin-left: 5%;
   width: 15%;
   font-size: 30px;
-  font-style: italic;
   font-weight: bold;
-  color: rgb(255, 240, 103);
+  color: rgb(237, 218, 157);
   float: left;
 }
 
@@ -1460,22 +1370,30 @@ function showInfo(item_id) {
   padding: 0 10px;
   text-overflow: ellipsis;
   overflow-wrap: break-word;
+  cursor: pointer;
+}
+
+.rank-article-title:hover {
+  text-decoration: underline;
 }
 
 .rank-article-author {
-  margin-top: 20px;
+  margin-top: 0px;
   font-size: 14px;
-  color: #999;
+  color: rgb(97, 97, 97);
 }
 
 .rank-article-date {
-  margin-top: 30px;
   font-size: 14px;
-  font-style: italic;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-bottom: 13px;
+  color: rgb(150, 150, 150);
 }
 
 .rank-article-cite {
-  margin-top: 10px;
+  color: rgb(51, 51, 51);
+  margin-top: 30px;
   font-size: 14px;
   font-style: italic;
 }
@@ -1584,8 +1502,8 @@ function showInfo(item_id) {
 }
 
 .ins-rank {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 23px;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -1595,42 +1513,83 @@ function showInfo(item_id) {
 }
 
 .ins-views {
-  font-size: 14px;
+  font-size: 16px;
+}
+
+.normal-item {
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
 }
 
 .normal-item .rank {
   width: 15%;
   text-align: center;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 900;
 }
 
 .normal-item .name {
   width: 60%;
+  font-size: 17px;
+  font-weight: 700;
   overflow-x: auto;
   // font-style: italic;
 }
 
 .normal-item .views {
+  font-size: 17px;
   width: 20%;
+  font-weight: bold;
+}
+
+.normal-item:hover {
+  border: 2px solid #333;
 }
 
 .first-place {
   background-color: rgba(255, 217, 0, 0.6);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.first-place:hover {
+  border: 2px solid #333;
 }
 
 .second-place {
   background-color: rgba(192, 192, 192, 0.6);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.second-place:hover {
+  border: 2px solid #333;
 }
 
 .third-place {
   background-color: rgba(209, 73, 14, 0.459);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.third-place:hover {
+  border: 2px solid #333;
 }
 
 .normal-list {
@@ -1712,5 +1671,50 @@ function showInfo(item_id) {
 .el-dialog__wrapper {
   max-height: calc(100vh - 120px);
   /* 在这里设置最大高度 */
+}
+
+.Advance {
+  float: right;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-top: 10px;
+  color: aliceblue;
+  transition: ease 0.3s;
+}
+
+.Advance:hover {
+  transform: scale(1.1);
+  transition: ease 0.3s;
+}
+
+/* 细的滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 鼠标按下时的样式 */
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 滚动条轨道样式 */
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+/* 鼠标悬停在滚动条轨道上时的样式 */
+::-webkit-scrollbar-track:hover {
+  background-color: rgba(0, 0, 0, 0.15);
 }
 </style>
