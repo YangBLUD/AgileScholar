@@ -308,6 +308,11 @@ function getpaperlist() {
         domain_institution_Agg.value.data = dealagg(data.agg[2].data, "Main Domain");
         search_extend_list.value = [];
       }
+      else if(search_type.value === 3){
+        
+        levelAgg.value.data = dealagg(data.agg[0].data, "Level");
+        search_extend_list.value = [];
+      }
       else {
         agg.value = [];
         for (let i = 0; i < data.agg.length; i++) {
