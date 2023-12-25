@@ -47,7 +47,12 @@ const total = ref(1)
 const currentPage = ref(0)
 const finalPage = ref(-1)
 onMounted(() => {
-
+  currentPage.value = 0;
+  addPage()
+})
+watch(() => store.state.Institution.id, (newVal, oldVal) => {
+  currentPage.value = 0
+  addPage()
 })
 watch(() => store.state.Institution.id, (newVal, oldVal) => {
   institution = store.state.Institution.institution

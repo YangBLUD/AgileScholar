@@ -35,15 +35,11 @@
             <div class="bottom">
                 <div class="data">
                     <div class="inference">
-                        <el-icon>
-                            <Edit />
-                        </el-icon>
+                        <img src="../../assets/ArticleDisplay/cite.png" style="width: 20px; height: 20px;" alt="Cites">
                         <div class="inf-num">{{ props.info.cited_count }}</div>
                     </div>
                     <div class="trend">
-                        <el-icon>
-                            <DocumentAdd />
-                        </el-icon>
+                        <img style="width: 20px; height: 20px;" src="../../assets/ArticleDisplay/click.png" alt="Clicks">
                         <div class="tr-num">{{ props.info.type_num }}</div>
                     </div>
                 </div>
@@ -59,7 +55,6 @@
                         </el-icon>
                     </div>
                     <div class="introduce">
-
                         <stardialog :token="props.token" :paper_id="paper_id" :type="type" :is_star="props.info.is_star">
                         </stardialog>
                     </div>
@@ -103,15 +98,15 @@ const props = defineProps({
 
 .left {
     display: flex;
-    width: 30%;
+    /* width: 30%; */
 
     .timer {
-        width: 40%;
+        width: 50%;
         margin: 15px;
 
         .state {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 900;
         }
 
         .time {
@@ -140,12 +135,12 @@ const props = defineProps({
     .title {
         font-size: 18px;
         width: 87%;
-        height: 59px;
+        height: 72px;
         cursor: pointer;
         white-space: pre-wrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        font-family: Merriweather, serif;
+        /* font-family: Merriweather, serif; */
         color: #0077c2;
         font-weight: 600;
 
@@ -162,7 +157,7 @@ const props = defineProps({
             display: flex;
             cursor: pointer;
             margin-right: 20px;
-
+            font-weight: bold;
 
             .writer-pic {
 
@@ -237,16 +232,11 @@ const props = defineProps({
                 font-size: 25px;
 
                 .inf-num {
-                    margin-top: 3px;
-                    font-size: 17px;
+                    font-size: 15px;
                     margin-left: 5px;
+                    font-weight: 600;
                     font-family: icomoon !important;
                 }
-            }
-
-            .inference:hover {
-                cursor: pointer;
-                transform: translate(1px, -1px)
             }
 
             .trend {
@@ -257,19 +247,15 @@ const props = defineProps({
                 font-size: 25px;
 
                 .tr-num {
-                    margin-top: 3px;
-                    font-size: 17px;
+                    font-size: 15px;
                     margin-left: 5px;
+                    font-weight: 600;
                 }
-            }
-
-            .trend:hover {
-                cursor: pointer;
-                transform: translate(1px, -1px)
             }
         }
 
         .choice {
+            top: -5px;
             position: relative;
             left: 35%;
             display: flex;
@@ -286,6 +272,7 @@ const props = defineProps({
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                cursor: pointer;
             }
 
             .introduce:hover {
@@ -296,6 +283,7 @@ const props = defineProps({
 }
 
 .link {
+    color: rgb(83, 139, 199);
     text-decoration: none;
 }
 

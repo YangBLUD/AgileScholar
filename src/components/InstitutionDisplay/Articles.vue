@@ -43,7 +43,7 @@
 
 <script setup>
 
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import store from "../../store/index.js";
 import { ElMessage } from "element-plus";
@@ -243,7 +243,12 @@ let articles = ref([
 const page = ref(0)
 const total = ref(1)
 const finalPage = ref(-1)
+onMounted(() => {
+  page.value = 0;
+  addPage()
+})
 watch(() => store.state.Institution.id, (newVal, oldVal) => {
+  page.value = 0
   addPage()
 })
 function addPage() {

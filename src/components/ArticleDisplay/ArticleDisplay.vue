@@ -42,9 +42,9 @@
                 <div class="article-show-content-author">
                     <span class="article-show-content-author-title">Authors:</span>
                     <div v-for="author in authors.slice(0, 5)" class="article-show-content-author-block">
-                        <img src="../../assets/ArticleDisplay/head.jpg" alt="" class="article-show-content-author-img">
+                        <img src="../../assets/logo.png" alt="" class="article-show-content-author-img">
                         <span class="article-show-content-author-name text-gray">
-                            <router-link :to="{ name: 'scholar-display', params: { id: author.id } }">
+                            <router-link class="link" :to="{ name: 'scholar-display', params: { id: author.id } }">
                                 {{ author.name }}
                             </router-link>
                         </span>
@@ -439,6 +439,7 @@ function downloadPdf() {
     background-color: #f0f0f0;
     color: #6b6b6b;
     border-radius: 2px;
+    cursor: pointer;
 }
 
 
@@ -462,6 +463,7 @@ function downloadPdf() {
     width: 70px;
     color: #f9f9f9;
     background-color: #d40c03;
+    cursor: pointer;
 }
 
 .update-content {
@@ -484,4 +486,12 @@ function downloadPdf() {
 /*    !*-moz-box-sizing: border-box;*!*/
 /*    !*box-sizing: border-box;*!*/
 /*}*/
+.link {
+    text-decoration: none !important;
+    color: black;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
 </style>
