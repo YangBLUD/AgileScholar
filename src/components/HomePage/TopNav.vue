@@ -208,6 +208,7 @@ function login() {
 function logout() {
   ElMessage.success("You have successfully signed out");
   Store.commit("logOut");
+  router.push("/home")
 }
 function register() {
   showRegister.value = true;
