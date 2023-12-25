@@ -22,6 +22,11 @@ const yr2_works_count = data.yr2_works_count;
 const chartDiv = ref(null);
 // ECharts 配置项
 let chartOptions = {
+  title: {
+    text: 'Scholar Index Graph',
+    top: 'top',
+    left: 'center',
+  },
   color: ['#1E90FF', '#7FFF00'], // 设置新的颜色方案
   tooltip: {
     trigger: 'axis',
@@ -37,7 +42,8 @@ let chartOptions = {
     }
   },
   legend: {
-    data: ['Total', 'Last 2 Years']
+    data: ['Total', 'Last 2 Years'],
+    top:"bottom"
   },
   grid: {
     left: '3%',

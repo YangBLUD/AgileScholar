@@ -73,6 +73,11 @@ const tooltip = {
 // }, {deep:true});
 // ECharts 配置项
 const chartOptions = ref( {
+  title: {
+    text: 'Distribution of achievements',
+    top: 'top',
+    left: 'center',
+  },
   legend: {
     top: 'bottom'
   },

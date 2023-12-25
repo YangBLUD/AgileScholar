@@ -108,6 +108,11 @@ var data = [
   }
 ];
 const chartOptions = {
+  title: {
+    text: 'Academic Focus Graph',
+    top: 'top',
+    left: 'center',
+  },
   visualMap: {
     type: 'continuous',
     min: 0,

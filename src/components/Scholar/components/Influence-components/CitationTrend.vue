@@ -25,6 +25,11 @@ const citationdata  = reactive(getAuthorStates().authorInformation.counts_by_yea
 // ECharts 配置项
 const chartOptions =ref( {
   animation: true, // 启用动画效果
+  title: {
+    text: 'Citation Trend Graph',
+    top: 'top',
+    left: 'center',
+  },
   xAxis: {
     type: 'category',
     data: yeardata,
@@ -34,14 +39,28 @@ const chartOptions =ref( {
       interval: 0, // 强制显示所有标签
       rotate: 45, // 标签旋转角度
     },
-    // 其他配置...
+    axisLine: {
+      lineStyle: {
+        color: '#000'
+      }
+    },
   },
   yAxis: {
     type: 'value',
-    axisLabel: {
-      color: '#333', // 坐标轴标签颜色
-      fontSize: 12, // 坐标轴标签字体大小
+    axisLine: {
+      lineStyle: {
+        color: '#000'
+      }
     },
+    axisLabel: {
+      color: '#333',
+    },
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: '#ccc'
+      }
+    }
   },
   grid: {
     left: '5%',
@@ -61,6 +80,17 @@ const chartOptions =ref( {
         shadowBlur: 5,
         shadowOffsetY: 5,
       },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+          offset: 0,
+          color: 'rgba(30,144,255,0.7)' // 深蓝色渐变
+        },
+          {
+            offset: 1,
+            color: 'rgba(70,130,180,0)' // 透明
+          }
+        ])
+      },
       label: {
         show: true,
         position: 'top', // 标签位置可根据需要调整
@@ -73,8 +103,11 @@ const chartOptions =ref( {
     }
   ],
   tooltip: {
-    trigger: 'axis', // 提示框触发类型
-    // 其他配置...
+    trigger: 'axis',
+    backgroundColor: 'rgba(30,144,255,0.7)',
+    textStyle: {
+      color: '#fff'
+    }
   },
 });
 onMounted(() => {

@@ -29,7 +29,9 @@ const oa_works_countdata =  reactive(getAuthorStates().authorInformation.counts_
 const chartOptions =ref( {
   color: [ '#37A2FF', '#FF0087', '#FFBF00'],
   title: {
-    text: 'academic achievements'
+    text: 'Academic Achievements Graph',
+    top: 'top',
+    left: 'center',
   },
   tooltip: {
     trigger: 'axis',
@@ -41,7 +43,8 @@ const chartOptions =ref( {
     }
   },
   legend: {
-    data: ['works_count', 'oa_works_count',]
+    data: ['works_count', 'oa_works_count',],
+    top:"bottom"
   },
   toolbox: {
     feature: {
