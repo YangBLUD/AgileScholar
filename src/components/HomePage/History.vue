@@ -2,33 +2,47 @@
   <div class="history-dialog" ref="showDialog">
     <div style="margin-top: 18px">
       <span style="margin-left: 20px; font-weight: 600">Browsing history</span>
-      <el-button type="primary" @click="clearAll()" style="margin-right: 10px; float: right">Clear All</el-button>
+      <el-button
+        type="primary"
+        @click="clearAll()"
+        style="margin-right: 10px; float: right"
+        >Clear All</el-button
+      >
     </div>
     <el-table :data="history_list" max-height="500px">
       <el-table-column width="40px">
         <template #default="{ row, $index }">
-          <span v-if="row.type == 0"><el-icon>
-              <Document />
-            </el-icon></span>
-          <span v-if="row.type == 1"><el-icon>
-              <User />
-            </el-icon></span>
-          <span v-if="row.type == 2"><el-icon>
-              <House />
-            </el-icon></span>
+          <span v-if="row.type == 0"
+            ><el-icon> <Document /> </el-icon
+          ></span>
+          <span v-if="row.type == 1"
+            ><el-icon> <User /> </el-icon
+          ></span>
+          <span v-if="row.type == 2"
+            ><el-icon> <House /> </el-icon
+          ></span>
         </template>
       </el-table-column>
       <el-table-column>
         <template #default="{ row, $index }">
-          <span v-if="row.type == 0" @click="jump(row)">{{
-            row.data.title
-          }}</span>
-          <span v-if="row.type == 1" @click="jump(row)">{{
-            row.data.display_name
-          }}</span>
-          <span v-if="row.type == 2" @click="jump(row)">{{
-            row.data.display_name
-          }}</span>
+          <span
+            style="cursor: pointer"
+            v-if="row.type == 0"
+            @click="jump(row)"
+            >{{ row.data.title }}</span
+          >
+          <span
+            style="cursor: pointer"
+            v-if="row.type == 1"
+            @click="jump(row)"
+            >{{ row.data.display_name }}</span
+          >
+          <span
+            style="cursor: pointer"
+            v-if="row.type == 2"
+            @click="jump(row)"
+            >{{ row.data.display_name }}</span
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -112,12 +126,13 @@ function getHistory() {
   }
 }
 function jump(row) {
+  console.log(row);
   if (row.type == 0) {
-    router.push(`/article/${row.id}`);
+    router.push(`/article/${row.data.id}`);
   } else if (row.type == 1) {
-    router.push(`/scholar/${row.id}`);
+    router.push(`/scholar/${row.data.id}`);
   } else if (row.type == 2) {
-    router.push(`/institution/${row.id}`);
+    router.push(`/institution/${row.data.id}`);
   }
 }
 </script>

@@ -1,4 +1,5 @@
 <template>
+  <button @click="test">test</button>
   <div>
     <TopNav />
   </div>
@@ -33,8 +34,16 @@
           </template>
         </div>
         <div class="author-opt">
-          <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
-          <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
+          <el-button
+            v-if="authorInformation.claimed"
+            @click="showAppeal"
+            type="primary"
+            class="AttrButton"
+            >Appeal</el-button
+          >
+          <el-button v-else @click="showClaim" class="AttrButton"
+            >Claim</el-button
+          >
         </div>
       </div>
     </el-header>
@@ -147,13 +156,16 @@
         >
         <!-- 发表的论文 -->
         <el-tab-pane label="Published Papers" name="papers" class="pane"
-          >Display all papers published by scholars, supporting retrieval and sorting</el-tab-pane
+          >Display all papers published by scholars, supporting retrieval and
+          sorting</el-tab-pane
         >
         <!-- 学术关系网络 -->
-        <el-tab-pane label="Academic Relations Network" name="network" class="pane"
+        <el-tab-pane
+          label="Academic Relations Network"
+          name="network"
+          class="pane"
           >Show the relationship network of this scholar</el-tab-pane
         >
-
       </el-tabs>
       <div class="tab-content">
         <component
@@ -179,7 +191,7 @@ import { Base64 } from "js-base64";
 import { encodeUtf8 } from "node-forge/lib/util.js";
 import { Store, useStore } from "vuex";
 import { UploadFilled } from "@element-plus/icons-vue";
-import { useRoute } from "vue-router"
+import { useRoute } from "vue-router";
 import {
   ElRow,
   ElCol,
@@ -195,7 +207,6 @@ import {
 import axios from "axios";
 import TopNav from "../HomePage/TopNav.vue";
 import { Check, Delete, Edit } from "@element-plus/icons-vue";
-
 // 标签页状态
 const is_Login = ref(false);
 const activeTab = ref("influence");
@@ -325,6 +336,9 @@ const load = {
     author_email: "21371102@cdcdcd.buaa.edu.cn",
   },
 };
+function test() {
+  console.log(route.params);
+}
 const fetchAuthorInformation = () => {
   axios({
     url: "http://122.9.5.156:8000/api/v1/author/get_author_information",
@@ -366,8 +380,20 @@ onBeforeMount(async () => {
   fetchAuthorNetwork();
   fetchAuthorInformation();
   authorInformation.value = getAuthorStates().authorInformation;
-  console.log(authorId)
+  console.log(authorId);
 });
+watch(
+  () => route.params,
+  (newVal, oldVal) => {
+    console.log(newVal);
+    is_Login.value = store.getters.getLoginState;
+    authorId.value = route.params.id;
+    fetchAuthorNetwork();
+    fetchAuthorInformation();
+    authorInformation.value = getAuthorStates().authorInformation;
+  },
+  { deep: true }
+);
 // 在页面加载时触发请求
 onMounted(() => {
   authorInformation.value = getAuthorStates().authorInformation;
@@ -731,10 +757,9 @@ watch(
   font-weight: 600;
 }
 
-.AttrButton{
+.AttrButton {
   height: auto;
   width: 70px;
-
 }
 
 .author-info .author-attr {
@@ -742,7 +767,7 @@ watch(
   font-size: 15px;
   color: #666;
 }
- .author-certificate {
+.author-certificate {
   margin-bottom: 15px;
   font-size: 17px;
   color: #0773df;
