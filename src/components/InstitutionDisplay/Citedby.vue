@@ -48,7 +48,7 @@ function initChart(){
             trigger: 'axis'
         },
         legend: {
-            data: [  'Cited Count','Work Count', 'Oa Work Count']
+            data: ['Cited Count', 'Work Count', 'Oa Work Count']
         },
         grid: {
             left: '3%',
@@ -103,7 +103,7 @@ function handleResize(){
             trigger: 'axis'
         },
         legend: {
-            data: [  'Cited Count','Work Count', 'Oa Work Count']
+            data: ['Cited Count', 'Work Count', 'Oa Work Count']
         },
         grid: {
             left: '3%',

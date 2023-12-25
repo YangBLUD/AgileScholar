@@ -30,7 +30,7 @@
                     <div class="holder"></div>
                     <Domain/>
                 </div>
-                <div class="institution-more-inform">
+                <div class="institution-more-inform" style="margin-bottom: 50px">
                     <Articles/>
                     <div class="holder"></div>
                     <Authors/>

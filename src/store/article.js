@@ -18,7 +18,7 @@ const ArticleModule ={
                 name: "Yang DingHao",
                 claimed: true,
             },
-        ],  //数组，存储当前所有的组织
+        ],
         currentAuthorId: -1,
         title: "Wireless mesh networks: a survey",
         id: "2150825860",

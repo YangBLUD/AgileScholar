@@ -6,34 +6,18 @@
         </div>
         <div class="basic-block">
             <div v-for="author in authors" class="author-box">
-                <div class="author-box-content-header">
-                    <p class="author-content-header">{{ author.name }}</p>
-                </div>
+                <img class="author-img" src="../../assets/ArticleDisplay/free.jpg" alt="">
                 <div class="author-term-wrapper">
-                    <div class="author-term-activity">
-                        <div class="author-term-header">Activity</div>
-                        <div class="holder"></div>
-                        <div class="author-term-bar">
-                            <span class="author-term" style="background-color: #34c471" :style="{ width: author.activity_level + '%' }"></span>
-                        </div>
-                    </div>
-                    <p class="author-term-percentage">{{ author.activity_level }}%</p>
+                    <p class="author-content-header">{{ author.display_name }}</p>
                 </div>
             </div>
-            <div v-if="haveMoreAuthor && (currentPage !== 1) && (currentPage !== finalPage)" class="author-btn-group">
-                <div class="author-more-two-btn" @click="minusPage()">
+            <div v-if="total>4" class="author-btn-group">
+                <div v-if="currentPage!==1" class="author-more-two-btn" @click="minusPage()">
                     Previous
                 </div>
-                <div class="author-more-two-btn" @click="addPage()">
+                <div v-if="currentPage!==finalPage" class="author-more-two-btn" @click="addPage()">
                     Next
                 </div>
-            </div>
-
-            <div v-if="haveMoreAuthor && (currentPage === 1)" class="author-more-btn" @click="addPage()">
-                Next
-            </div>
-            <div v-if="haveMoreAuthor && (currentPage === finalPage)" class="author-more-btn" @click="minusPage()">
-                Previous
             </div>
         </div>
     </div>
@@ -43,29 +27,112 @@
 
 <script setup>
 
-import {reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import store from "../../store/index.js";
+import axios from "axios";
+import {ElMessage} from "element-plus";
+
 
 let institution = reactive(store.state.Institution.institution)
-let authors = ref(store.getters.getFewAuthor)
-let haveMoreAuthor = ref(store.getters.getHaveMore)
-const currentPage = ref(1)
-const finalPage = ref(Math.ceil(institution.author.length/4))
+let authors = ref([
+    {
+        name: "HuoBin Tan",
+    }
+])
+const total = ref(1)
+const currentPage = ref(0)
+const finalPage = ref(-1)
+onMounted(()=>{
 
+})
 watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
-    currentPage.value = 1
     institution = store.state.Institution.institution
-    authors = store.getters.getFewAuthor
-    haveMoreAuthor = store.getters.getHaveMore
-    finalPage.value = Math.ceil(institution.author.length/4)
+    addPage()
 })
 function addPage(){
+    axios({
+        // 接口网址：包含协议名，域名，端口和路由
+        url: 'http://122.9.5.156:8000/api/v1/search_result/search',
+        // 请求方式，默认为get，可以不写
+        method: 'post',
+        // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+        data: JSON.stringify({
+            search_type: 1,
+            and_list: [{
+                content: 4210135016,
+                select: 'Institution',
+                clear: 1
+            }],
+            or_list:[],
+            not_list: [],
+            start_time: "",
+            end_time: "",
+            first_search: 0,
+            work_clustering: 0,
+            author_clustering: 0,
+            size: 4,
+            from: currentPage.value * 4,
+            sort: -1,
+            extend_list: [],
+            token: store.state.User.token,
+        }),
+// 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+        if(res.data.errno === 0){
+            console.log(res.data.data)
+            authors.value = res.data.data.result
+            finalPage.value = Math.ceil(res.data.data.total/8)
+        }
+        else{
+            ElMessage.error('出错啦，找周霄')
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
     currentPage.value = currentPage.value + 1
-    authors = institution.author.slice((currentPage.value-1)*4, currentPage.value*4)
 }
 function minusPage(){
     currentPage.value = currentPage.value - 1
-    authors = institution.author.slice((currentPage.value-1)*4, currentPage.value*4)
+    axios({
+        // 接口网址：包含协议名，域名，端口和路由
+        url: 'http://122.9.5.156:8000/api/v1/search_result/search',
+        // 请求方式，默认为get，可以不写
+        method: 'post',
+        // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+        data: JSON.stringify({
+            search_type: 1,
+            and_list: [{
+                content: store.state.Institution.id,
+                select: 'Institution',
+                clear: 1
+            }],
+            or_list:[],
+            not_list: [],
+            start_time: "",
+            end_time: "",
+            first_search: 0,
+            work_clustering: 0,
+            author_clustering: 0,
+            size: 4,
+            from: currentPage.value * 4,
+            sort: -1,
+            extend_list: [],
+            token: store.state.User.token,
+        }),
+// 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+        console.log(res.data.errno)
+        if(res.data.errno === 0){
+            console.log(res.data.data)
+            authors.value = res.data.data.result
+            finalPage.value = Math.ceil(res.data.data.total/8)
+        }
+        else{
+            ElMessage.error('出错啦，找周霄')
+        }
+    }).catch(err=>{
+        console.log(err)
+    })
 }
 </script>
 
@@ -107,10 +174,13 @@ function minusPage(){
     margin: 10px;
     padding: 16px;
     background-color: var(--main-color-card);
+    display: flex;
+    flex-direction: row;
 }
-.author-box-content-header {
-    margin-bottom: 10px;
-    p { margin: 0; }
+.author-img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
 .author-content-header {
@@ -119,37 +189,7 @@ function minusPage(){
     line-height: 24px;
     font-weight: 700;
     opacity: .7;
-}
-
-.author-term {
-    display: block;
-    height: 4px;
-    border-radius: 6px;
-}
-.author-term-bar {
-    height: 4px;
-    border-radius: 6px;
-    overflow: hidden;
-    background-color: #ffffff;
-    margin: 8px 0;
-}
-.author-term-activity{
-    display: grid;
-    grid-template-columns: 58px minmax(0px, 1%) minmax(0px, 70%);
-}
-.author-term-header {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 16px;
-    margin: 0;
-}
-.author-term-percentage {
-    text-align: right;
-    margin: 0;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 16px;
+    margin-left: 15px;
 }
 
 .author-more-btn{
