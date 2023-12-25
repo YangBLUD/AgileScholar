@@ -5,7 +5,7 @@
         </div>
         <div class="name" style="text-align: center;">
 <!--            <router-link :to="{name:'scholar-display', params:{id:props.info.id} }">-->
-                <span v-html="props.info.display_name" style="display: inline-block;"></span>
+<!--                <span v-html="props.info.display_name" style="display: inline-block;"></span>-->
 <!--            </router-link>-->
         </div>
         <div class="jigou" v-if="props.info.institution && props.info.institution.length!=0" style="text-align: center;"> 
