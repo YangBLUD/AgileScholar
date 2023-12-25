@@ -32,7 +32,9 @@
           <div v-for="author in authors.slice(0,5)" class="article-show-content-author-block">
             <img src="../../assets/ArticleDisplay/head.jpg" alt="" class="article-show-content-author-img">
             <span class="article-show-content-author-name text-gray">
-                {{ author.name }}
+              <router-link :to="{ name: 'scholar-display', params: { id: author.id } }">
+                 {{ author.name }}
+              </router-link>
             </span>
           </div>
           <span class="article-show-content-author-all text-underline">Authors Info & Claims</span>

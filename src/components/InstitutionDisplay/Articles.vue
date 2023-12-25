@@ -7,13 +7,17 @@
         <div class="basic-block">
             <div v-for="article in articles" class="article-block">
                 <h5>RESEARCH-ARTICLE</h5>
-                <div class="article-title">{{article.title}}</div>
+                <div class="article-title">
+                    <router-link :to="{ name: 'article-display', params: { id: article.id } }">
+                        {{article.title}}
+                    </router-link>
+                </div>
                 <div class="article-author">
-                    <div v-for="author in article.Authors.slice(0,2)" class="article-author-block">
+                    <div v-for="author in article.author_all.slice(0, 2)" class="article-author-block">
                         <img src="../../assets/ArticleDisplay/head.jpg" alt="" class="article-author-img">
                         <span class="article-author-name text-gray">
-                            {{ author.name }},
-                        </span>
+             {{ author.name }},
+            </span>
                     </div>
                     <div class="author-more">
                         ...
@@ -48,7 +52,7 @@ import {ElMessage} from "element-plus";
 let articles = ref([
     {
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -69,7 +73,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey wireless mesh networks: a survey mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -90,7 +94,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -111,7 +115,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -132,7 +136,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -153,7 +157,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -174,7 +178,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -195,7 +199,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",
@@ -216,7 +220,7 @@ let articles = ref([
         landing_page_url: "https://doi.org/10.1016/j.comnet.2004.12.001",
     },{
         title: "Wireless mesh networks: a survey",
-        Authors:[
+        author_all:[
             {
                 id: "001",
                 name: "Yang DingHao",

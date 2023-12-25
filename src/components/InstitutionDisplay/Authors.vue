@@ -8,7 +8,12 @@
             <div v-for="author in authors" class="author-box">
                 <img class="author-img" src="../../assets/ArticleDisplay/free.jpg" alt="">
                 <div class="author-term-wrapper">
-                    <p class="author-content-header">{{ author.display_name }}</p>
+                    <p class="author-content-header">
+                        <router-link :to="{ name: 'scholar-display', params: { id: author.id } }">
+                            {{ author.display_name }}
+                        </router-link>
+
+                    </p>
                 </div>
             </div>
             <div v-if="total>4" class="author-btn-group">
@@ -59,7 +64,7 @@ function addPage(){
         data: JSON.stringify({
             search_type: 1,
             and_list: [{
-                content: 4210135016,
+                content: store.state.Institution.id,
                 select: 'Institution',
                 clear: 1
             }],

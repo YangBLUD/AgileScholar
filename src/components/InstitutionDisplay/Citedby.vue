@@ -18,26 +18,34 @@
 import {onMounted, reactive, ref, watch} from "vue";
 import * as echarts from "echarts"
 import store from "../../store/index.js";
-onMounted(()=> {
-    console.log(11)
-    console.log(cited_count)
-    console.log(work_count)
-})
-watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
-    years = store.getters.getYears
-    cited_count = store.getters.getCitedCount
-    work_count = store.getters.getWorkCount
-    oa_work_count = store.getters.getOaWorkCount
-    initChart()
-    window.addEventListener('resize', handleResize);
+import Vue from "node-forge/lib/util.js";
+
+watch(() => store.state.Institution.id, (newVal, oldVal) => {
+    console.log("change")
+    years.value = store.getters.getYears
+    cited_count.value = store.getters.getCitedCount
+    work_count.value = store.getters.getWorkCount
+    oa_work_count.value = store.getters.getOaWorkCount
+    let timer
+    let mount = 60
+    timer = setInterval(() => {
+        mount--;
+        if (mount <= 0) {
+            initChart()
+            window.addEventListener('resize', handleResize);
+            clearInterval(timer)
+        }
+    }, 1)
 })
 
-let years = ref(store.getters.getYears)
-let cited_count = ref(store.getters.getCitedCount)
-let work_count = ref(store.getters.getWorkCount)
-let oa_work_count = ref(store.getters.getOaWorkCount)
-function initChart(){
+const years = ref(store.getters.getYears)
+const cited_count = ref(store.getters.getCitedCount)
+const work_count = ref(store.getters.getWorkCount)
+const oa_work_count = ref(store.getters.getOaWorkCount)
+
+function initChart() {
     const chartDom = document.getElementById('cited-echarts');
+    chartDom.removeAttribute("_echarts_instance_");
     const myChart = echarts.init(chartDom);
     const option = ref({
         title: {
@@ -91,7 +99,21 @@ function initChart(){
     })
     myChart.setOption(option.value)
 }
-function handleResize(){
+
+onMounted(() => {
+    setTimeout(() => {
+        Vue.nextTick(() => {
+            years.value = store.getters.getYears
+            cited_count.value = store.getters.getCitedCount
+            work_count.value = store.getters.getWorkCount
+            oa_work_count.value = store.getters.getOaWorkCount
+            initChart()
+        });
+    }, 60);  // 等待 60 毫秒
+    window.addEventListener('resize', handleResize);
+})
+
+function handleResize() {
     const chartDom = document.getElementById('cited-echarts');
     const myChart = echarts.init(chartDom);
     const option = ref({
@@ -152,23 +174,26 @@ function handleResize(){
 
 
 <style scoped>
-.institution-show-content-nav{
+.institution-show-content-nav {
     background-color: #fafafa;
     margin: 10px 10px 15px 0;
     /*padding: 30px;*/
 }
-.institution-show-content-nav-block{
+
+.institution-show-content-nav-block {
     /*margin: -30px 0 0 -30px;*/
     padding: 13px 0;
     display: flex;
     flex-direction: row;
 }
-.institution-show-content-nav-holder{
+
+.institution-show-content-nav-holder {
     width: 8px;
     height: 18px;
     background-color: #333333;
 }
-.institution-show-content-nav-title{
+
+.institution-show-content-nav-title {
     padding-left: 12px;
     font-size: 18px;
     line-height: 1.125rem;
@@ -176,12 +201,12 @@ function handleResize(){
     font-weight: bold;
 }
 
-.basic-block{
+.basic-block {
     display: flex;
     flex-direction: row;
 }
 
-.cited-echarts{
+.cited-echarts {
     margin: 10px;
     width: 100%;
     min-width: 560px;
