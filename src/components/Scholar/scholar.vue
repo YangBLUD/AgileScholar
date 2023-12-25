@@ -11,8 +11,10 @@
         <div class="author-info">
          <template v-if="authorInformation != null">
             <h2>{{ authorInformation.display_name }}</h2>
-            <p>{{ authorInformation.institution[0].name }}</p>
-            <p>{{ authorInformation.author_email}}</p>
+            <p class="author-attr">{{ authorInformation.institution[0].name }}</p>
+            <p class="author-attr">{{ authorInformation.author_email}}</p>
+            <p v-if="authorInformation.claimed" class="author-certificate">Scholar certified<el-button class="checkbutton" type="success" :icon="Check" circle /></p>
+            <p v-if="!authorInformation.claimed" class="author-certificate">Scholar not certified</p>
           </template>
         </div>
       </div>
@@ -43,6 +45,9 @@ import { onMounted ,defineAsyncComponent, computed, ref, reactive, onBeforeMount
 import {useStore} from "vuex";
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElTabs, ElTabPane } from 'element-plus';
 import axios from 'axios';
+import {
+  Check,Delete,Edit
+} from '@element-plus/icons-vue'
 
 // 标签页状态
 const activeTab = ref('influence');
@@ -116,9 +121,25 @@ authorId.value = 5053369573;
 authorInformation.value = getAuthorStates().authorInformation
 fetchAuthorNetwork();
 fetchAuthorInformation();
+console.log(authorInformation.value.claimed)
+console.log(authorInformation.value)
+console.log(authorInformation.value.display_name)
 </script>
 
 <style scoped>
+
+.checkbutton{
+  font-size: 16px;
+  margin-left: 5px;
+  width: 10px; /* 设置按钮宽度 */
+  height: 10px; /* 设置按钮高度 */
+}
+
+.certified-text{
+  color: 'red';
+  font-size: 24px;
+}
+
 .main-container {
   font-family: 'Source Sans Pro', Arial, sans-serif;
   color: #333;
@@ -148,6 +169,10 @@ fetchAuthorInformation();
   align-items: center;
   justify-content: center;
 }
+.author-certificate .el-icon {
+  margin-left: 10px; /* 调整图标与文字之间的间距 */
+  /* 其他样式设置 */
+}
 
 .author-info {
   display: flex;
@@ -161,11 +186,17 @@ fetchAuthorInformation();
   font-weight: 600;
 }
 
-.author-info p {
+.author-info .author-attr {
   margin-bottom: 15px;
   font-size: 15px;
   color: #666;
 }
+.author-info .author-certificate {
+  margin-bottom: 15px;
+  font-size: 17px;
+  color: #0773df;
+}
+
 /* 设置标签页标题的样式 */
 ::v-deep .tabs .el-tabs__item {
   margin: 5px;

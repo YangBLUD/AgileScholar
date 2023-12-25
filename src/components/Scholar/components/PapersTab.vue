@@ -39,6 +39,9 @@
           :current-page="currentPage"
           :page-size="10"
           :total="totalpage"
+          :small="false"
+          class="custom-pagination"
+          style="font-size: 16px; padding: 20px;"
           @current-change="handlePageChange">
       </el-pagination>
     </el-main>
