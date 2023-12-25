@@ -111,7 +111,7 @@
 <script setup>
 import { ref, reactive, watch, onMounted, onUnmounted } from "vue";
 import Login from "./Login.vue";
-import AI from "../Chat/chat.vue"
+import AI from "../Chat/chat.vue";
 import Register from "./Register.vue";
 import { Search } from "@element-plus/icons-vue";
 import Star from "./Star.vue";
@@ -174,19 +174,18 @@ watch(
     have_user_info.value = newVal;
   },
   { deep: true },
-  () => Store.getters.getScholarName,
+);
+watch(() => Store.getters.getScholarName,
   (newVal) => {
     if (newVal != "") {
       is_scholar.value = true;
     }
-  },
-  { deep: true },
-  () => Store.getters.getUserinfo.is_admin,
+  }, { deep: true })
+watch(() => Store.getters.getUserinfo.is_admin,
   (newVal) => {
     is_admin.value = newVal;
   },
-  { deep: true }
-);
+  { deep: true })
 function login() {
   showLogin.value = true;
 }
@@ -285,6 +284,7 @@ function handleLoginSubmit() {
     });
 }
 function toAdmin() {
+  Store.commit("AdminLogin")
   router.push("/admin");
 }
 //注册
