@@ -748,7 +748,7 @@ watch(
 }
 .author-info h2 {
   margin-bottom: 30px;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 600;
 }
 
