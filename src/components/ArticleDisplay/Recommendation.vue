@@ -61,7 +61,9 @@ watch(() => store.state.Article.id, (newVal, oldVal) => {
 onMounted(() => {
     jump(route.params.id)
 })
-
+watch(() => route.path, (newPath, oldPath) => {
+  jump(route.params.id)
+});
 function getMoreRecommendation_i() {
     recommendation_i.value = false;
 }

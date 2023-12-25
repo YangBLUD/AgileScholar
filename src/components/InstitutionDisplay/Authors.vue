@@ -17,7 +17,7 @@
         </div>
       </div>
       <div v-if="total > 4" class="author-btn-group">
-        <div v-if="currentPage !== 1" class="author-more-two-btn" @click="minusPage()">
+        <div v-if="currentPage !== 0" class="author-more-two-btn" @click="minusPage()">
           Previous
         </div>
         <div v-if="currentPage !== finalPage" class="author-more-two-btn" @click="addPage()">
@@ -39,21 +39,12 @@ import { ElMessage } from "element-plus";
 
 let institution = reactive(store.state.Institution.institution)
 let authors = ref([
-  {
-    name: "HuoBin Tan",
-  }
 ])
 const total = ref(1)
 const currentPage = ref(0)
 const finalPage = ref(-1)
 onMounted(() => {
-
-})
-watch(() => store.state.Institution.id, (newVal, oldVal) => {
   institution = store.state.Institution.institution
-  addPage()
-})
-function addPage() {
   axios({
     // 接口网址：包含协议名，域名，端口和路由
     url: 'http://122.9.5.156:8000/api/v1/search_result/search',
@@ -85,6 +76,7 @@ function addPage() {
     if (res.data.errno === 0) {
       console.log(res.data.data)
       authors.value = res.data.data.result
+      total.value = res.data.data.total
       finalPage.value = Math.ceil(res.data.data.total / 8)
     }
     else {
@@ -93,7 +85,92 @@ function addPage() {
   }).catch(err => {
     console.log(err)
   })
+})
+watch(() => store.state.Institution.id, (newVal, oldVal) => {
+  institution = store.state.Institution.institution
+  axios({
+    // 接口网址：包含协议名，域名，端口和路由
+    url: 'http://122.9.5.156:8000/api/v1/search_result/search',
+    // 请求方式，默认为get，可以不写
+    method: 'post',
+    // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+    data: JSON.stringify({
+      search_type: 1,
+      and_list: [{
+        content: store.state.Institution.id,
+        select: 'Institution',
+        clear: 1
+      }],
+      or_list: [],
+      not_list: [],
+      start_time: "",
+      end_time: "",
+      first_search: 0,
+      work_clustering: 0,
+      author_clustering: 0,
+      size: 4,
+      from: currentPage.value * 4,
+      sort: -1,
+      extend_list: [],
+      token: store.state.User.token,
+    }),
+    // 成功请求回数据后，进入then，并用console.log打印结果
+  }).then(res => {
+    if (res.data.errno === 0) {
+      console.log(res.data.data)
+      authors.value = res.data.data.result
+      total.value = res.data.data.total
+      finalPage.value = Math.ceil(res.data.data.total / 8)
+    }
+    else {
+      ElMessage.error('出错啦，找周霄')
+    }
+  }).catch(err => {
+    console.log(err)
+  })
+})
+function addPage() {
   currentPage.value = currentPage.value + 1
+  axios({
+    // 接口网址：包含协议名，域名，端口和路由
+    url: 'http://122.9.5.156:8000/api/v1/search_result/search',
+    // 请求方式，默认为get，可以不写
+    method: 'post',
+    // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+    data: JSON.stringify({
+      search_type: 1,
+      and_list: [{
+        content: store.state.Institution.id,
+        select: 'Institution',
+        clear: 1
+      }],
+      or_list: [],
+      not_list: [],
+      start_time: "",
+      end_time: "",
+      first_search: 0,
+      work_clustering: 0,
+      author_clustering: 0,
+      size: 4,
+      from: currentPage.value * 4,
+      sort: -1,
+      extend_list: [],
+      token: store.state.User.token,
+    }),
+    // 成功请求回数据后，进入then，并用console.log打印结果
+  }).then(res => {
+    if (res.data.errno === 0) {
+      console.log(res.data.data)
+      authors.value = res.data.data.result
+      total.value = res.data.data.total
+      finalPage.value = Math.ceil(res.data.data.total / 8)
+    }
+    else {
+      ElMessage.error('出错啦，找周霄')
+    }
+  }).catch(err => {
+    console.log(err)
+  })
 }
 function minusPage() {
   currentPage.value = currentPage.value - 1
@@ -129,6 +206,7 @@ function minusPage() {
     if (res.data.errno === 0) {
       console.log(res.data.data)
       authors.value = res.data.data.result
+      total.value = res.data.data.total
       finalPage.value = Math.ceil(res.data.data.total / 8)
     }
     else {

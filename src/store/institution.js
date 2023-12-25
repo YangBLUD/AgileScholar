@@ -5,11 +5,11 @@ const InstitutionModule ={
     state: {
         id: -1,
         institution: {
-            "display_name": "Xilinx (Canada)",
+            "display_name": "",
             "display_name_acronyms": [],
             "country_code": "CA",
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/XilinxInc-lobby.jpg",
-            "id": "4210135016",
+            "image_url": "",
+            "id": "",
             "summary_stats": {
                 "cited_by_count": 331,
                 "yr2_i10_index": 0,
@@ -22,8 +22,8 @@ const InstitutionModule ={
                 "yr2_h_index": 0,
                 "yr2_cited_by_count": 6
             },
-            "homepage_url": "http://www.xilinx.com/",
-            "type": "company",
+            "homepage_url": "",
+            "type": "",
             "domain": [
                 {
                     "name": "Computer science",

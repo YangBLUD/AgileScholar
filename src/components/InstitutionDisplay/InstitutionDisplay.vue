@@ -63,10 +63,9 @@ const route = useRoute();
 onMounted(() => {
     jump(route.params.id)
 })
-watch(() => store.state.Institution.id, (newVal, oldVal) => {
-
-})
-
+watch(() => route.path, (newPath, oldPath) => {
+  jump(route.params.id)
+});
 function jump(institution_id) {
     axios({
         // 接口网址：包含协议名，域名，端口和路由
@@ -82,7 +81,6 @@ function jump(institution_id) {
     }).then(res => {
         if (res.data.errno === 0) {
             store.commit('updateInstitution', res.data.data)
-            console.log(res.data.data)
         }
         else {
             ElMessage.error('出错啦，找周霄')

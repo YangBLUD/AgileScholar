@@ -43,22 +43,22 @@
 
 <script setup>
 
-import {reactive, ref, watch} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import store from "../../store/index.js";
 
 let institution = reactive(store.state.Institution.institution)
-let domains = ref(store.getters.getFewDomain)
+let domains = ref(null)
 let haveMoreDomain = ref(store.getters.getHaveMore)
 const currentPage = ref(1)
 const finalPage = ref(Math.ceil(institution.domain.length/4))
 
-watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
+watch(()=>store.state.Institution, (newVal, oldVal)=>{
     currentPage.value = 1
     institution = store.state.Institution.institution
-    domains = store.getters.getFewDomain
+    domains.value = store.getters.getFewDomain
     haveMoreDomain = store.getters.getHaveMore
     finalPage.value = Math.ceil(institution.domain.length/4)
-})
+},{deep:true})
 function addPage(){
     currentPage.value = currentPage.value + 1
     domains = institution.domain.slice((currentPage.value-1)*4, currentPage.value*4)
