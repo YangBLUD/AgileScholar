@@ -13,37 +13,38 @@
       <!-- 筛选栏 -->
       <el-menu default-active="1" class="filter-menu" accordion>
         <el-menu-item-group>
-          <el-menu-item index="1-2" @click="filterSearch(0, 0)">按引用数量降序</el-menu-item>
-          <el-menu-item index="1-3" @click="filterSearch(0, 1)">按引用数量升序</el-menu-item>
-          <el-menu-item index="1-4" @click="filterSearch(0,2)">按发布时间降序</el-menu-item>
-          <el-menu-item index="1-5" @click="filterSearch(0,3)">按发布时间升序</el-menu-item>
-          <el-menu-item index="1-6" @click="filterSearch(0,4)">按标题降序</el-menu-item>
-          <el-menu-item index="1-7" @click="filterSearch(0,5)">按标题升序</el-menu-item>
+          <el-menu-item index="1-2" @click="filterSearch(0, 0)">Descending by references</el-menu-item>
+          <el-menu-item index="1-3" @click="filterSearch(0, 1)">Ascending by references</el-menu-item>
+          <el-menu-item index="1-4" @click="filterSearch(0,2)">Descending by publication time</el-menu-item>
+          <el-menu-item index="1-5" @click="filterSearch(0,3)">Ascending by publication time</el-menu-item>
+          <el-menu-item index="1-6" @click="filterSearch(0,4)">Descending by title</el-menu-item>
+          <el-menu-item index="1-7" @click="filterSearch(0,5)">Ascending by title</el-menu-item>
         </el-menu-item-group>
       </el-menu>
     </el-aside>
     <el-main>
       <el-col :span="24" v-for="paper in paper_list" :key="paper.id">
-        <el-card class="paper-card">
-          <div class="paper-authors-share">
-            <span v-html="paper.title"></span>
-            <div>
-              <el-icon style="font-size: 20px; vertical-align: middle">
-                <Share />
-              </el-icon>
-              <div class="citedcount">{{paper.cited_count}}</div>
-              <el-icon style="font-size: 20px; vertical-align: middle">
-                <Star />
-              </el-icon>
+          <el-card class="paper-card">
+            <div class="paper-authors-share">
+              <router-link :to="{name:'article-display', params:{id:paper.id} }">
+                <span v-html="paper.title"></span>
+              </router-link>
+              <div>
+                <el-icon style="font-size: 20px; vertical-align: middle">
+                  <Share />
+                </el-icon>
+                <div class="citedcount">{{paper.cited_count}}</div>
+<!--                <el-icon style="font-size: 20px; vertical-align: middle">-->
+<!--                  <Star />-->
+<!--                </el-icon>-->
+              </div>
             </div>
-          </div>
-          <div class="paper-info">
-            <p class="paper-field">领域：{{ paper.domain.slice(0,3).map(d => d.name).join(', ') }}</p>
-              <p class="paper-authors">作者：{{ paper.author_all.map(a => a.name).join(', ') }}</p>
-            <p class="paper-date">发表时间：{{ paper.publication_date }}</p>
-          </div>
-        </el-card>
-
+            <div class="paper-info">
+              <p class="paper-field">area：{{ paper.domain.slice(0,3).map(d => d.name).join(', ') }}</p>
+              <p class="paper-authors">author：{{ paper.author_all.map(a => a.name).join(', ') }}</p>
+              <p class="paper-date">Publication time：{{ paper.publication_date }}</p>
+            </div>
+          </el-card>
       </el-col>
       <el-pagination
           :current-page="currentPage"

@@ -53,8 +53,8 @@
       <li class="right">
         <button v-if="have_user_info" @click="history" style="border-radius: 10px 0 0 10px;">History</button>
         <button v-if="have_user_info" @click="star">Favorites</button>
-        <button v-if="is_admin" @click="toAdmin">Admin</button>
-        <button v-if="is_scholar" @click="toPersonal">Personal Homepage</button>
+        <button v-if="is_admin && have_user_info" @click="toAdmin">Admin</button>
+        <button v-if="is_scholar && have_user_info" @click="toPersonal">Personal Homepage</button>
         <button v-if="have_user_info" @click="logout" style="margin-right: 20px;border-radius: 0 10px 10px 0;">Sign
           out</button>
         <button v-if="!have_user_info" @click="login" style="border-radius: 10px 0 0 10px;">Sign in</button>
@@ -220,6 +220,7 @@ function history() {
 }
 function toPersonal() {
   let id = Store.getters.getUserinfo.claimed_scholar_id;
+  router.push(`/scholar/${id}`);
 }
 function refresh() {
   showLogin.value = false;

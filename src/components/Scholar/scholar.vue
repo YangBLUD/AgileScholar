@@ -6,7 +6,7 @@
   <el-container class="main-container">
     <!-- 上方板块 -->
     <el-header class="main-header">
-      <div class="header-content">
+      <div class="header-content-scholar">
         <!-- 作者头像 -->
         <div class="author-avatar">
           <el-avatar :size="130" :src="circleUrl" />
@@ -32,11 +32,10 @@
             </p>
           </template>
         </div>
-        <div class="author-opt" style="display: flex; flex-direction: column;">
+        <div class="author-opt">
           <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
           <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
         </div>
-
       </div>
     </el-header>
     <el-dialog v-model="showAppealDialog" :lock-scroll="false">
@@ -143,21 +142,18 @@
     <el-main class="main-content">
       <el-tabs class="tab-bar" v-model="activeTab" @tab-click="handleTabClick">
         <!-- 学术影响力分析 -->
-        <el-tab-pane label="学术影响力分析" name="influence" class="pane"
-          >学术影响力</el-tab-pane
+        <el-tab-pane label="Academic Influence" name="influence" class="pane"
+          >Show the scholar's influence through charts and graphs</el-tab-pane
         >
         <!-- 发表的论文 -->
-        <el-tab-pane label="发表的论文" name="papers" class="pane"
-          >论文</el-tab-pane
+        <el-tab-pane label="Published Papers" name="papers" class="pane"
+          >Display all papers published by scholars, supporting retrieval and sorting</el-tab-pane
         >
         <!-- 学术关系网络 -->
-        <el-tab-pane label="学术关系网络" name="network" class="pane"
-          >学术关系网络</el-tab-pane
+        <el-tab-pane label="Academic Relations Network" name="network" class="pane"
+          >Show the relationship network of this scholar</el-tab-pane
         >
-        <!-- 学术成果集 -->
-        <el-tab-pane label="学术成果集" name="achievements" class="pane"
-          >学术成果</el-tab-pane
-        >
+
       </el-tabs>
       <div class="tab-content">
         <component
@@ -698,7 +694,7 @@ watch(
   width: 100%;
 }
 
-.header-content {
+.header-content-scholar {
   display: flex;
   align-items: center;
   width: 100%;
@@ -722,10 +718,12 @@ watch(
   justify-content: center;
 }
 .author-opt {
+  margin-left: 150px;
+  height: 160px;
+  width: 200px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  margin-left: 200px;
+  align-items: center;
 }
 .author-info h2 {
   margin-bottom: 30px;
@@ -744,7 +742,7 @@ watch(
   font-size: 15px;
   color: #666;
 }
-.author-info .author-certificate {
+ .author-certificate {
   margin-bottom: 15px;
   font-size: 17px;
   color: #0773df;
