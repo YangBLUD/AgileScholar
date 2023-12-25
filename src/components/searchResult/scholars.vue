@@ -128,4 +128,5 @@ const props = defineProps({
 
 .star:hover {
     background-color: #d7d7d7;
-}</style>
+}
+</style>
