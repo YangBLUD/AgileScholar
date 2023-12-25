@@ -29,7 +29,7 @@
         <div class="article-show-content-line"></div>
         <div class="article-show-content-author">
           <span class="article-show-content-author-title">Authors:</span>
-          <div v-for="author in authors" class="article-show-content-author-block">
+          <div v-for="author in authors.slice(0,5)" class="article-show-content-author-block">
             <img src="../../assets/ArticleDisplay/head.jpg" alt="" class="article-show-content-author-img">
             <span class="article-show-content-author-name text-gray">
                 {{ author.name }}
@@ -78,9 +78,9 @@
                     content="Add to favorites"
                     placement="bottom"
             >
-<!--              <el-icon class="article-show-content-cite-btn-icon"><Folder /></el-icon>-->
+              <el-icon class="article-show-content-cite-btn-icon"><Folder /></el-icon>
 
-              <StarDialog class="article-show-content-cite-btn-icon" />
+<!--              <StarDialog class="article-show-content-cite-btn-icon" :token="store.state.User.token" :paper_id:="store.state.Article.id" :type="0" :is_star="store.state.Article.is_star"></StarDialog>-->
             </el-tooltip>
 <!--            <el-tooltip-->
 <!--                    effect="dark"-->
