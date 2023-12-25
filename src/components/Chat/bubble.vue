@@ -2,7 +2,7 @@
     <div class="container">
         <div class="avatar">
             <!-- <img :src="props.avatar" alt="Avatar"> -->
-            <el-avatar src="https://avatars.githubusercontent.com/u/72015883?v=4" />
+            <el-avatar :src="Avatar" />
         </div>
         <div class="username">
             {{ props.sender }}
@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+import Avatar from "../../assets/icon.png"
 const props = defineProps({
     content: String,
     avatar: String,

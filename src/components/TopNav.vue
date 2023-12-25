@@ -2,13 +2,14 @@
   <div class="top-nav">
     <ul>
       <li style="padding-left: 30px">
-        <a href="#" style="
+        <img src="../assets/7b5cd0fb87aa1c3e2b77df08f6161fa.png" alt="">
+        <!-- <a href="#" style="
             color: aliceblue;
             line-height: 40px;
             font-size: 20px;
             text-decoration: none;
             font-style: italic;
-          ">What Scholar</a>
+          ">What Scholar</a> -->
       </li>
       <li style="width: 55%; margin-right: 0">
         <div style="float: right">

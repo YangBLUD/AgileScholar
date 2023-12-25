@@ -11,7 +11,7 @@
   <div class="article-search" id="section1">
     <div style="z-index: 5">
       <div class="headline">
-        <h1>What Scholar</h1>
+        <h1 style="font-size: 70px;">AgileScholar</h1>
       </div>
       <div class="search_box">
         <el-input v-model="searchText" placeholder="Search" class="input-with-select" @keyup.enter="performSearch"
@@ -26,8 +26,9 @@
             margin-right: 5px;
             margin-top: 10px;
             color: aliceblue;
-          " @click="$router.push({ path: '/advanced' })">
-          <h5>Advanced Search</h5>
+
+          " @click="$router.push({ path: '/advanced' })" class="Advance">
+          <h5 style="font-size: 16px;">Advanced Search</h5>
         </div>
       </div>
       <div class="carousel">
@@ -48,21 +49,26 @@
       <div class="rank-article-item" v-for="(item, index) in rankArticles" :key="index" @click="goArticle(item.id)">
         <div class="rank-article-index">{{ index + 1 }}</div>
         <div class="rank-article-content">
+          <div class="rank-article-date">{{ item.publication_date }}</div>
           <div class="rank-article-title">
             {{ item.title }}
           </div>
-          <div style="height: 60px">
+          <div style="height: 40px">
             <div class="rank-article-author">
+              <el-avatar :src="Avatar" style="cursor: pointer; position: relative; top: 7px; margin-right: 5px;"
+                :size="25"></el-avatar>
               <span>{{ item.author_all[0].name }}</span>
               <span v-if="item.author_all.length == 2">,</span>
               <span v-if="item.author_all.length > 2"> et al.</span>
             </div>
-            <div class="rank-article-author" v-if="item.author_all.length == 2">
-              <span>{{ item.author_all[1].name }}</span>
+            <div class="rank-article-author" v-if="item.author_all.length == 2" style="margin-top: 3px;">
+              <el-avatar :src="Avatar" style="cursor: pointer; position: relative; top: 7px; margin-right: 5px;"
+                :size="25"></el-avatar>
+              <span>{{
+                item.author_all[1].name }}</span>
             </div>
           </div>
-          <div style="height: 80px">
-            <div class="rank-article-date">{{ item.publication_date }}</div>
+          <div style="height: 40px; margin-top: 20px;">
             <div class="rank-article-cite">
               Cited {{ item.cited_count }} times
             </div>
@@ -140,10 +146,10 @@
   </div>
   <!-- <div><Footer /></div> -->
   <!-- 学科详细信息dialog -->
-  <el-dialog v-model="dialogVisible" width="70%" :show-close="false" open-delay="500">
-    <div style="max-height: 700px; overflow-y: auto;">
+  <el-dialog v-model="dialogVisible" width="70%" :show-close="false" open-delay="500" top="4vh">
+    <div style="max-height: 690px; overflow-y: auto;">
       <div class="subject-name">{{ subjectInfo.name }}</div>
-      <img :src="subjectInfo.img_url" alt="cnm加载得出来" :onerror="display_vacant" class="image"
+      <img :src="subjectInfo.img_url" alt="" :onerror="display_vacant" class="image"
         style="margin-left: 325px; margin-bottom: 40px; margin-top: 40px;">
       <div class="subject-description">{{ subjectInfo.description }}</div>
       <div class="summary">Summary Statistics</div>
@@ -198,6 +204,7 @@ import { ref, onMounted, reactive, nextTick } from "vue";
 import axios from "axios";
 import Echart from "../HomePage/Echats.vue"
 import AI from "../../components/Chat/chat.vue";
+import Avatar from "../../assets/logo.png"
 import TopNav from "../../components/HomePage/TopNav.vue";
 import Footer from "../../components/HomePage/Footer.vue";
 import { ElMessageBox } from 'element-plus'
@@ -221,7 +228,7 @@ const subjectInfo = reactive({
   img_url: '',
 },);
 function display_vacant() {
-  subjectInfo.img_url = "src/assets/homepage/vacant.jpg"
+  subjectInfo.img_url = "src/assets/homepage/vacant.png"
 }
 var flag = ref(0);
 var xData = ref("");
@@ -1203,7 +1210,8 @@ function showInfo(item_id) {
 .navigation-item {
   cursor: pointer;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -1280,7 +1288,7 @@ function showInfo(item_id) {
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: bold;
   font-style: italic;
   margin: 20px 10px 40px 20px;
@@ -1288,8 +1296,8 @@ function showInfo(item_id) {
 
 .rank-content {
   margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 220px;
+  margin-right: 220px;
   border: 1px solid #ccd0d8;
   border-radius: 4px;
   background-color: #fff;
@@ -1302,20 +1310,19 @@ function showInfo(item_id) {
 }
 
 .rank-article-item {
+  padding-top: 10px;
   width: 25%;
   margin-bottom: 20px;
   padding-bottom: 30px;
   border-bottom: 1px solid #ccd0d8;
-  cursor: pointer;
 }
 
 .rank-article-index {
   margin-left: 5%;
   width: 15%;
   font-size: 30px;
-  font-style: italic;
   font-weight: bold;
-  color: rgb(255, 240, 103);
+  color: rgb(237, 218, 157);
   float: left;
 }
 
@@ -1337,22 +1344,30 @@ function showInfo(item_id) {
   padding: 0 10px;
   text-overflow: ellipsis;
   overflow-wrap: break-word;
+  cursor: pointer;
+}
+
+.rank-article-title:hover {
+  text-decoration: underline;
 }
 
 .rank-article-author {
-  margin-top: 20px;
+  margin-top: 0px;
   font-size: 14px;
-  color: #999;
+  color: rgb(97, 97, 97);
 }
 
 .rank-article-date {
-  margin-top: 30px;
   font-size: 14px;
-  font-style: italic;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-bottom: 13px;
+  color: rgb(150, 150, 150);
 }
 
 .rank-article-cite {
-  margin-top: 10px;
+  color: rgb(51, 51, 51);
+  margin-top: 30px;
   font-size: 14px;
   font-style: italic;
 }
@@ -1461,8 +1476,8 @@ function showInfo(item_id) {
 }
 
 .ins-rank {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 23px;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -1472,42 +1487,83 @@ function showInfo(item_id) {
 }
 
 .ins-views {
-  font-size: 14px;
+  font-size: 16px;
+}
+
+.normal-item {
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
 }
 
 .normal-item .rank {
   width: 15%;
   text-align: center;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 900;
 }
 
 .normal-item .name {
   width: 60%;
+  font-size: 17px;
+  font-weight: 700;
   overflow-x: auto;
   // font-style: italic;
 }
 
 .normal-item .views {
+  font-size: 17px;
   width: 20%;
+  font-weight: bold;
+}
+
+.normal-item:hover {
+  border: 2px solid #333;
 }
 
 .first-place {
   background-color: rgba(255, 217, 0, 0.6);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.first-place:hover {
+  border: 2px solid #333;
 }
 
 .second-place {
   background-color: rgba(192, 192, 192, 0.6);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.second-place:hover {
+  border: 2px solid #333;
 }
 
 .third-place {
   background-color: rgba(209, 73, 14, 0.459);
   width: 30%;
+  font-size: 17px;
+  font-weight: 700;
   text-align: center;
+  border: 2px solid transparent;
+  /* 初始状态下无边框 */
+  box-sizing: border-box;
+}
+
+.third-place:hover {
+  border: 2px solid #333;
 }
 
 .normal-list {
@@ -1589,5 +1645,50 @@ function showInfo(item_id) {
 .el-dialog__wrapper {
   max-height: calc(100vh - 120px);
   /* 在这里设置最大高度 */
+}
+
+.Advance {
+  float: right;
+  cursor: pointer;
+  margin-right: 5px;
+  margin-top: 10px;
+  color: aliceblue;
+  transition: ease 0.3s;
+}
+
+.Advance:hover {
+  transform: scale(1.1);
+  transition: ease 0.3s;
+}
+
+/* 细的滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 鼠标按下时的样式 */
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 滚动条轨道样式 */
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+/* 鼠标悬停在滚动条轨道上时的样式 */
+::-webkit-scrollbar-track:hover {
+  background-color: rgba(0, 0, 0, 0.15);
 }
 </style>
