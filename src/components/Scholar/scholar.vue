@@ -22,27 +22,24 @@
               {{ authorInformation.author_email }}
             </p>
             <p v-if="authorInformation.claimed" class="author-certificate">
-              Scholar certified<el-button
-                class="checkbutton"
-                type="success"
-                :icon="Check"
-                circle
-              />
+              Scholar certified<el-button class="checkbutton" type="success" :icon="Check" circle />
             </p>
             <div style="display: flex; align-items: center; width: 500px;">
               <p v-if="!authorInformation.claimed" class="author-certificate" style="margin-top: 12px;margin-right: 20px">
                 Scholar not certified
               </p>
-              <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>
-              <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>
+              <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary"
+                class="AttrButton">Appeal</el-button>
+              <el-button v-else @click="showClaim" class="AttrButton"><span
+                  style="font-weight: bold;">Claim</span></el-button>
             </div>
 
           </template>
         </div>
-<!--        <div class="author-opt">-->
-<!--          <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>-->
-<!--          <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>-->
-<!--        </div>-->
+        <!--        <div class="author-opt">-->
+        <!--          <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary" class="AttrButton">Appeal</el-button>-->
+        <!--          <el-button v-else @click="showClaim" class="AttrButton">Claim</el-button>-->
+        <!--        </div>-->
       </div>
     </el-header>
     <el-dialog v-model="showAppealDialog" :lock-scroll="false">
@@ -62,26 +59,12 @@
           <div style="display: flex; align-items: center">
             <el-input v-model="appealForm.captcha" />
             <span style="width: 150px"></span>
-            <el-button
-              type="primary"
-              @click="getAppealCaptcha"
-              style="float: right"
-              >{{ appeal_captcha_time }}</el-button
-            >
+            <el-button type="primary" @click="getAppealCaptcha" style="float: right">{{ appeal_captcha_time }}</el-button>
           </div>
         </el-form-item>
         <el-form-item label="Appeal Material" label-width="140px">
-          <el-upload
-            class="upload-demo"
-            drag
-            action=""
-            multiple
-            :on-remove="handleAppealRemove"
-            :file-list="fileList"
-            :limit="1"
-            :on-change="handleAppealFile"
-            :auto-upload="false"
-          >
+          <el-upload class="upload-demo" drag action="" multiple :on-remove="handleAppealRemove" :file-list="fileList"
+            :limit="1" :on-change="handleAppealFile" :auto-upload="false">
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">
               Drop file here or <em>click to upload</em>
@@ -95,8 +78,7 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog v-model="showClaimDialog" :lock-scroll="false"
-      ><template #header>
+    <el-dialog v-model="showClaimDialog" :lock-scroll="false"><template #header>
         <span class="dialog-header" style="font-weight: 600">
           Claim to be this scholar
         </span>
@@ -112,26 +94,12 @@
           <div style="display: flex; align-items: center">
             <el-input v-model="claimForm.captcha" />
             <span style="width: 150px"></span>
-            <el-button
-              type="primary"
-              @click="getClaimCaptcha"
-              style="float: right"
-              >{{ claim_captcha_time }}</el-button
-            >
+            <el-button type="primary" @click="getClaimCaptcha" style="float: right">{{ claim_captcha_time }}</el-button>
           </div>
         </el-form-item>
         <el-form-item label="Application Material" label-width="140px">
-          <el-upload
-            class="upload-demo"
-            drag
-            action=""
-            multiple
-            :on-remove="handleClaimRemove"
-            :file-list="fileList"
-            :limit="1"
-            :on-change="handleClaimFile"
-            :auto-upload="false"
-          >
+          <el-upload class="upload-demo" drag action="" multiple :on-remove="handleClaimRemove" :file-list="fileList"
+            :limit="1" :on-change="handleClaimFile" :auto-upload="false">
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">
               Drop file here or <em>click to upload</em>
@@ -149,23 +117,17 @@
     <el-main class="main-content">
       <el-tabs class="tab-bar" v-model="activeTab" @tab-click="handleTabClick">
         <!-- 学术影响力分析 -->
-        <el-tab-pane label="Academic Influence" name="influence" class="pane"
-          >Show the scholar's influence through charts and graphs</el-tab-pane
-        >
+        <el-tab-pane label="Academic Influence" name="influence" class="pane">Show the scholar's influence through charts
+          and graphs</el-tab-pane>
         <!-- 发表的论文 -->
-        <el-tab-pane label="Published Papers" name="papers" class="pane"
-          >Display all papers published by scholars, supporting retrieval and sorting</el-tab-pane
-        >
+        <el-tab-pane label="Published Papers" name="papers" class="pane">Display all papers published by scholars,
+          supporting retrieval and sorting</el-tab-pane>
         <!-- 学术关系网络 -->
-        <el-tab-pane label="Academic Relations Network" name="network" class="pane"
-          >Show the relationship network of this scholar</el-tab-pane
-        >
+        <el-tab-pane label="Academic Relations Network" name="network" class="pane">Show the relationship network of this
+          scholar</el-tab-pane>
       </el-tabs>
       <div class="tab-content">
-        <component
-          :is="currentTabComponent"
-          :authorInformation="authorInformation"
-        ></component>
+        <component :is="currentTabComponent" :authorInformation="authorInformation"></component>
       </div>
     </el-main>
   </el-container>
@@ -683,8 +645,10 @@ watch(
 .checkbutton {
   font-size: 16px;
   margin-left: 5px;
-  width: 10px; /* 设置按钮宽度 */
-  height: 10px; /* 设置按钮高度 */
+  width: 10px;
+  /* 设置按钮宽度 */
+  height: 10px;
+  /* 设置按钮高度 */
 }
 
 .certified-text {
@@ -721,18 +685,24 @@ watch(
   align-items: center;
   justify-content: center;
 }
+
 .author-certificate .el-icon {
-  margin-left: 10px; /* 调整图标与文字之间的间距 */
+  margin-left: 10px;
+  /* 调整图标与文字之间的间距 */
   /* 其他样式设置 */
 }
-.tab-bar >>> .el-tabs__item {
+
+.tab-bar>>>.el-tabs__item {
+  font-weight: bold;
   font-size: 18px;
 }
+
 .author-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+
 .author-opt {
   margin-left: 150px;
   height: 160px;
@@ -741,13 +711,14 @@ watch(
   justify-content: center;
   align-items: center;
 }
+
 .author-info h2 {
   margin-bottom: 30px;
   font-size: 28px;
   font-weight: 600;
 }
 
-.AttrButton{
+.AttrButton {
   height: auto;
   width: 70px;
 }
@@ -757,7 +728,8 @@ watch(
   font-size: 15px;
   color: #666;
 }
- .author-certificate {
+
+.author-certificate {
   margin-bottom: 15px;
   font-size: 17px;
   color: #0773df;
@@ -766,12 +738,15 @@ watch(
 /* 设置标签页标题的样式 */
 ::v-deep .tabs .el-tabs__item {
   margin: 5px;
-  font-size: 16px; /* 调整字体大小 */
+  font-size: 16px;
+  /* 调整字体大小 */
 }
 
 ::v-deep .tabs .el-tabs__item.is-active {
-  color: #409eff; /* 选中标签的文字颜色 */
-  font-weight: bold; /* 加粗字体 */
+  color: #409eff;
+  /* 选中标签的文字颜色 */
+  font-weight: bold;
+  /* 加粗字体 */
 }
 
 /* 继续保持原有的 pane 样式 */
@@ -788,11 +763,7 @@ watch(
   margin-top: 1rem;
 }
 
-.tab-content {
-}
-.tab-bar {
+.tab-content {}
 
-}
-
-
+.tab-bar {}
 </style>

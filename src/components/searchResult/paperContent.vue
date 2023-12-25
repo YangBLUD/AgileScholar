@@ -45,10 +45,11 @@
                 </div>
                 <div class="choice">
                     <div class="introduce" v-if="props.info.pdf_url">
-                        <img style="width: 25px; height: 25px;" src="../../assets/PDF.png" alt="Clicks">
+                        <img style="width: 25px; height: 25px;" src="../../assets/PDF.png" alt="Clicks" @click="gotopdf()">
                     </div>
                     <div class="introduce" v-if="props.info.landing_page_url">
-                        <img style="width: 25px; height: 25px;" src="../../assets/view.png" alt="Clicks">
+                        <img style="width: 25px; height: 25px;" src="../../assets/view.png" alt="Clicks"
+                            @click="gotolink()">
                     </div>
                     <div class="introduce">
                         <stardialog :token="props.token" :paper_id="paper_id" :type="type" :is_star="props.info.is_star">

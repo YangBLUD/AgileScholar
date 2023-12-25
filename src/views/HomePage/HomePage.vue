@@ -1258,7 +1258,7 @@ function showInfo(item_id) {
   margin: auto;
   height: fit-content;
   width: 60%;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 :deep(.el-input-group__append) {
@@ -1514,6 +1514,7 @@ function showInfo(item_id) {
 }
 
 .ins-views {
+  color: rgb(51, 117, 188);
   font-size: 16px;
 }
 
@@ -1542,6 +1543,7 @@ function showInfo(item_id) {
   font-size: 17px;
   width: 20%;
   font-weight: bold;
+  color: rgb(51, 117, 188);
 }
 
 .normal-item:hover {
