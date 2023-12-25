@@ -2,25 +2,20 @@
   <div class="history-dialog" ref="showDialog">
     <div style="margin-top: 18px">
       <span style="margin-left: 20px; font-weight: 600">Browsing history</span>
-      <el-button
-        type="primary"
-        @click="clearAll()"
-        style="margin-right: 10px; float: right"
-        >Clear All</el-button
-      >
+      <el-button type="primary" @click="clearAll()" style="margin-right: 10px; float: right">Clear All</el-button>
     </div>
     <el-table :data="history_list" max-height="500px">
       <el-table-column width="40px">
         <template #default="{ row, $index }">
-          <span v-if="row.type == 0"
-            ><el-icon><Document /></el-icon
-          ></span>
-          <span v-if="row.type == 1"
-            ><el-icon><User /></el-icon
-          ></span>
-          <span v-if="row.type == 2"
-            ><el-icon><House /></el-icon
-          ></span>
+          <span v-if="row.type == 0"><el-icon>
+              <Document />
+            </el-icon></span>
+          <span v-if="row.type == 1"><el-icon>
+              <User />
+            </el-icon></span>
+          <span v-if="row.type == 2"><el-icon>
+              <House />
+            </el-icon></span>
         </template>
       </el-table-column>
       <el-table-column>
@@ -120,7 +115,7 @@ function jump(row) {
   if (row.type == 0) {
     router.push(`/article/${row.id}`);
   } else if (row.type == 1) {
-    router.push("/scholar");
+    router.push(`/scholar/${row.id}`);
   } else if (row.type == 2) {
     router.push(`/institution/${row.id}`);
   }
@@ -139,14 +134,17 @@ function jump(row) {
   right: 120px;
   z-index: 999;
 }
+
 :deep(.el-button) {
   background-color: #f0f4ff;
   color: black;
 }
+
 :deep(.el-table) {
   background-color: #ffffff;
   color: black;
 }
+
 :deep(.cell) {
   max-width: 260px;
   white-space: nowrap;
