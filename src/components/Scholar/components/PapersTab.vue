@@ -79,12 +79,7 @@ const paper_list = ref([])
 const currentPage = ref(1);
 const totalpage = ref(0);
 const search_to = ref(20)
-const search_from  = ref(1)
-const searchQuery = ref('');
-const selectedDomain = ref(null);
-const domains = ref([{ value: 'domain1', label: '领域1' }, { value: 'domain2', label: '领域2' }]); // 示例数据
 const sortType = ref(-1);
-const curPage = ref(0);
 const addList = ref([
   {
     "content":getAuthorStates().authorInformation.id,
