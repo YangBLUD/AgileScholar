@@ -73,15 +73,10 @@
             >
                 <el-icon class="article-show-content-cite-btn-icon"><Connection /></el-icon>
             </el-tooltip>
-            <el-tooltip
-                    effect="dark"
-                    content="Add to favorites"
-                    placement="bottom"
-            >
-              <el-icon class="article-show-content-cite-btn-icon"><Folder /></el-icon>
 
-<!--              <StarDialog class="article-show-content-cite-btn-icon" :token="store.state.User.token" :paper_id:="store.state.Article.id" :type="0" :is_star="store.state.Article.is_star"></StarDialog>-->
-            </el-tooltip>
+
+            <StarDialog :token="store.state.User.token" :paper_id:="store.state.Article.id" :type="0" :is_star="store.state.Article.is_star"></StarDialog>
+
 <!--            <el-tooltip-->
 <!--                    effect="dark"-->
 <!--                    content="Generate reference format"-->

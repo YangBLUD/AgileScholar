@@ -1,8 +1,13 @@
 <template>
-    <el-icon @click="start" v-if="!is_star"><StarFilled /></el-icon>
-    <div v-else class="kk">
-        <el-icon @click="start"  ><StarFilled /></el-icon>
-    </div>
+    <el-tooltip
+        effect="dark"
+        content="Add to favorites"
+        placement="bottom"
+    >
+        <el-icon class="article-show-content-cite-btn-icon" @click="start" v-if="!is_star"><StarFilled /></el-icon>
+        <el-icon v-else class="article-show-content-cite-btn-icon kk" @click="start"  ><StarFilled /></el-icon>
+    </el-tooltip>
+
     <el-dialog
             v-model="centerDialogVisible"
             class="tan-win"
@@ -115,9 +120,18 @@ function handleEdit() {
 
 </script>
 <style scoped>
+.article-show-content-cite-btn-icon{
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    margin: 0 5px;
+    background-color: #f0f0f0;
+    color: #6b6b6b;
+    border-radius: 2px;
+}
 .kk{
     color: #f4bf41;
-    padding-top: 2px;
+    /*padding-top: 2px;*/
 }
 .tan-win{
     border-radius: 10%;
@@ -152,4 +166,5 @@ function handleEdit() {
         }
     }
 }
+
 </style>
