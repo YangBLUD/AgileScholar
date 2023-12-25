@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 import { toRaw } from "vue";
 const SearchModule = {
   state: {
-    agg_text:"da",
+    agg_text:"",
     agg_raw:"",
   },
   mutations: {
