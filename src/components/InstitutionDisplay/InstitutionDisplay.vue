@@ -9,7 +9,8 @@
             <div class="institution-show-aside"></div>
             <div class="institution-show-content">
                 <div class="institution-show-content-head">
-                    <div class="institution-show-content-info">RESEARCH-INSTITUTION</div>
+                    <div class="institution-show-content-info">RESEARCH-INSTITUTION
+                    </div>
                     <div class="institution-show-content-group">
                         <el-icon class="institution-show-content-icon"><Share /></el-icon>
                     </div>
@@ -29,6 +30,11 @@
                     <div class="holder"></div>
                     <Domain/>
                 </div>
+                <div class="institution-more-inform">
+                    <Articles/>
+                    <div class="holder"></div>
+                    <Authors/>
+                </div>
             </div>
             <div class="institution-show-aside">
 
@@ -46,12 +52,17 @@ import Domain from "./Domain.vue";
 import axios from "axios";
 import store from "../../store/index.js";
 import {ElMessage} from "element-plus";
-import {watch} from "vue";
+import {onMounted, watch} from "vue";
 import {useRoute} from "vue-router";
+import Articles from "./Articles.vue";
+import Authors from "./Authors.vue";
 
 const route = useRoute();
-watch(()=>route.params.id, (newVal, oldVal)=>{
-    jump(newVal)
+onMounted(()=>{
+    jump(route.params.id)
+})
+watch(()=>store.state.Institution.id, (newVal, oldVal)=>{
+
 })
 
 function jump(institution_id){
