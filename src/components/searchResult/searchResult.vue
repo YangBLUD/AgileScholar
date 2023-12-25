@@ -174,7 +174,7 @@ const router = useRouter();
 const token = ref("");
 const isadvance = ref(false);
 //额外的请求参数
-const search_type = ref(1);
+const search_type = ref(0);
 const search_first_search = ref(1);
 const search_work_clustering = ref(0);
 const search_author_clustering = ref(0);
