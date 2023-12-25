@@ -134,7 +134,6 @@ const props = defineProps({
         font-weight: 600;
         >>> em {
         background-color: yellow;
-
         }
     }
     .wri_list{
