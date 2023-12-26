@@ -71,8 +71,8 @@
                     <div class="article-show-content-cite-block">
                         <img class="article-show-content-cite-show-icon" src="../../assets/ArticleDisplay/cite.png"
                             alt="Cites"><span class="article-show-content-cite-show-text text-blue">{{ cited_count }}</span>
-                        <img class="article-show-content-cite-show-icon" src="../../assets/icon-trend.png"
-                            alt="Clicks"><span class="article-show-content-cite-show-text text-purple">{{ clickNum }}</span>
+                        <!-- <img class="article-show-content-cite-show-icon" src="../../assets/icon-trend.png"
+                            alt="Clicks"><span class="article-show-content-cite-show-text text-purple">{{ clickNum }}</span> -->
                     </div>
                     <div class="article-show-content-cite-btn-block">
                         <el-tooltip effect="dark" content="Report" placement="bottom">
@@ -80,11 +80,11 @@
                                 <Warning />
                             </el-icon>
                         </el-tooltip>
-                        <el-tooltip effect="dark" content="Generate reference format" placement="bottom">
+                        <!-- <el-tooltip effect="dark" content="Generate reference format" placement="bottom">
                             <el-icon class="article-show-content-cite-btn-icon">
                                 <Connection />
                             </el-icon>
-                        </el-tooltip>
+                        </el-tooltip> -->
 
 
                         <StarDialog :token="store.state.User.token" :paper_id:="work_id" :type="0"
@@ -131,7 +131,8 @@
             <div class="update-content">
                 <div class="left">
                     <el-form-item label="Reason" prop="description">
-                        <el-input v-model="description" :rows="4" type="textarea" placeholder="Please enter the reason for reporting" />
+                        <el-input v-model="description" :rows="4" type="textarea"
+                            placeholder="Please enter the reason for reporting" />
                     </el-form-item>
                     <el-form-item label="Detailed materials" prop="details">
                         <el-upload ref="upLoads" class="upload-demo" drag :limit="1" :auto-upload="false"

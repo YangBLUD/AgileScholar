@@ -101,7 +101,8 @@
             <div class="update-content">
                 <div class="left">
                     <el-form-item label="Reason" prop="description">
-                        <el-input v-model="description" :rows="4" type="textarea" placeholder="Please enter the reason for reporting" />
+                        <el-input v-model="description" :rows="4" type="textarea"
+                            placeholder="Please enter the reason for reporting" />
                     </el-form-item>
                     <el-form-item class="dialog-form-item" label="Detailed materials" prop="details">
                         <el-upload ref="upLoads" class="upload-demo" drag :limit="1" :auto-upload="false"
