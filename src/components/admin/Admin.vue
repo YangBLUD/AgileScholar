@@ -39,6 +39,7 @@ onBeforeMount(() => {
     //     console.log(err)
     // })
     console.log("begin get the data")
+    //console.log(store.getters.getUserinfo.token)
     axios({
         url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
         method: 'post',
@@ -51,6 +52,7 @@ onBeforeMount(() => {
         //console.log(store.getters.getAppealList)
         //console.log(store.getters.getAffairList)
     }).catch(err => {
+        console.log("admin.vue error")
         console.log(err)
     })
 
