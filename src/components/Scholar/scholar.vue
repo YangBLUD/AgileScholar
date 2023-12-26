@@ -529,7 +529,12 @@ function handleClaimSubmit() {
     })
       .then((res) => {
         console.log(res);
-        ElMessage.success("Application has been submitted");
+        if(res.data.errno === 1005){
+          ElMessage.warning("You have claimed to be another Scholar")
+        }
+        else{
+          ElMessage.success("Application has been submitted");
+        }
         handleClaimClose();
       })
       .catch((err) => {
