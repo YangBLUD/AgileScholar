@@ -35,7 +35,7 @@
 				</el-table-column>
 				<el-table-column label="操作" width="220" align="center">
 					<template #default="scope">
-						<el-button text :icon="Edit" @click="handleEdit(scope.row)">
+						<el-button link :icon="Edit" @click="handleEdit(scope.row)">
 							处理事务
 						</el-button>
 					</template>
@@ -699,5 +699,14 @@ const undoEdit = () => {
 	position: relative;
 	top: -30px;
 	font-weight: bold;
+}
+
+::v-deep .el-table--border th.el-table__cell {
+	text-align: center;
+}
+
+::v-deep .el-table--enable-row-transition .el-table__body td.el-table__cell {
+	text-align: center;
+	font-size: 14px;
 }
 </style>
