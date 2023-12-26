@@ -518,30 +518,54 @@ function handleClaimSubmit() {
     claimForm.captcha == claimForm.captcha_get &&
     claimForm.captcha_get != ""
   ) {
-    let formData = new FormData();
-    formData.append("token", store.getters.getUserinfo.token);
-    formData.append("claim_email", claimForm.email);
-    formData.append("claim_text", claimForm.reason);
-    formData.append("claim_file", claimForm.file.raw);
-    formData.append("author_id", authorInformation.value.id);
     axios({
-      url: "http://122.9.5.156:8000/api/v1/author/other_claim",
+      url: "http://122.9.5.156:8000/api/v1/author/email_claim",
       method: "post",
-      data: formData,
+      data: JSON.stringify({
+        token: store.getters.getUserinfo.token,
+        email: claimForm.email,
+        author_id: authorInformation.value.id
+      }),
     })
-      .then((res) => {
-        console.log(res);
-        if (res.data.errno === 1005) {
-          ElMessage.warning("You have claimed to be another Scholar")
-        }
-        else {
-          ElMessage.success("Application has been submitted");
-        }
-        handleClaimClose();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((res) => {
+      console.log(res.data)
+      if(res.data.errno === 0){
+        ElMessage.success("Application has been allowed");
+      }
+      else if(res.data.errno === 1005) {
+        ElMessage.warning("You have claimed to be another Scholar")
+      }
+      else{
+        let formData = new FormData();
+        formData.append("token", store.getters.getUserinfo.token);
+        formData.append("claim_email", claimForm.email);
+        formData.append("claim_text", claimForm.reason);
+        formData.append("claim_file", claimForm.file.raw);
+        formData.append("author_id", authorInformation.value.id);
+        axios({
+          url: "http://122.9.5.156:8000/api/v1/author/other_claim",
+          method: "post",
+          data: formData,
+        })
+            .then((res) => {
+              console.log(res);
+              if (res.data.errno === 1005) {
+                ElMessage.warning("You have claimed to be another Scholar")
+              }
+              else {
+                ElMessage.success("Application has been submitted");
+              }
+              handleClaimClose();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+      }
+      handleClaimClose();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 }
 function handleClaimClose() {
