@@ -2,7 +2,7 @@
     <div class="main">
         <div class="pic">
             <img v-if="props.info.image_url" :src=props.info.image_url class="scholar-pic" />
-            <img v-else src="../../assets/buaa.jpg" class="scholar-pic" />
+            <img v-else src="../../assets/buaa.png" class="scholar-pic" />
         </div>
         <div class="name" style="text-align: center;">
             <router-link style="color: black;" :to="{ name: 'institution-display', params: { id: props.info.id } }">
