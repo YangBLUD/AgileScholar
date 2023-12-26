@@ -28,11 +28,11 @@
 					待处理
 					<el-progress :percentage="100" color="#42b983"></el-progress>
 					申诉
-					<el-progress :percentage="appealNum / affairNum * 100" color="#f1e05a"></el-progress>
+					<el-progress :percentage="(appealNum / affairNum * 100).toFixed(2)" color="#f1e05a"></el-progress>
 					举报
-					<el-progress :percentage="reportNum / affairNum * 100"></el-progress>
+					<el-progress :percentage="(reportNum / affairNum * 100).toFixed(2)"></el-progress>
 					认证申请
-					<el-progress :percentage="claimNum / affairNum * 100" color="#f56c6c"></el-progress>
+					<el-progress :percentage="(claimNum / affairNum * 100).toFixed(2)" color="#f56c6c"></el-progress>
 				</el-card>
 			</el-col>
 			<el-col :span="16">

@@ -107,7 +107,7 @@
 			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="appealListVisible = false">取 消</el-button>
+					<el-button @click="undoEdit">取 消</el-button>
 					<el-button type="primary" @click="saveEdit">确 定</el-button>
 				</span>
 			</template>
@@ -152,7 +152,7 @@
 			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="claimListVisible = false">取 消</el-button>
+					<el-button @click="undoEdit">取 消</el-button>
 					<el-button type="primary" @click="saveEdit">确 定</el-button>
 				</span>
 			</template>
@@ -197,7 +197,7 @@
 			</el-form>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="reportListVisible = false">取 消</el-button>
+					<el-button @click="undoEdit">取 消</el-button>
 					<el-button type="primary" @click="saveEdit">确 定</el-button>
 				</span>
 			</template>
@@ -215,8 +215,8 @@ import store from '../../store';
 
 
 let handle_reason = ref('');
-let descion = ref(0);
-let appeal_email_special = ref(0);
+let descion = ref(10);
+let appeal_email_special = ref(10);
 
 let comment = ref(false)
 let itemKey = ref()
@@ -231,6 +231,7 @@ let query = reactive({
 	state: '全部',
 	name: '',
 });
+
 
 // 查询操作
 const handleSearch = () => {
@@ -258,9 +259,9 @@ const handleSearch = () => {
 // };
 
 // 表格编辑时弹窗和保存
-const appealListVisible = ref(false);
-const claimListVisible = ref(false);
-const reportListVisible = ref(false);
+let appealListVisible = ref(false);
+let claimListVisible = ref(false);
+let reportListVisible = ref(false);
 
 let form = reactive({
 	id: '',
@@ -452,6 +453,14 @@ const saveEdit = () => {
 			break;
 	}
 };
+
+const undoEdit = () => {
+	appealListVisible.value = false;
+	claimListVisible.value = false;
+	reportListVisible.value = false;
+	descion.value = 10;
+	appeal_email_special.value = 10;
+}
 </script>
 
 <style scoped>
