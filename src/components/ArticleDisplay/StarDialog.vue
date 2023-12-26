@@ -71,6 +71,8 @@ import { Folder } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 const Store = useStore();
 import { useRouter } from "vue-router";
+import store from "../../store/index.js";
+import {ElMessage} from "element-plus";
 const router = useRouter();
 const is_star = ref(false);
 onMounted(() => {
@@ -102,12 +104,17 @@ function getfold() {
 
 const fold = ref([]);
 function start() {
-  if (props.token == "") {
-    router.push({ path: "home" });
-  }
-  centerDialogVisible.value = true;
-  getfold();
-  choose.value = [];
+    if (store.getters.getLoginState) {
+        if (props.token == "") {
+            router.push({ path: "home" });
+        }
+        centerDialogVisible.value = true;
+        getfold();
+        choose.value = [];
+    } else {
+        ElMessage.error("Please log in to your account first！")
+    }
+
 }
 const choose = ref([]);
 function addfold(item) {

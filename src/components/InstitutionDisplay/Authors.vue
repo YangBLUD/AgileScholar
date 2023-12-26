@@ -80,7 +80,7 @@ onMounted(() => {
       finalPage.value = Math.ceil(res.data.data.total / 8)
     }
     else {
-      ElMessage.error('出错啦，找周霄')
+      // ElMessage.error('出错啦，找周霄')
     }
   }).catch(err => {
     console.log(err)
@@ -123,7 +123,7 @@ watch(() => store.state.Institution.id, (newVal, oldVal) => {
       finalPage.value = Math.ceil(res.data.data.total / 8)
     }
     else {
-      ElMessage.error('出错啦，找周霄')
+      // ElMessage.error('出错啦，找周霄')
     }
   }).catch(err => {
     console.log(err)
@@ -166,7 +166,7 @@ function addPage() {
       finalPage.value = Math.ceil(res.data.data.total / 8)
     }
     else {
-      ElMessage.error('出错啦，找周霄')
+      // ElMessage.error('出错啦，找周霄')
     }
   }).catch(err => {
     console.log(err)
@@ -210,7 +210,7 @@ function minusPage() {
       finalPage.value = Math.ceil(res.data.data.total / 8)
     }
     else {
-      ElMessage.error('出错啦，找周霄')
+      // ElMessage.error('出错啦，找周霄')
     }
   }).catch(err => {
     console.log(err)
