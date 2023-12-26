@@ -26,7 +26,7 @@
                 <ul id="comments-list" class="comments-list">
                     <li v-for="comment in comments">
                         <div class="comment-main-level">
-                            <div class="comment-avatar"><img src="../../assets/ArticleDisplay/lu.png" alt=""></div>
+                            <div class="comment-avatar"><img src="../../assets/logo.png" alt=""></div>
                             <div class="comment-box">
                                 <div class="comment-head">
                                     <h6 v-if="comment.is_scholar" class="comment-name by-author"><a href="">{{ comment.user
@@ -59,7 +59,7 @@
                         </div>
                         <ul class="comments-list reply-list">
                             <li v-for="sec_comment in comment.reply_list">
-                                <div class="comment-avatar"><img src="../../assets/ArticleDisplay/free.jpg" alt=""></div>
+                                <div class="comment-avatar"><img src="../../assets/logo.png" alt=""></div>
                                 <div class="comment-box">
                                     <div class="comment-head">
                                         <h6 v-if="sec_comment.is_scholar" class="comment-name by-author"><a href="">{{
@@ -187,9 +187,9 @@ function clearReplyTo() {
     initCommentForm()
 }
 function sendComment() {
-    if(!store.getters.getUserinfo.login_or_not){
-      ElMessage.warning("Please Login first")
-      return
+    if (!store.getters.getUserinfo.login_or_not) {
+        ElMessage.warning("Please Login first")
+        return
     }
     new_comment.content = input_content.value
     new_comment.paper_id = store.state.Article.id
