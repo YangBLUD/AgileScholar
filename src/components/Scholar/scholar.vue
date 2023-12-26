@@ -44,27 +44,26 @@
     </el-header>
     <el-dialog v-model="showAppealDialog" :lock-scroll="false">
       <template #header>
-        <span class="dialog-header" style="font-weight: 600">
+        <span class="dialog-header" style="font-weight: 600;">
           Appeal against the scholar
         </span>
       </template>
-      <el-form :model="appealForm">
+      <el-form :model="claimForm" class="custom-form">
         <el-form-item label="Reason" label-width="140px">
-          <el-input v-model="appealForm.reason" type="textarea" />
+          <el-input v-model="claimForm.reason" type="textarea" class="custom-input" />
         </el-form-item>
         <el-form-item label="E-mail" label-width="140px">
-          <el-input v-model="appealForm.email" />
+          <el-input v-model="claimForm.email" class="custom-input" />
         </el-form-item>
         <el-form-item label="Captcha" label-width="140px">
-          <div style="display: flex; align-items: center">
-            <el-input v-model="appealForm.captcha" />
-            <span style="width: 150px"></span>
-            <el-button type="primary" @click="getAppealCaptcha" style="float: right">{{ appeal_captcha_time }}</el-button>
+          <div class="captcha-container">
+            <el-input v-model="claimForm.captcha" class="custom-input captcha-input" />
+            <el-button type="primary" @click="getClaimCaptcha" class="captcha-button">{{ claim_captcha_time }}</el-button>
           </div>
         </el-form-item>
-        <el-form-item label="Appeal Material" label-width="140px">
-          <el-upload class="upload-demo" drag action="" multiple :on-remove="handleAppealRemove" :file-list="fileList"
-            :limit="1" :on-change="handleAppealFile" :auto-upload="false">
+        <el-form-item label="Application Material" label-width="140px">
+          <el-upload class="upload-demo custom-upload" drag action="" multiple :on-remove="handleClaimRemove" :file-list="fileList"
+                     :limit="1" :on-change="handleClaimFile" :auto-upload="false">
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">
               Drop file here or <em>click to upload</em>
@@ -72,6 +71,7 @@
           </el-upload>
         </el-form-item>
       </el-form>
+
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleAppealSubmit">Submit</el-button>
@@ -79,9 +79,11 @@
       </template>
     </el-dialog>
     <el-dialog v-model="showClaimDialog" :lock-scroll="false"><template #header>
-        <span class="dialog-header" style="font-weight: 600">
-          Claim to be this scholar
+      <div style="text-align: center;margin-top: 20px;">
+        <span class="dialog-header" style="font-weight: 600; font-size: 25px;">
+            Claim to be this scholar
         </span>
+      </div>
       </template>
       <el-form :model="claimForm">
         <el-form-item label="Reason" label-width="140px">
@@ -795,4 +797,32 @@ watch(
 .tab-content {}
 
 .tab-bar {}
+
+
+/deep/ .el-upload {
+  border: 2px dashed #dcdfe6;
+  border-radius: 4px;
+  padding: 15px;
+  text-align: center;
+}
+
+/deep/ .el-upload:hover {
+  border-color: #409EFF;
+}
+
+/deep/ .el-form-item__label {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  font-weight: bold;
+  font-size: 16px;
+  text-align: right; /* 文本右对齐 */
+  width: 140px; /* 固定宽度 */
+  margin-right: 10px; /* 右侧留白 */
+}
+/deep/ .el-form-item {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+
 </style>

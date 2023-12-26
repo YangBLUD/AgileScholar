@@ -45,5 +45,7 @@ onMounted(() => {
 <style scoped>
 .network-item{
   font-size: 17px;
+  height: 60px;
+  margin: 5px;
 }
 </style>
