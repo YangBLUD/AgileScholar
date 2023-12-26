@@ -87,7 +87,7 @@
                         </el-tooltip>
 
 
-                        <StarDialog :token="store.state.User.token" :paper_id:="store.state.Article.id" :type="0"
+                        <StarDialog :token="store.state.User.token" :paper_id:="work_id" :type="0"
                             :is_star="store.state.Article.is_star"></StarDialog>
 
                         <!--            <el-tooltip-->
@@ -190,8 +190,10 @@ let landing_page_url = ref(store.state.Article.landing_page_url)
 let publish_date = ref(store.state.Article.publication_date)
 let source = ref(store.getters.get_source)
 let pdfUrl = ref(store.state.Article.pdf_url)
-
+const work_id = ref(store.state.Article.id)
+const is_star = ref(store.state.Article.is_star)
 watch(() => store.state.Article.id, (newVal, oldVal) => {
+    console.log(store.state.Article)
     article_title.value = store.state.Article.title
     authors.value = store.state.Article.Authors
     cited_count.value = store.state.Article.cited_count
@@ -199,6 +201,8 @@ watch(() => store.state.Article.id, (newVal, oldVal) => {
     publish_date.value = store.state.Article.publication_date
     source.value = store.getters.get_source
     pdfUrl.value = store.state.Article.pdf_url
+    work_id.value = store.state.Article.id
+    is_star.value = store.state.Article.is_star
     window.scrollTo(0, 0)
 })
 

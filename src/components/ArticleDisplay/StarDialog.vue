@@ -43,6 +43,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const is_star = ref(false);
 onMounted(() => {
+    console.log(props)
     is_star.value = props.is_star;
 });
 const centerDialogVisible = ref(false)
@@ -97,7 +98,7 @@ function handleEdit() {
             method: "post",
             data: JSON.stringify({
                 token: props.token,
-                paper_id: props.paper_id,
+                paper_id: Store.state.Article.id,
                 type: props.type,
                 folder_id: folder_id,
             }),
