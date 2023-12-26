@@ -76,7 +76,7 @@ import {ElMessage} from "element-plus";
 const router = useRouter();
 const is_star = ref(false);
 onMounted(() => {
-  is_star.value = props.is_star;
+    is_star.value = props.is_star;
 });
 const centerDialogVisible = ref(false);
 const props = defineProps({
@@ -104,6 +104,10 @@ function getfold() {
 
 const fold = ref([]);
 function start() {
+    if(!store.getters.getUserinfo.login_or_not){
+      ElMessage.warning("Please Login first")
+      return
+    }
     if (store.getters.getLoginState) {
         if (props.token == "") {
             router.push({ path: "home" });
@@ -127,27 +131,28 @@ function addfold(item) {
   choose.value.push(item);
 }
 function handleEdit() {
-  centerDialogVisible.value = false;
-  for (let i = 0; i < choose.value.length; i++) {
-    let folder_id = choose.value[i].folder_id;
-    axios({
-      url: "http://122.9.5.156:8000/api/v1/home/star",
-      method: "post",
-      data: JSON.stringify({
-        token: props.token,
-        paper_id: props.paper_id,
-        type: props.type,
-        folder_id: folder_id,
-      }),
-    })
-      .then((res) => {
-        console.log(res);
-        is_star.value = true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+    centerDialogVisible.value = false;
+    for (let i = 0; i < choose.value.length; i++) {
+        let folder_id = choose.value[i].folder_id;
+        axios({
+            url: "http://122.9.5.156:8000/api/v1/home/star",
+            method: "post",
+            data: JSON.stringify({
+                token: props.token,
+                paper_id: props.paper_id,
+                type: props.type,
+                folder_id: folder_id,
+            }),
+        })
+            .then((res) => {
+                console.log(res);
+                is_star.value = true;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
 }
 </script>
 <style scoped>

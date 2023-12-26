@@ -187,6 +187,10 @@ function clearReplyTo() {
     initCommentForm()
 }
 function sendComment() {
+    if(!store.getters.getUserinfo.login_or_not){
+      ElMessage.warning("Please Login first")
+      return
+    }
     new_comment.content = input_content.value
     new_comment.paper_id = store.state.Article.id
     new_comment.user = store.state.User.user_name

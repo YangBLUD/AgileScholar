@@ -98,8 +98,7 @@ function getfold() {
 const fold = ref([]);
 function start() {
   if (props.token == "") {
-    router.push({ path: "home" });
-    ElMessage("Please Sign In");
+    ElMessage.warning("Please Login first");
     return;
   }
   centerDialogVisible.value = true;
