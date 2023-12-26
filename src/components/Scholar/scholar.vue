@@ -15,14 +15,15 @@
         <div class="author-info">
           <template v-if="authorInformation != null">
             <h2>{{ authorInformation.display_name }}</h2>
-            <p class="author-attr">
+            <p class="author-attr" style="color: rgb(64, 96, 123)">
               {{ authorInformation.institution[0].name }}
             </p>
             <p class="author-attr">
               {{ authorInformation.author_email }}
             </p>
             <div style="display: flex; align-items: center; width: 500px;">
-              <p v-if="!authorInformation.claimed" class="author-certificate" style="margin-top: 15px;margin-right: 20px">
+              <p v-if="!authorInformation.claimed" class="author-certificate"
+                style="margin-top: 15px;margin-right: 20px; color:black">
                 Scholar not certified
               </p>
               <p v-if="authorInformation.claimed" class="author-certificate">
@@ -331,26 +332,26 @@ const fetchAuthorNetwork = () => {
       console.log(err);
     });
 };
-function AddBrowsingHistory(){
+function AddBrowsingHistory() {
   if (store.getters.getLoginState) {
     axios({
-    // 接口网址：包含协议名，域名，端口和路由
+      // 接口网址：包含协议名，域名，端口和路由
       url: 'http://122.9.5.156:8000/api/v1/home/add_history',
-    // 请求方式，默认为get，可以不写
+      // 请求方式，默认为get，可以不写
       method: 'post',
-    // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+      // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
       data: JSON.stringify({
         token: store.getters.getUserinfo.token,
         paper_id: route.params.id,
         type: 1,
       }),
-    // 成功请求回数据后，进入then，并用console.log打印结果
+      // 成功请求回数据后，进入then，并用console.log打印结果
     }).then(res => {
       if (res.data.errno === 0) {
-     // console.log(res.data.data)
+        // console.log(res.data.data)
       }
       else {
-     //ElMessage.error('出错啦，找周霄')
+        //ElMessage.error('出错啦，找周霄')
       }
     }).catch(err => {
       console.log(err)
@@ -530,10 +531,10 @@ function handleClaimSubmit() {
     })
       .then((res) => {
         console.log(res);
-        if(res.data.errno === 1005){
+        if (res.data.errno === 1005) {
           ElMessage.warning("You have claimed to be another Scholar")
         }
-        else{
+        else {
           ElMessage.success("Application has been submitted");
         }
         handleClaimClose();
@@ -761,13 +762,13 @@ watch(
 .author-info .author-attr {
   margin-bottom: 15px;
   font-size: 15px;
-  color: #666;
+  color: #0773df;
 }
 
 .author-certificate {
   margin-bottom: 15px;
   font-size: 17px;
-  color: #0773df;
+  color: rgb(126, 192, 80);
 }
 
 /* 设置标签页标题的样式 */
