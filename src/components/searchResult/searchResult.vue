@@ -108,7 +108,7 @@
               <div v-else class="page-num-com" @click="changeSize(30)">30</div>
             </div>
             <div class="drop-choice">
-              <el-col :span="8">
+              <el-col :span="12">
                 <el-dropdown trigger="click">
                   <span class="el-dropdown-link" @click="dropsort()">{{ search_text }}</span>
                   <template #dropdown>
