@@ -215,7 +215,7 @@ import store from '../../store';
 
 
 let handle_reason = ref('');
-let descion = ref(10);
+let descion = ref("10");
 let appeal_email_special = ref(10);
 
 let comment = ref(false)
@@ -383,7 +383,7 @@ const saveEdit = () => {
             		"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
-					"decision": descion,
+					"decision": parseInt(descion.value),
         		})
     		}).then(res => {
         		console.log(res.data)
@@ -401,7 +401,7 @@ const saveEdit = () => {
             		"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
-					"decision": descion,
+					"decision": parseInt(descion.value),
 					"appeal_email_special": appeal_email_special,
         		})
     		}).then(res => {
@@ -420,7 +420,7 @@ const saveEdit = () => {
             		"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
-					"decision": descion,
+					"decision": parseInt(descion.value),
 					"appeal_email_special": appeal_email_special,
         		})
     		}).then(res => {
@@ -458,7 +458,7 @@ const undoEdit = () => {
 	appealListVisible.value = false;
 	claimListVisible.value = false;
 	reportListVisible.value = false;
-	descion.value = 10;
+	descion.value = "10";
 	appeal_email_special.value = 10;
 }
 </script>
