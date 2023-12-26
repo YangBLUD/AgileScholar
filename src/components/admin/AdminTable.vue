@@ -562,15 +562,6 @@ const saveEdit = () => {
 					"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
-<<<<<<< Updated upstream
-					"decision": parseInt(descion.value),
-        		})
-    		}).then(res => {
-        		console.log(res.data)
-    		}).catch(err => {
-        		console.log(err)
-    		})
-=======
 					"decision": descion,
 				})
 			}).then(res => {
@@ -578,7 +569,6 @@ const saveEdit = () => {
 			}).catch(err => {
 				console.log(err)
 			})
->>>>>>> Stashed changes
 			reportListVisible.value = false;
 			break;
 		case "申诉":
