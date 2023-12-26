@@ -216,6 +216,7 @@ function append() {
     }),
   })
     .then((res) => {
+      console.log(res.data)
       if (res.data.errno == 0) {
         getFavorites();
       } else {

@@ -218,8 +218,10 @@
             <div class="shai-checkbox">
               <!-- <el-checkbox /> -->
             </div>
-            <div class="select-all" @click="withoutagg()">
+            <div class="select-all" @click="withoutagg()" v-if="search_work_clustering !== -1">
               &lt; Return Normal
+            </div>
+            <div class="select-all" v-if="search_work_clustering === -1">
             </div>
             <div class="per-page">
               per page&nbsp;&nbsp;:&nbsp;&nbsp;
@@ -360,7 +362,7 @@ const isadvance = ref(false);
 //额外的请求参数
 const search_type = ref(0);
 const search_first_search = ref(0);
-const search_work_clustering = ref(0);
+const search_work_clustering = ref(-1);
 const search_author_clustering = ref(0);
 const search_sort = ref(0);
 const search_text = ref("Cited down");
@@ -476,7 +478,7 @@ function getpaperlist() {
         nameAgg.value.data = dealagg(data.agg[0].data, "Name");
         institutionAgg.value.data = dealagg(
           data.agg[1].data,
-          "Institution Type"
+          "Institution"
         );
         search_extend_list.value = [];
       } else if (search_type.value === 2) {
@@ -533,6 +535,7 @@ function keysearch() {
   type_institution_Agg.value.data = [];
   levelAgg.value.data = [];
   search_text.value = "Cited down";
+  search_work_clustering.value = -1;
   getpaperlist();
 }
 
@@ -565,6 +568,7 @@ const handleClick = (tab, event) => {
   domain_institution_Agg.value.data = [];
   type_institution_Agg.value.data = [];
   levelAgg.value.data = [];
+  search_work_clustering.value = -1;
   getpaperlist();
   resetpage();
 };
@@ -619,6 +623,9 @@ watch(
   getCluster,
   (newVal, oldVal) => {
     console.log("newVal, oldVal", newVal, oldVal);
+    if(newVal.agg_text === "" && newVal.agg_raw === ""){
+      return ;
+    }
     getnewagg();
   },
   { deep: true }
@@ -630,7 +637,7 @@ function getnewagg() {
     text: pp.agg_text,
     value: pp.agg_raw,
   });
-  search_first_search.value = 1;
+  search_first_search.value = 0;
   getpaperlist();
   search_first_search.value = 0;
   resetpage();
@@ -651,6 +658,7 @@ function withoutagg() {
   domain_institution_Agg.value.data = [];
   type_institution_Agg.value.data = [];
   levelAgg.value.data = [];
+  search_work_clustering.value = -1;
   getpaperlist();
   search_first_search.value = 0;
   resetpage();
@@ -686,6 +694,10 @@ function getaggagain(type) {
     Store.commit("setOutCondition", true);
     return;
   }
+  if(type === search_work_clustering.value){
+    return;
+  }
+  search_extend_list.value = [];
   search_first_search.value = 1;
   // if(type == 0 && timeagg.value.data.length != 0){
   //     timeagg.value.data = [];
@@ -711,6 +723,9 @@ function getaggagain(type) {
   search_work_clustering.value = type;
   getpaperlist();
   search_first_search.value = 0;
+  Store.commit("setaggtext", "");
+  Store.commit("setaggraw", "");Store.commit("setaggtext", "");
+  Store.commit("setaggraw", "");
 }
 function dealagg(datalist, type) {
   let results = [];

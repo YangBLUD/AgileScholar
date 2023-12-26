@@ -227,7 +227,6 @@ function sendComment() {
             initCommentForm()
         }
         else {
-            ElMessage.error('出错啦，找周霄')
 
             console.log(res.data)
             console.log(user.token)
@@ -271,7 +270,6 @@ function deleteComment(comment_id) {
             getComment()
         }
         else {
-            ElMessage.error('出错啦，找周霄')
             console.log(res.data)
         }
     }).catch(err => {
@@ -297,7 +295,6 @@ function getComment() {
             console.log(res.data.data)
         }
         else {
-            ElMessage.error('出错啦，找周霄')
         }
     }).catch(err => {
         console.log(err)
