@@ -300,6 +300,7 @@ const fetchAuthorInformation = () => {
     url: "http://122.9.5.156:8000/api/v1/author/get_author_information",
     method: "post",
     data: JSON.stringify({
+      token: store.getters.getUserinfo.token,
       author_id: route.params.id,
     }),
   })
