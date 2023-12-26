@@ -38,10 +38,10 @@
                         <img src="../../assets/ArticleDisplay/cite.png" style="width: 20px; height: 20px;" alt="Cites">
                         <div class="inf-num">{{ props.info.cited_count }}</div>
                     </div>
-                    <div class="trend">
+                    <!-- <div class="trend">
                         <img style="width: 20px; height: 20px;" src="../../assets/icon-trend.png" alt="Clicks">
                         <div class="tr-num">{{ props.info.type_num }}</div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="choice">
                     <div class="introduce" v-if="props.info.pdf_url">
@@ -223,7 +223,7 @@ const props = defineProps({
             position: relative;
             left: 0px;
             display: flex;
-            width: 24%;
+            width: 30%;
             /* border-right: 1px solid #e6e6e6; */
             font-size: 18px;
 
