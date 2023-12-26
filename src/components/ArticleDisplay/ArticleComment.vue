@@ -100,10 +100,10 @@
         <el-form ref="updateInfo" label-width="150px">
             <div class="update-content">
                 <div class="left">
-                    <el-form-item label="举报说明" prop="description">
-                        <el-input v-model="description" :rows="4" type="textarea" placeholder="请输入举报理由" />
+                    <el-form-item label="Reason" prop="description">
+                        <el-input v-model="description" :rows="4" type="textarea" placeholder="Please enter the reason for reporting" />
                     </el-form-item>
-                    <el-form-item class="dialog-form-item" label="详细材料" prop="details">
+                    <el-form-item class="dialog-form-item" label="Detailed materials" prop="details">
                         <el-upload ref="upLoads" class="upload-demo" drag :limit="1" :auto-upload="false"
                             :on-change="handleChange" :show-file-list="true">
                             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
