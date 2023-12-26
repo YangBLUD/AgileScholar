@@ -368,6 +368,7 @@ function keysearch() {
   domain_institution_Agg.value.data = []
   type_institution_Agg.value.data = []
   levelAgg.value.data = []
+  search_text.value = "Cited down"
   getpaperlist();
 }
 
