@@ -420,7 +420,7 @@ const saveEdit = () => {
             		"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
-					"decision": descion,
+					"decision": parseInt(descion.value),
 					"appeal_email_special": appeal_email_special,
         		})
     		}).then(res => {
