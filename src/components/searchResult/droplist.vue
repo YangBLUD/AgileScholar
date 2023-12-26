@@ -7,7 +7,7 @@
             <div class="list-item" v-for="(item, index) in props.agginfo.data.slice(0, 6)" :key="index"
                 @click="aggchange(item)" v-if="props.agginfo.data && props.agginfo.data.length != 0">
                 <div class="item-item" v-if="getText() === item.raw"
-                    style="color: rgb(90, 156, 248); font-size: 18px; text-align: right; font-weight: bold;">
+                    style="color: rgb(90, 156, 248); font-size: 18px; text-align: left; font-weight: bold;">
                     {{ item.show }}&nbsp;({{ item.value }})
                 </div>
                 <div class="item-item" v-if="getText() !== item.raw">
