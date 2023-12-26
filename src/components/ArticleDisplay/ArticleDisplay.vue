@@ -14,7 +14,7 @@
             <div class="article-show-content">
                 <div class="article-show-content-head">
                     <div class="article-show-content-info">RESEARCH-ARTICLE</div>
-                    <div class="article-show-content-group">
+                    <!-- <div class="article-show-content-group">
                         <el-icon class="article-show-content-icon">
                             <InfoFilled />
                         </el-icon>
@@ -33,7 +33,7 @@
                         <el-icon class="article-show-content-icon">
                             <Share />
                         </el-icon>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="article-show-content-title">
                     {{ article_title }}
