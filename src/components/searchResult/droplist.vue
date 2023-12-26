@@ -6,7 +6,11 @@
         <div class="list">
             <div class="list-item" v-for="(item, index) in props.agginfo.data.slice(0, 6)" :key="index"
                 @click="aggchange(item)" v-if="props.agginfo.data && props.agginfo.data.length != 0">
-                <div class="item-item">
+                <div class="item-item" v-if="getText() === item.raw"
+                    style="color: rgb(90, 156, 248); font-size: 18px; text-align: left; font-weight: bold;">
+                    {{ item.show }}&nbsp;({{ item.value }})
+                </div>
+                <div class="item-item" v-if="getText() !== item.raw">
                     {{ item.show }}&nbsp;({{ item.value }})
                 </div>
             </div>
@@ -24,13 +28,14 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted, onBeforeMount, watch } from "vue";
 import axios from "axios";
 import { storeKey, useStore } from "vuex";
 const Store = useStore();
 onMounted(() => {
     console.log(props.agginfo)
 });
+const control = ref(false)
 const props = defineProps({
     agginfo: Object,
 })
@@ -40,10 +45,12 @@ const handleChange = (val) => {
 };
 //点击进行聚类
 function aggchange(item) {
-    console.log("aggchange");
     Store.commit("setOutCondition", false);
     Store.commit("setaggtext", props.agginfo.text);
     Store.commit("setaggraw", item.raw);
+}
+function getText() {
+    return Store.getters.getCluster.agg_raw;
 }
 </script>
 <style scoped>

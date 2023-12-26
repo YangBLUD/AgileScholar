@@ -88,7 +88,6 @@ function jump(article_id) {
             console.log(res.data)
         }
         else {
-            ElMessage.error('出错啦，找周霄')
         }
     }).catch(err => {
         console.log(err)
@@ -110,7 +109,6 @@ function jump(article_id) {
             console.log(res.data)
         }
         else {
-            ElMessage.error('出错啦，找周霄')
         }
     }).catch(err => {
         console.log(err)
@@ -133,7 +131,6 @@ function jump(article_id) {
                 // console.log(res.data.data)
             }
             else {
-                ElMessage.error('出错啦，找周霄')
             }
         }).catch(err => {
             console.log(err)

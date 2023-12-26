@@ -28,11 +28,11 @@
 					待处理
 					<el-progress :percentage="100" color="#42b983"></el-progress>
 					申诉
-					<el-progress :percentage="(appealNum / affairNum * 100).toFixed(2)" color="#f1e05a"></el-progress>
+					<el-progress :percentage="appealNumPer" color="#f1e05a"></el-progress>
 					举报
-					<el-progress :percentage="(reportNum / affairNum * 100).toFixed(2)"></el-progress>
+					<el-progress :percentage="reportNumPer"></el-progress>
 					认证申请
-					<el-progress :percentage="(claimNum / affairNum * 100).toFixed(2)" color="#f56c6c"></el-progress>
+					<el-progress :percentage="claimNumPer" color="#f56c6c"></el-progress>
 				</el-card>
 			</el-col>
 			<el-col :span="16">
@@ -118,24 +118,28 @@
 </template>
 
 <script setup>
-
+import { onBeforeMount } from 'vue'
 import { ref, reactive } from 'vue';
 import imgurl from '../../assets/img.jpg';
 import store from '../../store';
 
-const name = store.getters.getName;
-const role = store.getters.getRole;
-const lastTime = store.getters.getLoginTime;
-const lastLocation = store.getters.getLoginLocation;
+let name = store.getters.getName;
+let role = store.getters.getRole;
+let lastTime = store.getters.getLoginTime;
+let lastLocation = store.getters.getLoginLocation;
 
-const affairNum = store.getters.getAffairListLength;
-const appealNum = store.getters.getAppealListLength;
-const reportNum = store.getters.getReportListLength;
-const claimNum = store.getters.getClaimListLength;
+let affairNum = store.getters.getAffairListLength;
+let appealNum = store.getters.getAppealListLength;
+let reportNum = store.getters.getReportListLength;
+let claimNum = store.getters.getClaimListLength;
+
+let appealNumPer = (appealNum / affairNum * 100).toFixed(2)
+let reportNumPer = (reportNum / affairNum * 100).toFixed(2)
+let claimNumPer = (claimNum / affairNum * 100).toFixed(2)
 
 let todoList = ref(store.getters.getTodoList)
 
-const editVisible = ref(false);
+let editVisible = ref(false);
 
 let toDoItem = ref("请输入待办事项");
 
@@ -147,6 +151,12 @@ const saveEdit = () => {
 	todoList = store.commit('AddTodoList', toDoItem)
 	editVisible.value = false;
 };
+onBeforeMount(() => {	
+	affairNum = store.getters.getAffairListLength;
+	appealNum = store.getters.getAppealListLength;
+	reportNum = store.getters.getReportListLength;
+	claimNum = store.getters.getClaimListLength;
+})
 </script>
 
 <style scoped>

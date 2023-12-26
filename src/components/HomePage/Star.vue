@@ -2,50 +2,38 @@
   <div class="star-dialog" ref="showFavorite">
     <div style="margin: 20px 0">
       <span style="margin-left: 20px; font-weight: 600">Favorites</span>
-      <el-button
-        @click="createDialogShow"
-        style="margin-right: 10px; float: right"
-        >Create new folder</el-button
-      >
+      <el-button @click="createDialogShow" style="margin-right: 10px; float: right">Create new folder</el-button>
     </div>
     <el-tree :data="favorites_list" :props="treeProps" ref="tree">
       <template v-slot="{ node, data: nodeData }">
         <div class="custom-tree-node">
-          <span class="icon" v-if="nodeData.type == 0"
-            ><el-icon> <Document /> </el-icon
-          ></span>
-          <span class="icon" v-if="nodeData.type == 1"
-            ><el-icon> <User /> </el-icon
-          ></span>
-          <span class="icon" v-if="nodeData.type == 2"
-            ><el-icon> <House /> </el-icon
-          ></span>
-          <span class="icon" v-if="nodeData.list != undefined"
-            ><el-icon> <Folder /> </el-icon
-          ></span>
-          <span
-            style="
+          <span class="icon" v-if="nodeData.type == 0"><el-icon>
+              <Document />
+            </el-icon></span>
+          <span class="icon" v-if="nodeData.type == 1"><el-icon>
+              <User />
+            </el-icon></span>
+          <span class="icon" v-if="nodeData.type == 2"><el-icon>
+              <House />
+            </el-icon></span>
+          <span class="icon" v-if="nodeData.list != undefined"><el-icon>
+              <Folder />
+            </el-icon></span>
+          <span style="
               width: 220px;
               overflow: hidden;
               text-overflow: ellipsis;
               word-break: break-all;
-            "
-            @click="jump(nodeData)"
-            >{{
+            " @click="jump(nodeData)">{{
               nodeData.name || nodeData.data.display_name || nodeData.data.title
-            }}</span
-          >
+            }}</span>
           <span>
             <el-button @click="remove(node, nodeData)">Delete</el-button>
           </span>
         </div>
       </template>
     </el-tree>
-    <el-dialog
-      v-model="showCreateDialog"
-      @close="createDialogClose"
-      :lock-scroll="false"
-    >
+    <el-dialog v-model="showCreateDialog" @close="createDialogClose" :lock-scroll="false">
       <template #header>
         <span class="dialog-footer" style="font-weight: 600">
           Create New Folder
@@ -216,6 +204,7 @@ function append() {
     }),
   })
     .then((res) => {
+      console.log(res.data)
       if (res.data.errno == 0) {
         getFavorites();
       } else {
@@ -247,7 +236,7 @@ function remove(node: Node, data) {
     // console.log(newItem);
     // favorites_list.splice(index, 1);
     axios({
-      url: "http://122.9.5.156:8000/api/v1/home/home/unstar",
+      url: "http://122.9.5.156:8000/api/v1/home/unstar",
       method: "post",
       data: JSON.stringify({
         token: Store.getters.getUserinfo.token,
@@ -255,9 +244,11 @@ function remove(node: Node, data) {
       }),
     })
       .then((res) => {
+        console.log(res.data)
         if (res.data.errno == 0) {
           //暂时用的刷新机制，因为正常删除删不掉只能同步了
           getFavorites();
+          ElMessage.success("Delete succeed")
         } else {
           ElMessage.error("Delete failed!");
         }

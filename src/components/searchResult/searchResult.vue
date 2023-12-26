@@ -10,107 +10,51 @@
         </div>
         <div class="second-search-form">
           <div class="content-search">
-            <input
-              type=""
-              name=""
-              placeholder="Search"
-              class="content-search-input"
-              v-model="searchcontent"
-            />
+            <input type="" name="" placeholder="Search" class="content-search-input" v-model="searchcontent" />
             <el-icon :size="22" color="#808080" @click="keysearch()">
               <search />
             </el-icon>
           </div>
-          <div
-            style="
+          <div style="
               float: right;
               cursor: pointer;
               margin-right: 5px;
               margin-top: 10px;
               color: aliceblue;
-            "
-            @click="$router.push({ path: '/advanced' })"
-            class="Advance"
-          >
+            " @click="$router.push({ path: '/advanced' })" class="Advance">
             <h5 style="font-size: 16px">Advanced Search</h5>
           </div>
         </div>
       </div>
       <div class="middle">
         <div class="middle-left">
-          <div
-            style="
+          <div style="
               font-size: 25px;
               font-weight: bold;
               margin-left: 90px;
               margin-bottom: 10px;
               color: rgb(84, 84, 84);
-            "
-          >
+            ">
             Filters
           </div>
           <div v-if="search_type === 0" class="middle-left-people">
-            <Droplist
-              :agginfo="timeagg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
-            <Droplist
-              :agginfo="writeragg"
-              class="drop1"
-              @click="getaggagain(1)"
-            />
-            <Droplist
-              :agginfo="sourceagg"
-              class="drop1"
-              @click="getaggagain(2)"
-            />
-            <Droplist
-              :agginfo="domainagg"
-              class="drop1"
-              @click="getaggagain(3)"
-            />
-            <Droplist
-              :agginfo="typeagg"
-              class="drop1"
-              @click="getaggagain(4)"
-            />
+            <Droplist :agginfo="timeagg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="writeragg" class="drop1" @click="getaggagain(1)" />
+            <Droplist :agginfo="sourceagg" class="drop1" @click="getaggagain(2)" />
+            <Droplist :agginfo="domainagg" class="drop1" @click="getaggagain(3)" />
+            <Droplist :agginfo="typeagg" class="drop1" @click="getaggagain(4)" />
           </div>
           <div v-if="search_type === 1" class="middle-left-people">
-            <Droplist
-              :agginfo="nameAgg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
-            <Droplist
-              :agginfo="institutionAgg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
+            <Droplist :agginfo="nameAgg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="institutionAgg" class="drop1" @click="getaggagain(0)" />
           </div>
           <div v-if="search_type === 2" class="middle-left-people">
-            <Droplist
-              :agginfo="countryAgg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
-            <Droplist
-              :agginfo="type_institution_Agg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
-            <Droplist
-              :agginfo="domain_institution_Agg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
+            <Droplist :agginfo="countryAgg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="type_institution_Agg" class="drop1" @click="getaggagain(0)" />
+            <Droplist :agginfo="domain_institution_Agg" class="drop1" @click="getaggagain(0)" />
           </div>
           <div v-if="search_type === 3" class="middle-left-people">
-            <Droplist
-              :agginfo="levelAgg"
-              class="drop1"
-              @click="getaggagain(0)"
-            />
+            <Droplist :agginfo="levelAgg" class="drop1" @click="getaggagain(0)" />
           </div>
         </div>
         <div class="middle-right">
@@ -118,83 +62,59 @@
           <div class="middle-right-sum">
             <div class="first-line">
               <div class="search-num">
-                <div
-                  style="
+                <div style="
                     font-family: Merriweather Sans, sans-serif;
                     font-weight: normal;
                     font-style: italic;
                     font-size: 18px;
-                  "
-                  v-if="totalpage == 10000"
-                >
+                  " v-if="totalpage == 10000">
                   {{ totalpage }}+&nbsp;
                 </div>
-                <div
-                  style="
+                <div style="
                     font-family: Merriweather Sans, sans-serif;
                     font-weight: normal;
                     font-style: italic;
                     font-size: 18px;
-                  "
-                  v-else
-                >
+                  " v-else>
                   {{ totalpage }}&nbsp;
                 </div>
-                <div
-                  style="
+                <div style="
                     font-family: Merriweather Sans, sans-serif;
                     font-weight: 300;
                     font-style: italic;
                     font-size: 18px;
-                  "
-                >
+                  ">
                   Results for:
                 </div>
-                <div
-                  style="
+                <div style="
                     position: relative;
                     top: -2px;
                     font-family: Merriweather Sans, sans-serif;
                     font-weight: bold;
                     font-style: italic;
                     font-size: 20px;
-                  "
-                >
+                  ">
                   &nbsp;All: {{ search_title }}
                 </div>
               </div>
             </div>
             <div class="sum-text">
               <span class="text-first">
-                Searched The Full-Text Collection (<span
-                  style="font-weight: normal"
-                  >{{ totalpage }}</span
-                >
-                records) &nbsp; <span style="font-style: normal">|</span>
+                Searched The Full-Text Collection (<span style="font-weight: normal">{{ totalpage }}</span>
+                records) &nbsp;
               </span>
-              <div class="text-second">
-                Expand to The ACM Guide to Computing Literature (<span
-                  style="font-weight: normal"
-                  >3,605,660</span
-                >
+              <!-- <div class="text-second">
+                Expand to The ACM Guide to Computing Literature (<span style="font-weight: normal">3,605,660</span>
                 records)
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="search-result-tabs">
             <div class="nav-container">
-              <el-tabs
-                v-if="!isadvance"
-                v-model="activeName"
-                class="demo-tabs"
-                @tab-click="handleClick"
-              >
+              <el-tabs v-if="!isadvance" v-model="activeName" class="demo-tabs" @tab-click="handleClick">
                 <el-tab-pane label="RESULTS" name="RESULTS"></el-tab-pane>
                 <el-tab-pane label="SCHOLARS" name="SCHOLARS"></el-tab-pane>
-                <el-tab-pane
-                  label="INSTITUTIONS"
-                  name="INSTITUTIONS"
-                ></el-tab-pane>
+                <el-tab-pane label="INSTITUTIONS" name="INSTITUTIONS"></el-tab-pane>
                 <el-tab-pane label="SUBJECTS" name="SUBJECTS"></el-tab-pane>
               </el-tabs>
             </div>
@@ -210,16 +130,17 @@
               of
               <span style="font-style: italic; font-weight: bold">{{
                 totalpage
-              }}</span
-              >&nbsp;Results
+              }}</span>&nbsp;Results
             </div>
           </div>
           <div class="search-result-checkbox">
             <div class="shai-checkbox">
               <!-- <el-checkbox /> -->
             </div>
-            <div class="select-all" @click="withoutagg()">
+            <div class="select-all" @click="withoutagg()" v-if="search_work_clustering !== -1">
               &lt; Return Normal
+            </div>
+            <div class="select-all" v-if="search_work_clustering === -1">
             </div>
             <div class="per-page">
               per page&nbsp;&nbsp;:&nbsp;&nbsp;
@@ -240,12 +161,8 @@
                   }}</span>
                   <template #dropdown>
                     <el-dropdown-menu>
-                      <el-dropdown-item
-                        :key="index"
-                        v-for="(item, index) in sortlist"
-                        @click="changesort(item)"
-                        >{{ item.text }}</el-dropdown-item
-                      >
+                      <el-dropdown-item :key="index" v-for="(item, index) in sortlist" @click="changesort(item)">{{
+                        item.text }}</el-dropdown-item>
                     </el-dropdown-menu>
                   </template>
                 </el-dropdown>
@@ -253,12 +170,7 @@
             </div>
           </div>
           <div class="middle-right-list">
-            <div
-              v-if="search_type == 0"
-              class="paper-list"
-              :key="index"
-              v-for="(item, index) in paper_list"
-            >
+            <div v-if="search_type == 0" class="paper-list" :key="index" v-for="(item, index) in paper_list">
               <div class="list-item">
                 <div class="checkbox">
                   <el-checkbox />
@@ -269,42 +181,24 @@
               </div>
             </div>
             <div v-if="search_type == 1" class="people-list">
-              <div
-                class="people-item"
-                :key="index"
-                v-for="(item, index) in paper_list"
-              >
+              <div class="people-item" :key="index" v-for="(item, index) in paper_list">
                 <Scholars :info="item" :token="token"></Scholars>
               </div>
             </div>
             <div v-if="search_type == 2" class="people-list">
-              <div
-                class="people-item"
-                :key="index"
-                v-for="(item, index) in paper_list"
-              >
+              <div class="people-item" :key="index" v-for="(item, index) in paper_list">
                 <Institutions :info="item" :token="token"></Institutions>
               </div>
             </div>
             <div v-if="search_type == 3" class="people-list">
-              <div
-                class="people-item"
-                :key="index"
-                v-for="(item, index) in paper_list"
-              >
+              <div class="people-item" :key="index" v-for="(item, index) in paper_list">
                 <Subjects :info="item" :token="token"></Subjects>
               </div>
             </div>
             <div class="bottom-page">
               <div class="example-pagination-block">
-                <el-pagination
-                  layout="prev, pager, next"
-                  :page-count="totalye"
-                  v-model:current-page="currentPage"
-                  @current-change="currentChange"
-                  @prev-click="prevClick"
-                  @next-click="nextClick"
-                />
+                <el-pagination layout="prev, pager, next" :page-count="totalye" v-model:current-page="currentPage"
+                  @current-change="currentChange" @prev-click="prevClick" @next-click="nextClick" />
               </div>
             </div>
           </div>
@@ -312,10 +206,7 @@
       </div>
     </div>
   </div>
-  <el-dialog
-    id="important_progress"
-    v-model="importantProgress"
-    style="
+  <el-dialog id="important_progress" v-model="importantProgress" style="
       width: 20%;
       right: 0%;
       height: 0;
@@ -323,10 +214,7 @@
       top: 10%;
       background-color: #7e7e7f !important;
       border: 0px solid #7e7e7f !important;
-    "
-    :close-on-click-modal="false"
-    :show-close="false"
-  >
+    " :close-on-click-modal="false" :show-close="false">
     <div class="spinner-box">
       <div class="blue-orbit leo"></div>
 
@@ -360,7 +248,7 @@ const isadvance = ref(false);
 //额外的请求参数
 const search_type = ref(0);
 const search_first_search = ref(0);
-const search_work_clustering = ref(0);
+const search_work_clustering = ref(-1);
 const search_author_clustering = ref(0);
 const search_sort = ref(0);
 const search_text = ref("Cited down");
@@ -476,7 +364,7 @@ function getpaperlist() {
         nameAgg.value.data = dealagg(data.agg[0].data, "Name");
         institutionAgg.value.data = dealagg(
           data.agg[1].data,
-          "Institution Type"
+          "Institution"
         );
         search_extend_list.value = [];
       } else if (search_type.value === 2) {
@@ -533,6 +421,7 @@ function keysearch() {
   type_institution_Agg.value.data = [];
   levelAgg.value.data = [];
   search_text.value = "Cited down";
+  search_work_clustering.value = -1;
   getpaperlist();
 }
 
@@ -565,6 +454,7 @@ const handleClick = (tab, event) => {
   domain_institution_Agg.value.data = [];
   type_institution_Agg.value.data = [];
   levelAgg.value.data = [];
+  search_work_clustering.value = -1;
   getpaperlist();
   resetpage();
 };
@@ -619,6 +509,9 @@ watch(
   getCluster,
   (newVal, oldVal) => {
     console.log("newVal, oldVal", newVal, oldVal);
+    if (newVal.agg_text === "" && newVal.agg_raw === "") {
+      return;
+    }
     getnewagg();
   },
   { deep: true }
@@ -630,7 +523,7 @@ function getnewagg() {
     text: pp.agg_text,
     value: pp.agg_raw,
   });
-  search_first_search.value = 1;
+  search_first_search.value = 0;
   getpaperlist();
   search_first_search.value = 0;
   resetpage();
@@ -651,6 +544,7 @@ function withoutagg() {
   domain_institution_Agg.value.data = [];
   type_institution_Agg.value.data = [];
   levelAgg.value.data = [];
+  search_work_clustering.value = -1;
   getpaperlist();
   search_first_search.value = 0;
   resetpage();
@@ -686,6 +580,10 @@ function getaggagain(type) {
     Store.commit("setOutCondition", true);
     return;
   }
+  if (type === search_work_clustering.value) {
+    return;
+  }
+  search_extend_list.value = [];
   search_first_search.value = 1;
   // if(type == 0 && timeagg.value.data.length != 0){
   //     timeagg.value.data = [];
@@ -711,6 +609,9 @@ function getaggagain(type) {
   search_work_clustering.value = type;
   getpaperlist();
   search_first_search.value = 0;
+  Store.commit("setaggtext", "");
+  Store.commit("setaggraw", ""); Store.commit("setaggtext", "");
+  Store.commit("setaggraw", "");
 }
 function dealagg(datalist, type) {
   let results = [];
@@ -919,11 +820,9 @@ function changesort(item) {
   align-items: center;
   border-radius: 50%;
   background: rgb(63, 249, 220);
-  background: linear-gradient(
-    0deg,
-    rgba(63, 249, 220, 0.1) 33%,
-    rgba(63, 249, 220, 1) 100%
-  );
+  background: linear-gradient(0deg,
+      rgba(63, 249, 220, 0.1) 33%,
+      rgba(63, 249, 220, 1) 100%);
   animation: spin3D 1.8s linear 0s infinite;
 }
 
@@ -944,11 +843,9 @@ function changesort(item) {
   align-items: center;
   border-radius: 50%;
   background: rgb(251, 91, 83);
-  background: linear-gradient(
-    0deg,
-    rgba(251, 91, 83, 0.1) 33%,
-    rgba(251, 91, 83, 1) 100%
-  );
+  background: linear-gradient(0deg,
+      rgba(251, 91, 83, 0.1) 33%,
+      rgba(251, 91, 83, 1) 100%);
   animation: spin3D 2.2s linear 0s infinite;
 }
 
@@ -970,11 +867,9 @@ function changesort(item) {
   align-items: center;
   border-radius: 50%;
   background: rgb(63, 249, 220);
-  background: linear-gradient(
-    0deg,
-    rgba(63, 249, 220, 0.1) 33%,
-    rgba(63, 249, 220, 1) 100%
-  );
+  background: linear-gradient(0deg,
+      rgba(63, 249, 220, 0.1) 33%,
+      rgba(63, 249, 220, 1) 100%);
   animation: spin 0.8s linear 0s infinite;
 }
 
@@ -1421,7 +1316,7 @@ ul {
         margin-left: 300px;
         padding-bottom: 20px;
 
-        .example-pagination-block + .example-pagination-block {
+        .example-pagination-block+.example-pagination-block {
           margin-top: 10px;
         }
       }
@@ -1433,6 +1328,7 @@ ul {
   font-weight: bold;
   /* 你想要的字重，比如 bold 或者 normal */
 }
+
 .Advance {
   position: relative;
   left: 200px;
@@ -1440,6 +1336,7 @@ ul {
   cursor: pointer;
   color: aliceblue;
   transition: ease 0.3s;
+
   &:hover {
     transform: scale(1.1);
     transition: ease 0.3s;

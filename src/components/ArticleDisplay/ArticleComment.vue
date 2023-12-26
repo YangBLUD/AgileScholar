@@ -29,9 +29,12 @@
                             <div class="comment-avatar"><img src="../../assets/logo.png" alt=""></div>
                             <div class="comment-box">
                                 <div class="comment-head">
-                                    <h6 v-if="comment.is_scholar" class="comment-name by-author"><a href="">{{ comment.user
-                                    }}</a></h6>
-                                    <h6 v-if="!comment.is_scholar" class="comment-name"><a href="">{{ comment.user }}</a>
+                                    <h6 v-if="comment.is_scholar" class="comment-name by-author" >
+                                      <router-link class="link" :to="{ name: 'scholar-display', params: { id: comment.author_id } }">
+                                        {{ comment.user }}
+                                      </router-link>
+                                    </h6>
+                                    <h6 v-if="!comment.is_scholar" class="comment-name">{{ comment.user }}
                                     </h6>
                                     <span>{{ comment.comment_time }}</span>
                                     <el-tooltip effect="dark" content="Comment" placement="bottom">
@@ -101,7 +104,8 @@
             <div class="update-content">
                 <div class="left">
                     <el-form-item label="Reason" prop="description">
-                        <el-input v-model="description" :rows="4" type="textarea" placeholder="Please enter the reason for reporting" />
+                        <el-input v-model="description" :rows="4" type="textarea"
+                            placeholder="Please enter the reason for reporting" />
                     </el-form-item>
                     <el-form-item class="dialog-form-item" label="Detailed materials" prop="details">
                         <el-upload ref="upLoads" class="upload-demo" drag :limit="1" :auto-upload="false"
@@ -154,7 +158,6 @@ watch(() => store.state.Article.comment_add_num, (newVal, oldVal) => {
     user.value = store.getters.getUserinfo
     initCommentForm()
 })
-
 
 const new_comment = reactive({
     paper_id: "",
@@ -227,7 +230,6 @@ function sendComment() {
             initCommentForm()
         }
         else {
-            ElMessage.error('出错啦，找周霄')
 
             console.log(res.data)
             console.log(user.token)
@@ -271,7 +273,6 @@ function deleteComment(comment_id) {
             getComment()
         }
         else {
-            ElMessage.error('出错啦，找周霄')
             console.log(res.data)
         }
     }).catch(err => {
@@ -297,7 +298,6 @@ function getComment() {
             console.log(res.data.data)
         }
         else {
-            ElMessage.error('出错啦，找周霄')
         }
     }).catch(err => {
         console.log(err)
