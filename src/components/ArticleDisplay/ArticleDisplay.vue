@@ -49,7 +49,6 @@
                             </router-link>
                         </span>
                     </div>
-                    <span class="article-show-content-author-all text-underline">Authors Info & Claims</span>
                 </div>
                 <div class="article-show-content-line"></div>
                 <div class="article-show-content-source text-gray">
