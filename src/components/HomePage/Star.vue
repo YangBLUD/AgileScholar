@@ -248,7 +248,7 @@ function remove(node: Node, data) {
     // console.log(newItem);
     // favorites_list.splice(index, 1);
     axios({
-      url: "http://122.9.5.156:8000/api/v1/home/home/unstar",
+      url: "http://122.9.5.156:8000/api/v1/home/unstar",
       method: "post",
       data: JSON.stringify({
         token: Store.getters.getUserinfo.token,
@@ -256,9 +256,11 @@ function remove(node: Node, data) {
       }),
     })
       .then((res) => {
+        console.log(res.data)
         if (res.data.errno == 0) {
           //暂时用的刷新机制，因为正常删除删不掉只能同步了
           getFavorites();
+          ElMessage.success("Delete succeed")
         } else {
           ElMessage.error("Delete failed!");
         }
