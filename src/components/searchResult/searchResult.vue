@@ -110,7 +110,7 @@
             <div class="drop-choice">
               <el-col :span="8">
                 <el-dropdown trigger="click">
-                  <span class="el-dropdown-link" @click="dropsort()">Relevance</span>
+                  <span class="el-dropdown-link" @click="dropsort()">{{ search_text }}</span>
                   <template #dropdown>
                     <el-dropdown-menu>
                       <el-dropdown-item :key="index" v-for="(item, index) in sortlist" @click="changesort(item)">{{
@@ -203,6 +203,7 @@ const search_first_search = ref(0);
 const search_work_clustering = ref(0);
 const search_author_clustering = ref(0);
 const search_sort = ref(0);
+const search_text = ref("Cited down")
 const search_extend_list = ref([]);
 //用于论文列表的渲染
 const paper_list = ref([]);
@@ -367,6 +368,7 @@ function keysearch() {
   domain_institution_Agg.value.data = []
   type_institution_Agg.value.data = []
   levelAgg.value.data = []
+  search_text.value = "Cited down"
   getpaperlist();
 }
 
@@ -640,6 +642,7 @@ function dropsort() {
 }
 function changesort(item) {
   search_sort.value = item.id;
+  search_text.value = item.text;
   getpaperlist();
 }
 </script>
