@@ -31,5 +31,5 @@ jobs:
           context: .
           push: true
           tags: |
-            docker.pkg.github.com/${{ env.IMAGE_REPOSITORY }}/qingjin-backend:${{ github.sha }}
-            docker.pkg.github.com/${{ env.IMAGE_REPOSITORY }}/qingjin-backend:${{ github.event.release.tag_name }}
+            docker.pkg.github.com/${{ env.IMAGE_REPOSITORY }}/qingjin-frontend:${{ github.sha }}
+            docker.pkg.github.com/${{ env.IMAGE_REPOSITORY }}/qingjin-frontend:${{ github.event.release.tag_name }}
