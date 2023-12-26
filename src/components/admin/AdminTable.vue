@@ -330,7 +330,7 @@
 							<template #label>
 								<div class="cell-item">
 									<el-icon>
-										<Avatar />
+										<Clock />
 									</el-icon>
 									评论时间
 								</div>
@@ -341,7 +341,7 @@
 							<template #label>
 								<div class="cell-item">
 									<el-icon>
-										<Avatar />
+										<User />
 									</el-icon>
 									评论用户
 								</div>
@@ -352,7 +352,7 @@
 							<template #label>
 								<div class="cell-item">
 									<el-icon>
-										<Avatar />
+										<EditPen />
 									</el-icon>
 									评论内容
 								</div>
