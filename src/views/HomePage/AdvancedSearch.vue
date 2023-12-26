@@ -107,7 +107,7 @@
                   <el-input
                     v-model="props.row.content"
                     style="width: 100%"
-                    maxlength="20"
+                    maxlength="60"
                   ></el-input>
                 </el-col>
                 <el-col :span="3">
