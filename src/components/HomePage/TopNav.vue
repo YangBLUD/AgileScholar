@@ -16,14 +16,14 @@
       </li>
       <li style="width: 45%; margin-right: 0">
         <div style="margin-top: 3px; margin-left: 100px;">
-          <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px"
+          <!-- <el-input v-model="searchText" @keyup="userNameKeyup($event)" size="large" width="200px"
             style="font-size: 16px;">
             <template #prefix>
               <el-icon class="el-input__icon">
                 <search />
               </el-icon>
             </template>
-          </el-input>
+          </el-input> -->
           <!-- <button @click="addHistory">add star</button> -->
         </div>
       </li>
