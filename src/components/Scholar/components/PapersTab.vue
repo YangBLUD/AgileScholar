@@ -51,7 +51,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-pagination :current-page="currentPage" :page-size="10" :total="totalpage" :small="false"
+      <el-pagination :current-page="currentPage" :page-size="5" :total="totalpage" :small="false"
         class="custom-pagination" style="font-size: 16px; padding: 20px;" @current-change="handlePageChange">
       </el-pagination>
     </el-main>
@@ -99,7 +99,7 @@ function performSearch() {
         "clear": 1
       },
     ]
-    currentPage.value = 0;
+    currentPage.value = 1;
   } else {
     addList.value = [
       {
@@ -113,7 +113,7 @@ function performSearch() {
         "clear": 1
       }
     ]
-    currentPage.value = 0;
+    currentPage.value = 1;
   }
   fetchPaperList()
 }
@@ -134,7 +134,7 @@ function fetchPaperList() {
       "work_clustering": 0,
       "author_clustering": 0,
       "size": papernum.value,
-      "from": currentPage.value * papernum.value,
+      "from": (currentPage.value-1) * papernum.value,
       "sort": sortType.value,
       "extend_list": [
       ]
@@ -143,9 +143,11 @@ function fetchPaperList() {
     .then((res) => {
       console.log(res.data)
       paper_list.value = res.data.data.result
-      console.log(paper_list)
       totalpage.value = res.data.data.total;
       search_to.value = Math.min(res.data.data.total, papernum.value);
+      console.log(paper_list)
+      console.log(search_to.value)
+      console.log(totalpage.value)
     })
     .catch((err) => {
       console.log(err);
@@ -249,5 +251,29 @@ onMounted(() => {
 ::v-deep .tab-bar .el-tabs__item {
   font-weight: bold;
 }
+.custom-pagination {
+  font-size: 16px;
+  padding: 20px;
+}
+
+.custom-pagination .el-pagination {
+  color: #333;
+}
+
+.custom-pagination .el-pagination button {
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.custom-pagination .el-pagination button:hover {
+  color: #409EFF;
+  border-color: #409EFF;
+}
+
+.custom-pagination .el-pagination .el-pager li.active {
+  background-color: #409EFF;
+  color: #fff;
+}
+
 </style>
 

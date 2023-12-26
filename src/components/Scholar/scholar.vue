@@ -21,12 +21,12 @@
             <p class="author-attr">
               {{ authorInformation.author_email }}
             </p>
-            <p v-if="authorInformation.claimed" class="author-certificate">
-              Scholar certified<el-button class="checkbutton" type="success" :icon="Check" circle />
-            </p>
             <div style="display: flex; align-items: center; width: 500px;">
-              <p v-if="!authorInformation.claimed" class="author-certificate" style="margin-top: 12px;margin-right: 20px">
+              <p v-if="!authorInformation.claimed" class="author-certificate" style="margin-top: 15px;margin-right: 20px">
                 Scholar not certified
+              </p>
+              <p v-if="authorInformation.claimed" class="author-certificate">
+                Scholar certified<el-button class="checkbutton" type="success" :icon="Check" circle />
               </p>
               <el-button v-if="authorInformation.claimed" @click="showAppeal" type="primary"
                 class="AttrButton">Appeal</el-button>
@@ -330,6 +330,33 @@ const fetchAuthorNetwork = () => {
       console.log(err);
     });
 };
+function AddBrowsingHistory(){
+  if (store.getters.getLoginState) {
+    axios({
+    // 接口网址：包含协议名，域名，端口和路由
+      url: 'http://122.9.5.156:8000/api/v1/home/add_history',
+    // 请求方式，默认为get，可以不写
+      method: 'post',
+    // 请求可以携带的参数，用对象来写，get方法对应params，其他方法对应data
+      data: JSON.stringify({
+        token: store.getters.getUserinfo.token,
+        paper_id: route.params.id,
+        type: 1,
+      }),
+    // 成功请求回数据后，进入then，并用console.log打印结果
+    }).then(res => {
+      if (res.data.errno === 0) {
+     // console.log(res.data.data)
+      }
+      else {
+     //ElMessage.error('出错啦，找周霄')
+      }
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+}
+
 function getAuthorStates() {
   return store.getters.getAuthorState;
 }
@@ -355,6 +382,7 @@ authorId.value = route.params.id;
 fetchAuthorNetwork();
 fetchAuthorInformation();
 authorInformation.value = getAuthorStates().authorInformation;
+AddBrowsingHistory()
 
 //申诉和认领
 const showAppealDialog = ref(false);
@@ -719,6 +747,7 @@ watch(
 }
 
 .AttrButton {
+  margin-left: 30px;
   height: auto;
   width: 70px;
 }
