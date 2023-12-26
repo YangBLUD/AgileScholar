@@ -76,7 +76,7 @@ import {ElMessage} from "element-plus";
 const router = useRouter();
 const is_star = ref(false);
 onMounted(() => {
-    is_star.value = props.is_star;
+    is_star.value = Store.state.Article.is_star;
 });
 const centerDialogVisible = ref(false);
 const props = defineProps({
@@ -139,7 +139,7 @@ function handleEdit() {
             method: "post",
             data: JSON.stringify({
                 token: props.token,
-                paper_id: props.paper_id,
+                paper_id: store.state.Article.id,
                 type: props.type,
                 folder_id: folder_id,
             }),
