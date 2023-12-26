@@ -104,6 +104,10 @@ function getfold() {
 
 const fold = ref([]);
 function start() {
+    if(!store.getters.getUserinfo.login_or_not){
+      ElMessage.warning("Please Login first")
+      return
+    }
     if (store.getters.getLoginState) {
         if (props.token == "") {
             router.push({ path: "home" });
