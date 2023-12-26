@@ -206,7 +206,11 @@ watch(() => store.state.Article.id, (newVal, oldVal) => {
 const reportDialog = ref(false)
 
 function reportArticle() {
-    reportDialog.value = true
+    if (store.getters.getLoginState) {
+        reportDialog.value = true
+    } else {
+        ElMessage.error("Please log in to your account first！")
+    }
 }
 const file = ref(null)
 const reportUrl = ref("http://122.9.5.156:8000/api/v1/paper/report_comment_or_paper")

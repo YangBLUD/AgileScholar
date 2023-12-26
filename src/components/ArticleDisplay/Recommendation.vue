@@ -85,7 +85,7 @@ function jump(article_id) {
     }).then(res => {
         if (res.data.errno === 0) {
             store.commit('updateComment', res.data.data)
-            console.log(res.data.data)
+            console.log(res.data)
         }
         else {
             ElMessage.error('出错啦，找周霄')
@@ -107,7 +107,7 @@ function jump(article_id) {
     }).then(res => {
         if (res.data.errno === 0) {
             store.commit('updateCurrent', res.data.data)
-            console.log(res.data.data)
+            console.log(res.data)
         }
         else {
             ElMessage.error('出错啦，找周霄')

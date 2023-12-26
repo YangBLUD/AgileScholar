@@ -83,7 +83,7 @@ function jump(institution_id) {
             store.commit('updateInstitution', res.data.data)
         }
         else {
-            ElMessage.error('出错啦，找周霄')
+            // ElMessage.error('出错啦，找周霄')
         }
     }).catch(err => {
         console.log(err)
