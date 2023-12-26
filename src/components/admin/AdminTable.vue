@@ -236,7 +236,8 @@
 						</el-descriptions-item>
 					</el-descriptions>
 					<el-form-item>
-						<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理理由</div>
+						<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理理由<span
+								style="font-weight: bold; font-size: 20px; color: rgb(228, 117, 113);">*</span></div>
 						<el-input v-model="handle_reason" type="textarea" style="font-size: 16px;" />
 					</el-form-item>
 					<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理结果</div>
