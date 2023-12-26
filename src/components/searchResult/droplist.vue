@@ -6,12 +6,13 @@
         <div class="list">
             <div class="list-item" v-for="(item, index) in props.agginfo.data.slice(0, 6)" :key="index"
                 @click="aggchange(item)" v-if="props.agginfo.data && props.agginfo.data.length != 0">
-                <div class="item-item" v-if="getText() === item.raw"  style="color: red; font-size: 20px;">
+                <div class="item-item" v-if="getText() === item.raw"
+                    style="color: rgb(90, 156, 248); font-size: 18px; text-align: right; font-weight: bold;">
                     {{ item.show }}&nbsp;({{ item.value }})
                 </div>
-              <div class="item-item" v-if="getText() !== item.raw">
-                {{ item.show }}&nbsp;({{ item.value }})
-              </div>
+                <div class="item-item" v-if="getText() !== item.raw">
+                    {{ item.show }}&nbsp;({{ item.value }})
+                </div>
             </div>
             <!-- <el-collapse v-model="activeNames" @change="handleChange" v-if="props.agginfo.data && props.agginfo.data.length!=0">
                 <el-collapse-item :title=item.show :name=index v-for="(item,index) in props.agginfo.data.slice(0,6)" :key="index" accordion=true>
@@ -27,7 +28,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, onBeforeMount, watch} from "vue";
+import { ref, onMounted, onBeforeMount, watch } from "vue";
 import axios from "axios";
 import { storeKey, useStore } from "vuex";
 const Store = useStore();
@@ -48,8 +49,8 @@ function aggchange(item) {
     Store.commit("setaggtext", props.agginfo.text);
     Store.commit("setaggraw", item.raw);
 }
-function getText(){
-  return Store.getters.getCluster.agg_raw;
+function getText() {
+    return Store.getters.getCluster.agg_raw;
 }
 </script>
 <style scoped>
