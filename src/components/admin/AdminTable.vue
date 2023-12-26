@@ -19,25 +19,16 @@
 					<el-button type="primary" :icon="Plus">新增</el-button>
 				-->
 			</div>
-			<el-table 
-			class="table"
-			:key="itemKey"
-			:data="tableDataList"
-			max-height="520"
-			:border="true"  
-			:stripe="true"
-			header-cell-class-name="table-header"
-			>
+			<el-table class="table" :key="itemKey" :data="tableDataList" max-height="520" :border="true" :stripe="true"
+				header-cell-class-name="table-header">
 				<el-table-column prop="id" label="ID" width="90" align="center"></el-table-column>
 				<el-table-column prop="name" label="用户名"></el-table-column>
 				<el-table-column prop="type" label="类型"></el-table-column>
 				<el-table-column prop="date" label="时间" sortable align="center"></el-table-column>
 				<el-table-column label="状态" align="center">
 					<template #default="scope">
-						<el-tag
-							:type="scope.row.state === '已处理' ? 'success' : scope.row.state === '未处理' ? 'danger' : ''"
-							:disable-transitions="true"
-						>
+						<el-tag :type="scope.row.state === '已处理' ? 'success' : scope.row.state === '未处理' ? 'danger' : ''"
+							:disable-transitions="true">
 							{{ scope.row.state }}
 						</el-tag>
 					</template>
@@ -63,48 +54,105 @@
 				></el-pagination>
 				</div>
 			-->
-			
+
 		</div>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title ="申诉" v-model="appealListVisible" width="65%">
-			<el-form label-width="80px" :model="form" label-position="top">
-				<el-form-item label="用户名">
-					<span> {{ form.name }}</span>
-				</el-form-item>
-				<el-form-item label="邮箱">
-					<span>{{ form.email }}</span>
-				</el-form-item>
-				<el-form-item label="邮箱是否为机构邮箱">
-					<span> {{ form.email_commom }}</span>
-				</el-form-item>
-				<el-form-item label="申诉内容">
-					<span> {{ form.text }}</span>
-				</el-form-item>
-				<el-form-item label="申诉文件">
-					<el-link :underline="false" :href="form.file">点此下载</el-link>
-				</el-form-item>
-				<el-form-item label="被申诉学者名称">
-					<span> {{ form.be_name }}</span>
-				</el-form-item>
-				<el-form-item label="处理理由">
-      				<el-input v-model="handle_reason" type="textarea" />
-    			</el-form-item>
-				<el-form-item label="处理结果">
-					<el-radio-group v-model="descion">
-        				<el-radio label="0" size="small">不处理</el-radio>
-      					<el-radio label="1" size="small">取消被申诉者身份</el-radio>
-						<el-radio label="2" size="small">取消并允许替换被申诉者身份</el-radio>
-      				</el-radio-group>
-				</el-form-item>
-				<el-form-item label="申请邮箱状态">
-					<el-radio-group v-model="appeal_email_special">
-        				<el-radio label="0" size="small">不评判</el-radio>
-      					<el-radio label="1" size="small">普通邮箱</el-radio>
-						<el-radio label="2" size="small">机构专属邮箱</el-radio>
-      				</el-radio-group>
-				</el-form-item>
-			</el-form>
+		<el-dialog v-model="appealListVisible" width="65%">
+			<div class="title">申诉</div>
+			<div style="margin-left: 50px; margin-right: 50px;">
+				<el-form label-width="80px" :model="form" label-position="top">
+					<el-descriptions class="margin-top" :column="2" size="16px" border>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<user />
+									</el-icon>
+									用户名
+								</div>
+							</template>
+							{{ form.name }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Message />
+									</el-icon>
+									邮箱
+								</div>
+							</template>
+							{{ form.email }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Message />
+									</el-icon>
+									邮箱是否为机构邮箱
+								</div>
+							</template>
+							{{ form.email_commom }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<EditPen />
+									</el-icon>
+									申诉内容
+								</div>
+							</template>
+							{{ form.text }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Document />
+									</el-icon>
+									申诉文件
+								</div>
+							</template>
+							<a :href="form.file" class="download-button">
+								<el-button type="primary">点此下载</el-button>
+							</a>
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Avatar />
+									</el-icon>
+									被申诉学者名称
+								</div>
+							</template>
+							{{ form.be_name }}
+						</el-descriptions-item>
+					</el-descriptions>
+					<el-form-item>
+						<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理理由</div>
+						<el-input v-model="handle_reason" type="textarea" style="font-size: 16px;" />
+					</el-form-item>
+					<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理结果</div>
+					<el-form-item>
+						<el-radio-group v-model="descion">
+							<el-radio label="0" size="large">不处理</el-radio>
+							<el-radio label="1" size="large">取消被申诉者身份</el-radio>
+							<el-radio label="2" size="large">取消并允许替换被申诉者身份</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<el-form-item label="申请邮箱状态">
+						<el-radio-group v-model="appeal_email_special">
+							<el-radio label="0" size="large">不评判</el-radio>
+							<el-radio label="1" size="large">普通邮箱</el-radio>
+							<el-radio label="2" size="large">机构专属邮箱</el-radio>
+						</el-radio-group>
+					</el-form-item>
+				</el-form>
+			</div>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="undoEdit">取 消</el-button>
@@ -113,43 +161,101 @@
 			</template>
 		</el-dialog>
 
-		<el-dialog title ="认证申请" v-model="claimListVisible" width="65%">
-			<el-form label-width="80px" :model="form" label-position="top">
-				<el-form-item label="用户名">
-					<span> {{ form.name }}</span>
-				</el-form-item>
-				<el-form-item label="邮箱">
-					<span>{{ form.email }}</span>
-				</el-form-item>
-				<el-form-item label="邮箱是否为机构邮箱">
-					<span> {{ form.email_commom }}</span>
-				</el-form-item>
-				<el-form-item label="申请内容">
-					<span> {{ form.text }}</span>
-				</el-form-item>
-				<el-form-item label="申请文件">
-					<el-link :underline="false" :href="form.file">点此下载</el-link>
-				</el-form-item>
-				<el-form-item label="申请认证的学者名称">
-					<span> {{ form.be_name }}</span>
-				</el-form-item>
-				<el-form-item label="处理理由">
-      				<el-input v-model="handle_reason" type="textarea" />
-    			</el-form-item>
-				<el-form-item label="处理结果">
-					<el-radio-group v-model="descion">
-        				<el-radio label="0" size="small">不通过</el-radio>
-      					<el-radio label="1" size="small">通过</el-radio>
-      				</el-radio-group>
-				</el-form-item>
-				<el-form-item label="申请邮箱状态">
-					<el-radio-group v-model="appeal_email_special">
-        				<el-radio label="0" size="small">不评判</el-radio>
-      					<el-radio label="1" size="small">普通邮箱</el-radio>
-						<el-radio label="2" size="small">机构专属邮箱</el-radio>
-      				</el-radio-group>
-				</el-form-item>
-			</el-form>
+		<el-dialog v-model="claimListVisible" width="65%">
+			<div class="title">认证申请</div>
+			<div style="margin-left: 50px; margin-right: 50px;">
+				<el-form label-width="80px" :model="form" label-position="top">
+					<el-descriptions class="margin-top" :column="2" size="16px" border>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<user />
+									</el-icon>
+									用户名
+								</div>
+							</template>
+							{{ form.name }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Message />
+									</el-icon>
+									邮箱
+								</div>
+							</template>
+							{{ form.email }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Message />
+									</el-icon>
+									邮箱是否为机构邮箱
+								</div>
+							</template>
+							{{ form.email_commom }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<EditPen />
+									</el-icon>
+									申请内容
+								</div>
+							</template>
+							{{ form.text }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Document />
+									</el-icon>
+									申请文件
+								</div>
+							</template>
+							<a :href="form.file" class="download-button">
+								<el-button type="primary">点此下载</el-button>
+							</a>
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Avatar />
+									</el-icon>
+									申请认证的学者名称
+								</div>
+							</template>
+							{{ form.be_name }}
+						</el-descriptions-item>
+					</el-descriptions>
+					<el-form-item>
+						<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理理由</div>
+						<el-input v-model="handle_reason" type="textarea" style="font-size: 16px;" />
+					</el-form-item>
+					<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理结果</div>
+					<el-form-item>
+						<el-radio-group v-model="descion">
+							<el-radio label="0" size="large">不通过</el-radio>
+							<el-radio label="1" size="large">通过</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">申请邮箱状态</div>
+					<el-form-item>
+						<el-radio-group v-model="appeal_email_special">
+							<el-radio label="0" size="large">不评判</el-radio>
+							<el-radio label="1" size="large">普通邮箱</el-radio>
+							<el-radio label="2" size="large">机构专属邮箱</el-radio>
+						</el-radio-group>
+					</el-form-item>
+				</el-form>
+			</div>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="undoEdit">取 消</el-button>
@@ -158,43 +264,116 @@
 			</template>
 		</el-dialog>
 
-		<el-dialog title ="举报" v-model="reportListVisible" width="65%">
-			<el-form label-width="80px" :model="form" label-position="top">
-				<el-form-item label="用户名">
-					<span> {{ form.name }}</span>
-				</el-form-item>
-				<el-form-item label="举报类型">
-					<span> {{ form.type }}</span>
-				</el-form-item>
-				<el-form-item label="举报内容">
-					<span> {{ form.text }}</span>
-				</el-form-item>
-				<el-form-item label="举报文件">
-					<el-link :underline="false" :href="form.file">点此下载</el-link>
-				</el-form-item>
-				<el-form-item label="论文标题">
-					<span> {{ form.paper_name }}</span>
-				</el-form-item>
-				<el-form-item v-show="comment" label="评论时间">
-					<span> {{ form.type }}</span>
-				</el-form-item>
-				<el-form-item v-show="comment" label="评论用户">
-					<span> {{ form.type }}</span>
-				</el-form-item>
-				<el-form-item v-show="comment" label="评论内容">
-					<span> {{ form.type }}</span>
-				</el-form-item>
-				<el-form-item label="处理理由">
-      				<el-input v-model="handle_reason" type="textarea"> </el-input>
-    			</el-form-item>
-				<el-form-item label="处理结果">
-					<el-radio-group v-model="descion">
-        				<el-radio label="0" size="small">不处理</el-radio>
-      					<el-radio v-show="comment" label="1" size="small">删除评论</el-radio>
-						<el-radio v-show="!comment" label="2" size="small">删除文章</el-radio>
-      				</el-radio-group>
-				</el-form-item>
-			</el-form>
+		<el-dialog v-model="reportListVisible" width="65%">
+			<div class="title">举报</div>
+			<div style="margin-left: 50px; margin-right: 50px;">
+				<el-form label-width="80px" :model="form" label-position="top">
+					<el-descriptions class="margin-top" :column="2" size="16px" border>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<user />
+									</el-icon>
+									用户名
+								</div>
+							</template>
+							{{ form.name }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Message />
+									</el-icon>
+									举报类型
+								</div>
+							</template>
+							{{ form.type }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Message />
+									</el-icon>
+									举报内容
+								</div>
+							</template>
+							{{ form.text }}
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Document />
+									</el-icon>
+									举报文件
+								</div>
+							</template>
+							<a :href="form.file" class="download-button">
+								<el-button type="primary">点此下载</el-button>
+							</a>
+						</el-descriptions-item>
+						<el-descriptions-item>
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Avatar />
+									</el-icon>
+									论文标题
+								</div>
+							</template>
+							{{ form.paper_name }}
+						</el-descriptions-item>
+						<el-descriptions-item v-show="comment">
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Avatar />
+									</el-icon>
+									评论时间
+								</div>
+							</template>
+							{{ form.comment_time }}
+						</el-descriptions-item>
+						<el-descriptions-item v-show="comment">
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Avatar />
+									</el-icon>
+									评论用户
+								</div>
+							</template>
+							{{ form.comment_user }}
+						</el-descriptions-item>
+						<el-descriptions-item v-show="comment">
+							<template #label>
+								<div class="cell-item">
+									<el-icon>
+										<Avatar />
+									</el-icon>
+									评论内容
+								</div>
+							</template>
+							{{ form.comment_text }}
+						</el-descriptions-item>
+					</el-descriptions>
+					<el-form-item>
+						<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理理由</div>
+						<el-input v-model="handle_reason" type="textarea" style="font-size: 16px;"> </el-input>
+					</el-form-item>
+					<div style="margin-top: 30px; margin-bottom: 20px; font-size: 20px; font-weight: bold;">处理结果</div>
+					<el-form-item>
+						<el-radio-group v-model="descion">
+							<el-radio label="0" size="large">不处理</el-radio>
+							<el-radio v-show="comment" label="1" size="large">删除评论</el-radio>
+							<el-radio v-show="!comment" label="2" size="large">删除文章</el-radio>
+						</el-radio-group>
+					</el-form-item>
+				</el-form>
+			</div>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="undoEdit">取 消</el-button>
@@ -238,18 +417,18 @@ const handleSearch = () => {
 	//console.log("筛选")
 	//console.log(query)
 	tableDataList = dataList.filter(item => {
-        if (query.type !== "全部" && item.type !== query.type) {
-            return false;
-        }
-        if (query.state !== "全部" && item.state !== query.state) {
-            return false;
-        }
-        if (query.name && !item.name.includes(query.name)) {
-            return false;
-        }
-		
-        return true;
-    });
+		if (query.type !== "全部" && item.type !== query.type) {
+			return false;
+		}
+		if (query.state !== "全部" && item.state !== query.state) {
+			return false;
+		}
+		if (query.name && !item.name.includes(query.name)) {
+			return false;
+		}
+
+		return true;
+	});
 	itemKey.value = Math.random()
 	console.log(tableDataList)
 };
@@ -279,11 +458,11 @@ let form = reactive({
 });
 
 const handleEdit = (row: any) => {
-	if(row.state == "已处理"){
+	if (row.state == "已处理") {
 		alert("已经处理过啦")
 	}
-	else{
-		switch(row.type){
+	else {
+		switch (row.type) {
 			case "举报":
 				state = "举报";
 				affair_id = row.id;
@@ -291,12 +470,12 @@ const handleEdit = (row: any) => {
 				//console.log(store.getters.getTheList)
 				let list = store.getters.getTheList;
 				//console.log(list);
-				if(list[0].comment_id == -1){
+				if (list[0].comment_id == -1) {
 					console.log(comment)
 					form.type = "举报论文"
 					comment.value = false;
 				}
-				else{
+				else {
 					form.type = "举报评论"
 					form.comment_text = list[0].comment_content
 					form.comment_user = list[0].comment_user
@@ -307,10 +486,10 @@ const handleEdit = (row: any) => {
 				form.paper_name = list[0].paper_title;
 				form.text = list[0].report_text;
 				form.file = list[0].report_file;
-				if(form.text == ''){
+				if (form.text == '') {
 					form.text = "用户未填写举报理由"
 				}
-				if(form.file == ''){
+				if (form.file == '') {
 					form.file = "用户未上传举报文件"
 				}
 				reportListVisible.value = true;
@@ -319,25 +498,25 @@ const handleEdit = (row: any) => {
 				state = "申诉";
 				affair_id = row.id;
 				store.commit('getAppeal', row.id)
-				
+
 				let list1 = store.getters.getTheList;
 				console.log(list1)
 
 				form.name = list1[0].username;
 				form.email = list1[0].appeal_email;
-				if(list1[0].appeal_email_common == false){
+				if (list1[0].appeal_email_common == false) {
 					form.email_commom = "非机构邮箱";
 				}
-				else{
+				else {
 					form.email_commom = "机构邮箱";
 				}
 				form.be_name = list1[0].scholar_name;
 				form.text = list1[0].report_text;
 				form.file = list1[0].report_file;
-				if(form.text == ''){
+				if (form.text == '') {
 					form.text = "用户未填写申诉理由"
 				}
-				if(form.file == ''){
+				if (form.file == '') {
 					form.file = "用户未上传申诉文件"
 				}
 				appealListVisible.value = true;
@@ -350,18 +529,18 @@ const handleEdit = (row: any) => {
 				console.log(list2)
 				form.name = list2[0].username;
 				form.email = list2[0].claim_email;
-				if(list2[0].appeal_email_common == false){
+				if (list2[0].appeal_email_common == false) {
 					form.email_commom = "非机构邮箱";
 				}
-				else{
+				else {
 					form.email_commom = "机构邮箱";
 				}
 				form.text = list2[0].claim_text;
 				form.file = list2[0].claim_file;
-				if(form.text == ''){
+				if (form.text == '') {
 					form.text = "用户未填写申诉理由"
 				}
-				if(form.file == ''){
+				if (form.file == '') {
 					form.file = "用户未上传申诉文件"
 				}
 				form.be_name = list2[0].scholar_name;
@@ -373,16 +552,17 @@ const handleEdit = (row: any) => {
 	}
 };
 const saveEdit = () => {
-	switch (state){
+	switch (state) {
 		case "举报":
 			console.log("begin report")
-    		axios({
-        		url: 'http://122.9.5.156:8000/api/v1/admin/handle_report',
-        		method: 'post',
-        		data: JSON.stringify({
-            		"token": store.getters.getUserinfo.token,
+			axios({
+				url: 'http://122.9.5.156:8000/api/v1/admin/handle_report',
+				method: 'post',
+				data: JSON.stringify({
+					"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
+<<<<<<< Updated upstream
 					"decision": parseInt(descion.value),
         		})
     		}).then(res => {
@@ -390,63 +570,72 @@ const saveEdit = () => {
     		}).catch(err => {
         		console.log(err)
     		})
+=======
+					"decision": descion,
+				})
+			}).then(res => {
+				console.log(res.data)
+			}).catch(err => {
+				console.log(err)
+			})
+>>>>>>> Stashed changes
 			reportListVisible.value = false;
 			break;
 		case "申诉":
-		console.log("begin appeal")
+			console.log("begin appeal")
 			axios({
-        		url: 'http://122.9.5.156:8000/api/v1/admin/handle_appeal',
-        		method: 'post',
-        		data: JSON.stringify({
-            		"token": store.getters.getUserinfo.token,
+				url: 'http://122.9.5.156:8000/api/v1/admin/handle_appeal',
+				method: 'post',
+				data: JSON.stringify({
+					"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
 					"decision": parseInt(descion.value),
 					"appeal_email_special": appeal_email_special,
-        		})
-    		}).then(res => {
-        		console.log(res.data)
-    		}).catch(err => {
-        		console.log(err)
-    		})
+				})
+			}).then(res => {
+				console.log(res.data)
+			}).catch(err => {
+				console.log(err)
+			})
 			appealListVisible.value = false;
 			break;
 		case "认证申请":
 			console.log("begin claim")
 			axios({
-        		url: 'http://122.9.5.156:8000/api/v1/admin/handle_claim',
-        		method: 'post',
-        		data: JSON.stringify({
-            		"token": store.getters.getUserinfo.token,
+				url: 'http://122.9.5.156:8000/api/v1/admin/handle_claim',
+				method: 'post',
+				data: JSON.stringify({
+					"token": store.getters.getUserinfo.token,
 					"affair_id": affair_id,
 					"handle_reason": handle_reason.value,
 					"decision": descion,
 					"appeal_email_special": appeal_email_special,
-        		})
-    		}).then(res => {
-        		console.log(res.data)
-    		}).catch(err => {
-        		console.log(err)
-    		})
+				})
+			}).then(res => {
+				console.log(res.data)
+			}).catch(err => {
+				console.log(err)
+			})
 			claimListVisible.value = false;
 			break;
 		default:
-		console.log("begin get the data")
-    	axios({
-        	url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
-        	method: 'post',
-        	data: JSON.stringify({
-            	"token": store.getters.getUserinfo.token
-        	})
-    	}).then(res => {
-        	console.log(res.data)
-        	store.commit('initAffairList', res.data.data)
-			
-        	//console.log(store.getters.getAppealList)
-        	//console.log(store.getters.getAffairList)
-    	}).catch(err => {
-        	console.log(err)
-    	})
+			console.log("begin get the data")
+			axios({
+				url: 'http://122.9.5.156:8000/api/v1/admin/get_affairs',
+				method: 'post',
+				data: JSON.stringify({
+					"token": store.getters.getUserinfo.token
+				})
+			}).then(res => {
+				console.log(res.data)
+				store.commit('initAffairList', res.data.data)
+
+				//console.log(store.getters.getAppealList)
+				//console.log(store.getters.getAffairList)
+			}).catch(err => {
+				console.log(err)
+			})
 			dataList = store.getters.getAffairList
 			tableDataList = reactive(store.getters.getAffairList)
 			itemKey.value = Math.random()
@@ -467,8 +656,9 @@ const undoEdit = () => {
 .textArea {
 	height: auto;
 	width: auto;
-	resize:none
+	resize: none
 }
+
 .handle-box {
 	margin-bottom: 20px;
 }
@@ -480,20 +670,44 @@ const undoEdit = () => {
 .handle-input {
 	width: 300px;
 }
+
 .table {
 	width: 100%;
 	font-size: 14px;
 }
+
 .red {
 	color: #F56C6C;
 }
+
 .mr10 {
 	margin-right: 10px;
 }
+
 .table-td-thumb {
 	display: block;
 	margin: auto;
 	width: 40px;
 	height: 40px;
+}
+
+::v-deep .el-descriptions__label.el-descriptions__cell.is-bordered-label {
+	font-size: 16px;
+	text-align: center;
+}
+
+::v-deep .el-descriptions__body .el-descriptions__table .el-descriptions__cell {
+	font-size: 16px;
+	text-align: center;
+}
+
+.title {
+	font-size: 24px;
+	line-height: 50px;
+	height: 50px;
+	text-align: center;
+	position: relative;
+	top: -30px;
+	font-weight: bold;
 }
 </style>
