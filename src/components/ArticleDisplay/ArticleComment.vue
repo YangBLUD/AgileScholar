@@ -29,9 +29,12 @@
                             <div class="comment-avatar"><img src="../../assets/logo.png" alt=""></div>
                             <div class="comment-box">
                                 <div class="comment-head">
-                                    <h6 v-if="comment.is_scholar" class="comment-name by-author"><a href="">{{ comment.user
-                                    }}</a></h6>
-                                    <h6 v-if="!comment.is_scholar" class="comment-name"><a href="">{{ comment.user }}</a>
+                                    <h6 v-if="comment.is_scholar" class="comment-name by-author" >
+                                      <router-link class="link" :to="{ name: 'scholar-display', params: { id: comment.author_id } }">
+                                        {{ comment.user }}
+                                      </router-link>
+                                    </h6>
+                                    <h6 v-if="!comment.is_scholar" class="comment-name">{{ comment.user }}
                                     </h6>
                                     <span>{{ comment.comment_time }}</span>
                                     <el-tooltip effect="dark" content="Comment" placement="bottom">
@@ -155,7 +158,6 @@ watch(() => store.state.Article.comment_add_num, (newVal, oldVal) => {
     user.value = store.getters.getUserinfo
     initCommentForm()
 })
-
 
 const new_comment = reactive({
     paper_id: "",
